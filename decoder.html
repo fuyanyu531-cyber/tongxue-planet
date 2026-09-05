@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天书解码器 · 瞳学星球 | 验光单趣味解读工具</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+    <style>
+    /* ============================================================
+       天书解码器 decoder.html · 宇宙星空游戏风格覆盖
+       命名空间 body.theme-purple（不影响其他页面）
+       ============================================================ */
+    body.theme-purple {
+        background: #06183D;
+        color: #e8f0ff;
+        font-family: "ZCOOL KuaiLe", "Microsoft YaHei", sans-serif;
+        overflow-x: hidden;
+    }
+    /* 星空背景层 */
+    body.theme-purple::before {
+        content: ""; position: fixed; inset: 0; z-index: -2;
+        background-image: url("assets/images/planet-scene.png");
+        background-size: cover; background-position: center top; background-repeat: no-repeat;
+    }
+    body.theme-purple::after {
+        content: ""; position: fixed; inset: 0; z-index: -1;
+        background:
+            radial-gradient(900px 420px at 18% -10%, rgba(101,200,255,0.30), rgba(10,36,90,0) 62%),
+            radial-gradient(1100px 520px at 110% 8%, rgba(166,108,255,0.22), rgba(14,30,84,0) 58%),
+            radial-gradient(860px 460px at 115% 110%, rgba(255,213,90,0.16), rgba(14,30,84,0) 58%),
+            linear-gradient(180deg, rgba(4,10,34,0.30), rgba(4,10,34,0.70));
+        pointer-events: none;
+    }
+    /* 星星粒子层 */
+    .dec-stars { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+    .dec-star { position: absolute; border-radius: 50%; background: #fff; }
+    .dec-star.s1 { width:2px; height:2px; opacity:.7; animation: dec-twinkle 3s ease-in-out infinite; }
+    .dec-star.s2 { width:3px; height:3px; opacity:.5; animation: dec-twinkle 4s ease-in-out infinite 1s; }
+    @keyframes dec-twinkle { 0%,100%{opacity:.3} 50%{opacity:.9} }
+    /* 导航栏玻璃态 */
+    body.theme-purple .navbar {
+        background: rgba(7,27,73,0.75) !important;
+        backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+        border-bottom: 1px solid rgba(120,200,255,0.25) !important;
+    }
+    body.theme-purple .nav-link { color: #cddfff !important; }
+    body.theme-purple .nav-link:hover { color: #7BE84A !important; transform: translateY(-2px); text-shadow: 0 0 8px rgba(123,232,74,0.5); }
+    body.theme-purple .nav-link.active { color: #7BE84A !important; }
+    body.theme-purple .nav-link.active::after {
+        background: #7BE84A;
+        box-shadow: 0 0 10px rgba(123,232,74,0.7);
+    }
+    body.theme-purple .logo-title { color: #fff !important; }
+    body.theme-purple .logo-subtitle { color: #9bb8e8 !important; }
+    body.theme-purple .btn-voice {
+        background: rgba(255,255,255,0.1) !important;
+        border: 1px solid rgba(120,200,255,0.3) !important;
+        color: #fff !important;
+    }
+    /* Hero 横幅：宇宙解密站 */
+    body.theme-purple .subpage-banner {
+        background: linear-gradient(135deg, rgba(123,232,74,0.12) 0%, rgba(85,200,255,0.12) 100%) !important;
+        border-bottom: 1px solid rgba(120,200,255,0.2);
+    }
+    body.theme-purple .subpage-banner::before,
+    body.theme-purple .subpage-banner::after { display: none !important; }
+    body.theme-purple .subpage-title {
+        font-family: "ZCOOL KuaiLe", "Microsoft YaHei", sans-serif !important;
+        color: #fff !important; font-size: 42px !important;
+        text-shadow: 0 0 20px rgba(123,232,74,0.6), 0 0 40px rgba(123,232,74,0.3);
+    }
+    body.theme-purple .subpage-subtitle { color: #d8f5ff !important; font-size: 18px !important; }
+    /* 小光仔引导气泡：玻璃态 */
+    body.theme-purple .decoder-guide-bubble,
+    body.theme-purple .hero-guide-bubble {
+        background: rgba(15,45,95,0.75) !important;
+        border: 1px solid rgba(120,200,255,0.35) !important;
+        color: #e8f0ff !important;
+    }
+    /* 核心卡片：宇宙玻璃拟态 */
+    body.theme-purple .decoder-core-card,
+    body.theme-purple .content-card,
+    body.theme-purple .decoder-card {
+        background: rgba(15,45,95,0.75) !important;
+        border: 1px solid rgba(120,200,255,0.35) !important;
+        border-radius: 24px !important;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.25) !important;
+        color: #e8f0ff !important;
+        transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+    }
+    body.theme-purple .decoder-core-card:hover,
+    body.theme-purple .content-card:hover,
+    body.theme-purple .decoder-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(120,200,255,0.6) !important;
+        box-shadow: 0 14px 48px rgba(85,200,255,0.2) !important;
+    }
+    body.theme-purple .core-card-head,
+    body.theme-purple .content-card-header,
+    body.theme-purple .decoder-section-head {
+        border-bottom-color: rgba(120,200,255,0.2) !important;
+    }
+    body.theme-purple .core-card-head h3,
+    body.theme-purple .content-card h2,
+    body.theme-purple .content-card h3,
+    body.theme-purple .decoder-section-head h2 {
+        color: #fff !important;
+    }
+    body.theme-purple .content-card .lead,
+    body.theme-purple .decoder-section p { color: #b8c8e8 !important; }
+    /* 标签/徽章 */
+    body.theme-purple .decoder-result-tag,
+    body.theme-purple .adv-modal-order {
+        background: rgba(123,232,74,0.15) !important;
+        color: #7BE84A !important;
+        border: 1px solid rgba(123,232,74,0.3) !important;
+    }
+    /* 侦探游戏区 */
+    /* 题目卡片：浅紫底 + 深蓝色粗体大字 */
+    body.theme-purple .detective-question {
+        color: #243B6B !important;
+        font-size: 26px !important;
+        font-weight: 800 !important;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.15) !important;
+    }
+    /* 选项按钮：深蓝底 + 白色粗体大字 */
+    body.theme-purple .detective-options button {
+        background: rgba(15,45,95,0.92) !important;
+        border: 1px solid rgba(120,200,255,0.4) !important;
+        color: #FFFFFF !important;
+        font-weight: 700 !important;
+        font-size: 22px !important;
+        letter-spacing: 1px !important;
+        opacity: 1 !important;
+        filter: none !important;
+    }
+    body.theme-purple .detective-options button:hover {
+        border-color: #7BE84A !important;
+        box-shadow: 0 0 14px rgba(123,232,74,0.45) !important;
+    }
+    /* 区域标题：白色 + 绿色星光 */
+    body.theme-purple .decoder-section-title {
+        color: #FFFFFF !important;
+        font-weight: 900 !important;
+        text-shadow: 0 0 12px rgba(120,255,80,0.8) !important;
+    }
+    /* 答题进度：亮绿字 + 深蓝底保证对比度 */
+    body.theme-purple .detective-progress {
+        background: rgba(15,45,95,0.8) !important;
+        border-color: rgba(120,200,255,0.3) !important;
+        color: #7CFF4F !important;
+        font-weight: 800 !important;
+    }
+    body.theme-purple .detective-progress b {
+        color: #7CFF4F !important;
+        font-weight: 800 !important;
+    }
+    /* 统一按钮：游戏化 */
+    body.theme-purple .btn-theme,
+    body.theme-purple .btn-green {
+        background: linear-gradient(135deg, #9BEF55, #42B936) !important;
+        color: #fff !important; font-weight: 700;
+        border-radius: 999px !important; border: none !important;
+        box-shadow: 0 4px 16px rgba(66,185,54,0.3);
+        transition: transform .2s ease, box-shadow .2s ease;
+    }
+    body.theme-purple .btn-theme:hover,
+    body.theme-purple .btn-green:hover {
+        transform: scale(1.03);
+        box-shadow: 0 6px 24px rgba(123,232,74,0.5) !important;
+    }
+    body.theme-purple .btn-purple {
+        background: linear-gradient(135deg, #b88aff, #7651D8) !important;
+        color: #fff !important; font-weight: 700;
+        border-radius: 999px !important; border: none !important;
+        box-shadow: 0 4px 16px rgba(118,81,216,0.3);
+    }
+    body.theme-purple .btn-purple:hover {
+        transform: scale(1.03);
+        box-shadow: 0 6px 24px rgba(166,108,255,0.5) !important;
+    }
+    body.theme-purple .btn-secondary {
+        background: rgba(255,255,255,0.1) !important;
+        border: 1px solid rgba(120,200,255,0.4) !important;
+        color: #cddfff !important;
+        border-radius: 999px !important;
+    }
+    body.theme-purple .btn-secondary:hover {
+        background: rgba(120,200,255,0.2) !important;
+    }
+    body.theme-purple .btn-back-home {
+        background: linear-gradient(135deg, #9BEF55, #42B936) !important;
+        color: #fff !important; border-radius: 999px !important; border: none !important;
+    }
+    /* 模态框 */
+    body.theme-purple .adv-modal-box,
+    body.theme-purple .decoder-modal-box {
+        background: rgba(11,40,96,0.95) !important;
+        border: 1px solid rgba(120,200,255,0.4) !important;
+        color: #e8f0ff !important;
+    }
+    /* 弹窗标题：白色 + 绿色外发光 */
+    body.theme-purple .adv-modal-title {
+        color: #FFFFFF !important;
+        text-shadow: 0 0 10px rgba(130,255,80,0.8) !important;
+    }
+    /* 白色解释卡片：白底 + 深蓝色正文 */
+    body.theme-purple .adv-modal-desc {
+        background: #FFFFFF !important;
+        color: #23456F !important;
+        font-size: 22px !important;
+        line-height: 1.8 !important;
+        font-weight: 500 !important;
+    }
+    /* 小光仔提示框 */
+    body.theme-purple .adv-modal-tip {
+        background: rgba(123,232,74,0.12) !important;
+        border: 1px solid rgba(123,232,74,0.3) !important;
+    }
+    body.theme-purple .adv-modal-tip-label {
+        color: #FFD43B !important;
+        font-weight: 800 !important;
+    }
+    body.theme-purple .adv-modal-tip > div:last-child,
+    body.theme-purple #decoderItemTip {
+        color: #B8FF5A !important;
+        font-weight: 600 !important;
+    }
+    /* 白色知识卡片：深蓝色粗体文字 */
+    body.theme-purple .decoder-item-code,
+    body.theme-purple .decoder-item-name {
+        color: #173B6D !important;
+        font-weight: 700 !important;
+    }
+    body.theme-purple .adv-modal-tip::before { display: none !important; }
+    /* 表单项 */
+    body.theme-purple input,
+    body.theme-purple select,
+    body.theme-purple textarea {
+        background: rgba(7,27,73,0.6) !important;
+        border: 1px solid rgba(120,200,255,0.3) !important;
+        color: #fff !important;
+    }
+    body.theme-purple input::placeholder { color: #6b86b8 !important; }
+    /* 页脚 */
+    body.theme-purple .footer {
+        background: rgba(7,27,73,0.8) !important;
+        border-top: 1px solid rgba(120,200,255,0.2) !important;
+        color: #9bb8e8 !important;
+    }
+    body.theme-purple .footer a { color: #7BE84A !important; }
+    /* 小光仔角色：左侧陪伴，不遮挡内容 */
+    body.theme-purple .decoder-guide-img img,
+    body.theme-purple .hero-guide-img-wrap img {
+        filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+    }
+    </style>
+</head>
+<body class="subpage theme-purple">
+    <div class="dec-stars" aria-hidden="true">
+        <span class="dec-star s1" style="top:8%;left:12%"></span>
+        <span class="dec-star s2" style="top:15%;left:78%"></span>
+        <span class="dec-star s1" style="top:32%;left:45%"></span>
+        <span class="dec-star s1" style="top:55%;left:22%"></span>
+        <span class="dec-star s2" style="top:68%;left:85%"></span>
+        <span class="dec-star s1" style="top:78%;left:60%"></span>
+        <span class="dec-star s1" style="top:25%;left:90%"></span>
+        <span class="dec-star s2" style="top:90%;left:30%"></span>
+        <span class="dec-star s1" style="top:42%;left:8%"></span>
+        <span class="dec-star s1" style="top:62%;left:50%"></span>
+    </div>
+
+    <!-- ============================================
+         1. 顶部导航栏（与全站一致）
+         ============================================ -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="assets/images/logo-tongxue.jpg" alt="瞳学星球 Logo" class="logo-img">
+                <div class="logo-text">
+                    <h1 class="logo-title">瞳学星球</h1>
+                    <p class="logo-subtitle">近视防控科普与矫正指南</p>
+                </div>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="index.html" class="nav-link" data-page="index">首页</a></li>
+                    <li><a href="eyeball-adventure.html" class="nav-link" data-page="eyeball-adventure">眼球大冒险</a></li>
+                    <li><a href="vision-exploration.html" class="nav-link" data-page="vision-exploration">视界探索站</a></li>
+                    <li><a href="decoder.html" class="nav-link active" data-page="decoder">天书解码器</a></li>
+                    <li><a href="hero.html" class="nav-link" data-page="hero">护眼小英雄</a></li>
+                    <li><a href="qa.html" class="nav-link" data-page="qa">护眼问答机</a></li>
+                </ul>
+            </nav>
+            <div class="nav-right">
+                <button class="btn-voice">
+                    <span class="voice-icon">🔊</span>
+                    语音朗读
+                </button>
+                <div class="user-avatar" title="用户头像">
+                    <span class="avatar-emoji">👧</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================
+         2. Banner 主标题
+         ============================================ -->
+    <section class="subpage-banner">
+        <div class="subpage-title-group">
+            <a href="index.html" class="subpage-back">← 返回首页</a>
+            <h1 class="subpage-title">天书解码器 🔮</h1>
+            <p class="subpage-subtitle">验光单上的"神秘符号"，小光仔陪你一秒读懂！</p>
+        </div>
+    </section>
+
+    <!-- ============================================
+         3. 主内容
+         ============================================ -->
+    <main class="subpage-container">
+
+        <!-- ========== 小光仔向导气泡 + 插画 ========== -->
+        <div class="decoder-guide">
+            <div class="decoder-guide-img" aria-hidden="true">
+                <img src="assets/images/xiaoguangzi-new.png" alt="小光仔" class="decoder-xiaoguangzai">
+            </div>
+            <div class="decoder-guide-bubble" id="decoderGuideBubble">
+                嗨！我是小光仔～<br>
+                验光单上有好多奇怪的 <b>R、L、SPH、-2.00</b> 字母和数字，<br>
+                看起来像"天书"📜 别怕！我们分三步把它看懂：<br>
+                👉 第一步 <b>认识符号</b>，第二步 <b>点开模拟单</b>，第三步 <b>当个小侦探</b>！
+            </div>
+        </div>
+
+        <!-- ========== 🔍 核心区：验光单解码器（拍照 + 手动输入） ========== -->
+        <section class="decoder-core">
+            <div class="decoder-core-head">
+                <h2 class="decoder-core-title">🔍 验光单解码器</h2>
+                <p class="decoder-core-sub">看不懂验光单？让小光仔帮你翻译！</p>
+            </div>
+
+            <div class="decoder-core-grid">
+
+                <!-- 卡片 1：📷 拍照 / 上传验光单 -->
+                <div class="decoder-core-card core-card-camera">
+                    <div class="core-card-head">
+                        <span class="core-card-icon">📷</span>
+                        <div>
+                            <h3 class="core-card-title">拍照 / 上传验光单</h3>
+                            <p class="core-card-subtitle-pill">拍一张验光单，让小光仔帮你找符号</p>
+                        </div>
+                    </div>
+
+                    <label class="core-upload-btn" for="decoderPhotoInput">
+                        <input type="file" id="decoderPhotoInput"
+                               accept="image/jpeg,image/png,image/webp"
+                               capture="environment" hidden>
+                        <span class="core-upload-icon">🖼️</span>
+                        <span class="core-upload-text">上传验光单</span>
+                    </label>
+
+                    <div class="core-photo-preview" id="decoderPhotoPreview">
+                        <div class="preview-placeholder">
+                            <span class="ph-icon">🖼️</span>
+                            <span class="ph-text">图片预览区域（支持 JPG / PNG / WEBP）</span>
+                        </div>
+                    </div>
+
+                    <div class="core-photo-status" id="decoderPhotoStatus"></div>
+
+                    <button type="button" class="btn-theme btn-purple core-recognize-btn" id="decoderRecognizeBtn" disabled>
+                        🔮 开始识别
+                    </button>
+                </div>
+
+                <!-- 卡片 2：✏️ 手动输入验光数据 -->
+                <div class="decoder-core-card core-card-input">
+                    <div class="core-card-head">
+                        <span class="core-card-icon">✏️</span>
+                        <div>
+                            <h3 class="core-card-title">手动输入验光数据</h3>
+                            <p class="core-card-subtitle-pill core-card-subtitle-green">
+                                自己输入数字，小光仔马上帮你解释
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="core-rx-form">
+                        <!-- 右眼列 -->
+                        <div class="core-eye-col core-eye-r">
+                            <div class="core-eye-head">
+                                <span class="core-eye-emoji">🫣</span>
+                                <span class="core-eye-name"><b>R</b> · 右眼</span>
+                            </div>
+                            <label class="core-field">
+                                <span class="core-field-label">SPH <small>球镜</small></span>
+                                <input type="number" step="0.25" class="core-field-input"
+                                       id="rx-r-sph" placeholder="如 -2.00">
+                            </label>
+                            <label class="core-field">
+                                <span class="core-field-label">CYL <small>柱镜/散光</small></span>
+                                <input type="number" step="0.25" class="core-field-input"
+                                       id="rx-r-cyl" placeholder="如 -0.75">
+                            </label>
+                            <label class="core-field">
+                                <span class="core-field-label">AXIS <small>轴位</small></span>
+                                <input type="number" min="0" max="180" step="1" class="core-field-input"
+                                       id="rx-r-axis" placeholder="如 180">
+                            </label>
+                        </div>
+
+                        <!-- 左眼列 -->
+                        <div class="core-eye-col core-eye-l">
+                            <div class="core-eye-head">
+                                <span class="core-eye-emoji">🫢</span>
+                                <span class="core-eye-name"><b>L</b> · 左眼</span>
+                            </div>
+                            <label class="core-field">
+                                <span class="core-field-label">SPH <small>球镜</small></span>
+                                <input type="number" step="0.25" class="core-field-input"
+                                       id="rx-l-sph" placeholder="如 -1.50">
+                            </label>
+                            <label class="core-field">
+                                <span class="core-field-label">CYL <small>柱镜/散光</small></span>
+                                <input type="number" step="0.25" class="core-field-input"
+                                       id="rx-l-cyl" placeholder="如 -0.50">
+                            </label>
+                            <label class="core-field">
+                                <span class="core-field-label">AXIS <small>轴位</small></span>
+                                <input type="number" min="0" max="180" step="1" class="core-field-input"
+                                       id="rx-l-axis" placeholder="如 95">
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn-theme btn-green core-explain-btn core-explain-full" id="decoderExplainBtn">
+                        ✨ 开始解释
+                    </button>
+
+                    <div class="core-quick-row">
+                        <span class="core-quick-label">常用符号：</span>
+                        <button type="button" class="core-quick-chip" data-quick="SPH">SPH</button>
+                        <button type="button" class="core-quick-chip" data-quick="CYL">CYL</button>
+                        <button type="button" class="core-quick-chip" data-quick="AXIS">AXIS</button>
+                        <button type="button" class="core-quick-chip" data-quick="R">R</button>
+                        <button type="button" class="core-quick-chip" data-quick="L">L</button>
+                        <button type="button" class="core-quick-chip" data-quick="PD">PD</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 小光仔解释结果区 -->
+            <div class="decoder-result" id="decoderCoreResult" hidden>
+                <div class="decoder-result-inner">
+                    <div class="decoder-result-head">
+                        <div class="decoder-result-avatar" aria-hidden="true">
+                            <img src="assets/images/xiaoguangzi-new.png" alt="小光仔" class="decoder-result-xgz">
+                        </div>
+                        <div class="decoder-result-text">
+                            <div class="decoder-result-tag" id="decoderResultTag">小光仔解释结果</div>
+                            <h4 class="decoder-result-title" id="decoderResultTitle">SPH</h4>
+                            <p class="decoder-result-sub" id="decoderResultSub">球镜（近视 / 远视）</p>
+                        </div>
+                    </div>
+                    <div class="decoder-result-body" id="decoderResultBody">
+                        SPH 是球镜度数，可以帮助我们了解近视或远视的大致度数。
+                    </div>
+                </div>
+            </div>
+
+            <!-- 免责声明 -->
+            <div class="decoder-core-disclaimer">
+                ⚠️ <b>免责声明：</b>本工具用于科普和辅助理解验光单，不替代专业验光、诊断或医生建议。
+            </div>
+        </section>
+
+        <!-- ========== 第一区：5 个项目解释卡片（点击 → 解释弹窗） ========== -->
+        <div class="content-card decoder-card decoder-section">
+            <div class="decoder-section-head">
+                <span class="decoder-step-badge">1</span>
+                <h2 class="decoder-section-title">认识天书符号</h2>
+                <p class="decoder-section-sub">👇 点下面任意一张小卡片，看看它到底是什么意思</p>
+            </div>
+
+            <div class="decoder-item-grid" id="decoderItemGrid">
+                <!-- R / L -->
+            <button type="button" class="decoder-item-card card-theme-green" data-item="RL">
+                <span class="decoder-item-icon" aria-hidden="true">👀</span>
+                <span class="decoder-item-code">R &nbsp;/&nbsp; L</span>
+                <span class="decoder-item-name">右眼 / 左眼</span>
+                <span class="decoder-item-hint">点我看看 →</span>
+            </button>
+            <!-- SPH -->
+            <button type="button" class="decoder-item-card card-theme-blue" data-item="SPH">
+                <span class="decoder-item-icon" aria-hidden="true">🔵</span>
+                <span class="decoder-item-code">SPH</span>
+                <span class="decoder-item-name">球镜（近视 / 远视）</span>
+                <span class="decoder-item-hint">点我看看 →</span>
+            </button>
+            <!-- CYL -->
+            <button type="button" class="decoder-item-card card-theme-purple" data-item="CYL">
+                <span class="decoder-item-icon" aria-hidden="true">🌀</span>
+                <span class="decoder-item-code">CYL</span>
+                <span class="decoder-item-name">柱镜（散光）</span>
+                <span class="decoder-item-hint">点我看看 →</span>
+            </button>
+            <!-- AXIS -->
+            <button type="button" class="decoder-item-card card-theme-orange" data-item="AXIS">
+                <span class="decoder-item-icon" aria-hidden="true">🧭</span>
+                <span class="decoder-item-code">AXIS / A</span>
+                <span class="decoder-item-name">轴位（散光方向）</span>
+                <span class="decoder-item-hint">点我看看 →</span>
+            </button>
+            <!-- PD -->
+            <button type="button" class="decoder-item-card card-theme-teal" data-item="PD">
+                <span class="decoder-item-icon" aria-hidden="true">📏</span>
+                <span class="decoder-item-code">PD</span>
+                <span class="decoder-item-name">瞳距（瞳孔距离）</span>
+                <span class="decoder-item-hint">点我看看 →</span>
+            </button>
+            </div>
+        </div>
+
+        <!-- ========== 第二区：模拟验光单（点击数字→含义） ========== -->
+        <div class="content-card decoder-card decoder-section">
+            <div class="decoder-section-head">
+                <span class="decoder-step-badge">2</span>
+                <h2 class="decoder-section-title">点开模拟验光单</h2>
+                <p class="decoder-section-sub">下面是一张"小侦探专用"的模拟验光单 ✨ 点击任意一个数字/字母，小光仔会告诉你它的秘密！</p>
+            </div>
+
+            <div class="decoder-prescription" id="decoderPrescription">
+                <!-- 单据头部 -->
+                <div class="rx-header">
+                    <div class="rx-title">
+                        <span class="rx-title-icon">📋</span>
+                        <span class="rx-title-text">瞳学星球 · 模拟验光单</span>
+                    </div>
+                    <div class="rx-meta">
+                        <span>姓名：小侦探同学</span>
+                        <span>年龄：10 岁</span>
+                        <span>日期：2026-09-01</span>
+                    </div>
+                </div>
+
+                <!-- 单据表格 -->
+                <table class="rx-table">
+                    <thead>
+                        <tr>
+                            <th class="rx-eye">👁️ 眼别</th>
+                            <th class="rx-col">
+                                <button class="rx-code-btn" data-code="SPH" aria-label="SPH 球镜">SPH</button>
+                                <small>球镜</small>
+                            </th>
+                            <th class="rx-col">
+                                <button class="rx-code-btn" data-code="CYL" aria-label="CYL 柱镜">CYL</button>
+                                <small>柱镜</small>
+                            </th>
+                            <th class="rx-col">
+                                <button class="rx-code-btn" data-code="AXIS" aria-label="AXIS 轴位">A</button>
+                                <small>轴位</small>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>
+                                <button class="rx-code-btn rx-eye-btn" data-code="R">R（右眼）</button>
+                            </th>
+                            <td><button class="rx-num" data-cell="r-sph">-2.00</button></td>
+                            <td><button class="rx-num" data-cell="r-cyl">-0.75</button></td>
+                            <td><button class="rx-num" data-cell="r-axis">180°</button></td>
+                        </tr>
+                        <tr>
+                            <th>
+                                <button class="rx-code-btn rx-eye-btn" data-code="L">L（左眼）</button>
+                            </th>
+                            <td><button class="rx-num" data-cell="l-sph">-1.50</button></td>
+                            <td><button class="rx-num" data-cell="l-cyl">-0.50</button></td>
+                            <td><button class="rx-num" data-cell="l-axis">95°</button></td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4" class="rx-foot-row">
+                                <span class="rx-foot-label">
+                                    <button class="rx-code-btn" data-code="PD">PD（瞳距）</button>：
+                                </span>
+                                <span class="rx-foot-value">
+                                    <button class="rx-num rx-num-lg" data-cell="pd">59 mm</button>
+                                </span>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <!-- 数字点击解释框 -->
+            <div class="decoder-cell-tip" id="decoderCellTip" hidden>
+                <button type="button" class="decoder-cell-close" id="decoderCellClose" aria-label="关闭">×</button>
+                <div class="decoder-cell-title">🔎 你点了：<b id="decoderCellName"></b></div>
+                <div class="decoder-cell-body" id="decoderCellBody"></div>
+            </div>
+        </div>
+
+        <!-- ========== 第三区：我是小侦探 小游戏 ========== -->
+        <div class="content-card decoder-card decoder-section">
+            <div class="decoder-section-head">
+                <span class="decoder-step-badge">3</span>
+                <h2 class="decoder-section-title">🕵️ 我是小侦探</h2>
+                <p class="decoder-section-sub">读完了吗？来挑战 3 道简单小题，看看你是不是"解码小能手"！💡</p>
+            </div>
+
+            <div class="detective-wrap" id="detectiveWrap">
+                <!-- 顶部状态 -->
+                <div class="detective-status">
+                    <div class="detective-progress">
+                        第 <b id="detectiveIndex">1</b> / 3 题
+                    </div>
+                    <div class="detective-stars" id="detectiveStars" title="获得的线索星星">
+                        <span class="star">☆</span>
+                        <span class="star">☆</span>
+                        <span class="star">☆</span>
+                    </div>
+                </div>
+
+                <!-- 题目 -->
+                <div class="detective-question" id="detectiveQuestion">题目加载中…</div>
+
+                <!-- 选项 -->
+                <div class="detective-options" id="detectiveOptions">
+                    <!-- JS 动态渲染 -->
+                </div>
+
+                <!-- 反馈 -->
+                <div class="detective-feedback" id="detectiveFeedback" hidden>
+                    <div class="detective-feedback-inner" id="detectiveFeedbackInner"></div>
+                </div>
+
+                <!-- 下一题/查看结果 -->
+                <div class="detective-next-row">
+                    <button type="button" id="detectiveNextBtn" class="btn-purple" disabled>下一题 →</button>
+                </div>
+            </div>
+
+            <!-- 完成页（默认隐藏） -->
+            <div class="detective-result" id="detectiveResult" hidden>
+                <div class="detective-badge">🏅</div>
+                <h3 class="detective-result-title">🎉 挑战完成！</h3>
+                <p class="detective-result-sub" id="detectiveResultSub">你获得了 0 颗"线索星星"</p>
+                <div class="detective-result-stars" id="detectiveResultStars"></div>
+                <p class="detective-result-tip">
+                    你已经能看懂大部分"验光单天书"啦～<br>
+                    下次看到爸爸妈妈手里的验光单，就可以帮他们"解码"咯！
+                </p>
+                <div class="detective-result-btns">
+                    <button type="button" id="detectiveRestartBtn" class="btn-secondary">🔄 再玩一次</button>
+                    <a href="index.html" class="btn-back-home">
+                        <span class="home-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 10.5L12 3l9 7.5"></path>
+                                <path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"></path>
+                            </svg>
+                        </span>
+                        <span class="home-text">返回首页</span>
+                        <span class="home-arrow" aria-hidden="true">›</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== 免责提示 ========== -->
+        <div class="decoder-disclaimer">
+            <div class="decoder-disclaimer-icon" aria-hidden="true">⚠️</div>
+            <div class="decoder-disclaimer-text">
+                <b>温馨提示：</b>验光单需要由专业人员结合实际检查结果进行判断，本工具仅用于科普，不用于诊断或配镜。
+                如果验光数据有疑问，请一定去正规医院眼科🏥 或 眼镜店，请专业的验光师/医生帮你解读哦！
+            </div>
+        </div>
+
+        <!-- ========== 独立返回首页按钮 ========== -->
+        <div class="decoder-bottom-row">
+            <a href="index.html" class="btn-back-home">
+                <span class="home-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 10.5L12 3l9 7.5"></path>
+                        <path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"></path>
+                    </svg>
+                </span>
+                <span class="home-text">返回首页</span>
+                <span class="home-arrow" aria-hidden="true">›</span>
+            </a>
+        </div>
+    </main>
+
+    <!-- ============================================
+         项目解释弹窗（点击5张卡片弹出）
+         ============================================ -->
+    <div class="adv-modal decoder-modal" id="decoderItemModal" hidden role="dialog" aria-modal="true" aria-labelledby="decoderItemTitle" aria-hidden="true">
+        <div class="adv-modal-mask" data-close-modal="1"></div>
+        <div class="adv-modal-box decoder-modal-box">
+            <button type="button" class="adv-modal-close" data-close-modal="1" aria-label="关闭">×</button>
+            <div class="adv-modal-badge" id="decoderItemIcon">🔵</div>
+            <div class="adv-modal-order decoder-modal-order" id="decoderItemOrder">符号解释</div>
+            <h3 class="adv-modal-title" id="decoderItemTitle">SPH</h3>
+            <div class="adv-modal-desc" id="decoderItemDesc"></div>
+            <div class="adv-modal-tip decoder-modal-tip">
+                <div class="adv-modal-tip-label">💡 小光仔提醒你</div>
+                <div id="decoderItemTip"></div>
+            </div>
+            <div class="adv-modal-actions">
+                <button type="button" class="btn-purple" data-close-modal="1">我知道啦 ✓</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         Footer
+         ============================================ -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <img src="assets/images/logo-tongxue.jpg" alt="瞳学星球" class="footer-logo">
+                <div class="footer-text">
+                    <h4>瞳学星球</h4>
+                    <p>守护每个孩子的明亮视界</p>
+                </div>
+            </div>
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h5>探索内容</h5>
+                    <a href="adventure.html">眼球大冒险</a>
+                    <a href="qa.html">护眼问答机</a>
+                    <a href="selftest.html">视界实验室</a>
+                </div>
+                <div class="footer-col">
+                    <h5>趣味挑战</h5>
+                    <a href="hero.html">21天打卡</a>
+                    <a href="#">护眼排行榜</a>
+                    <a href="#">成就徽章</a>
+                </div>
+                <div class="footer-col">
+                    <h5>关于我们</h5>
+                    <a href="#">平台介绍</a>
+                    <a href="#">联系我们</a>
+                    <a href="#">隐私政策</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 瞳学星球 · 专为青少年打造</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js?v=5"></script>
+</body>
+</html>

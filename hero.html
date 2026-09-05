@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>护眼小英雄 · 瞳学星球 | 每日护眼任务打卡</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+    <style>
+    /* ============================================================
+       护眼小英雄 hero.html · 深蓝星空幻想风（与眼球大冒险/视界探索站统一）
+       命名空间 body.theme-orange（不影响其他页面）
+       ============================================================ */
+    body.theme-orange {
+        background: #071936;
+        color: #e8f0ff;
+        font-family: "ZCOOL KuaiLe", "Microsoft YaHei", sans-serif;
+        overflow-x: hidden;
+    }
+    /* ===== 1. 背景层：planet-scene.png + 深蓝遮罩 + 彩色光晕 ===== */
+    body.theme-orange::before {
+        content: ""; position: fixed; inset: 0; z-index: -2;
+        background-image: url("assets/images/planet-scene.png");
+        background-size: cover; background-position: center top; background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+    body.theme-orange::after {
+        content: ""; position: fixed; inset: 0; z-index: -1;
+        background:
+            radial-gradient(900px 420px at 18% -10%, rgba(101,200,255,0.28), rgba(10,36,90,0) 62%),
+            radial-gradient(1100px 520px at 110% 8%, rgba(118,86,214,0.18), rgba(14,30,84,0) 58%),
+            radial-gradient(860px 460px at 115% 110%, rgba(255,213,90,0.14), rgba(14,30,84,0) 58%),
+            radial-gradient(1100px 640px at -12% 110%, rgba(165,232,90,0.10), rgba(4,10,34,0) 60%),
+            linear-gradient(180deg, rgba(7,25,54,0.35), rgba(7,25,54,0.65));
+        pointer-events: none;
+    }
+
+    /* ===== 2. 星空粒子层（远景星 + 近景星 + 星尘） ===== */
+    .hero-stars { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+    .hero-stars::before {
+        content: ""; position: absolute; inset: 0; opacity: .70;
+        background-image:
+            radial-gradient(1.6px 1.6px at 9% 18%, #FFFFFF 50%, transparent 51%),
+            radial-gradient(1.4px 1.4px at 17% 64%, #E6F0FF 50%, transparent 51%),
+            radial-gradient(1.3px 1.3px at 22% 34%, #FFFFFF 50%, transparent 51%),
+            radial-gradient(1.6px 1.6px at 31% 82%, #CFE6FF 50%, transparent 51%),
+            radial-gradient(1.6px 1.6px at 41% 10%, #D4E4FF 50%, transparent 51%),
+            radial-gradient(1.2px 1.2px at 48% 48%, #FFFFFF 50%, transparent 51%),
+            radial-gradient(1.4px 1.4px at 58% 28%, #FFFFFF 50%, transparent 51%),
+            radial-gradient(1.6px 1.6px at 68% 32%, #FFE58A 50%, transparent 51%),
+            radial-gradient(1.5px 1.5px at 78% 68%, #FFFFFF 50%, transparent 51%),
+            radial-gradient(1.3px 1.3px at 88% 42%, #DCE7FF 50%, transparent 51%),
+            radial-gradient(1.8px 1.8px at 92% 82%, #FFFFFF 50%, transparent 51%),
+            radial-gradient(1.2px 1.2px at 6% 90%, #E6F0FF 50%, transparent 51%),
+            radial-gradient(1.4px 1.4px at 35% 20%, #FFFFFF 50%, transparent 51%);
+        animation: hero-twinkle 8s ease-in-out infinite alternate;
+    }
+    .hero-stars::after {
+        content: ""; position: absolute; inset: 0; opacity: .70;
+        background-image:
+            radial-gradient(2.4px 2.4px at 12% 22%, #FFE58A 50%, transparent 51%),
+            radial-gradient(2.2px 2.2px at 30% 78%, #FFFFFF 50%, transparent 51%),
+            radial-gradient(2.8px 2.8px at 70% 30%, #FFE58A 50%, transparent 51%),
+            radial-gradient(2.0px 2.0px at 88% 70%, #FFFFFF 50%, transparent 51%),
+            radial-gradient(2.2px 2.2px at 50% 14%, #FFF1B3 50%, transparent 51%),
+            radial-gradient(2.4px 2.4px at 42% 54%, #FFE58A 50%, transparent 51%),
+            radial-gradient(1.8px 1.8px at 78% 58%, #FFFFFF 50%, transparent 51%),
+            radial-gradient(2.6px 2.6px at 4% 48%, #FFFFFF 50%, transparent 51%),
+            radial-gradient(2.2px 2.2px at 62% 88%, #FFE58A 50%, transparent 51%);
+        background-size: 560px 560px;
+        animation: hero-drift-near 80s linear infinite, hero-twinkle 10s ease-in-out infinite alternate-reverse;
+    }
+    /* HTML 中的 span 星星作为额外闪烁点 */
+    .hero-star { position: absolute; border-radius: 50%; background: #fff; }
+    .hero-star.s1 { width:2px; height:2px; opacity:.7; animation: hero-twinkle 3s ease-in-out infinite; }
+    .hero-star.s2 { width:3px; height:3px; opacity:.5; background:#FFE58A; animation: hero-twinkle 4s ease-in-out infinite 1s; }
+    @keyframes hero-twinkle { 0%,100%{opacity:.28} 50%{opacity:.85} }
+    @keyframes hero-drift-near { from{transform:translate3d(0,0,0)} to{transform:translate3d(-60px,30px,0)} }
+
+    /* ===== 3. 导航栏：半透明深蓝玻璃 ===== */
+    body.theme-orange .navbar {
+        background: rgba(10,25,60,0.55) !important;
+        backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid rgba(120,200,255,0.18) !important;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    }
+    body.theme-orange .nav-link { color: #d6e4ff !important; }
+    body.theme-orange .nav-link:hover { color: #a5e85a !important; transform: translateY(-2px); text-shadow: 0 0 8px rgba(165,232,90,0.5); }
+    body.theme-orange .nav-link.active { color: #a5e85a !important; }
+    body.theme-orange .nav-link.active::after {
+        background: linear-gradient(90deg, #78c943, #a5e85a);
+        box-shadow: 0 0 8px rgba(165,232,90,0.7);
+    }
+    body.theme-orange .logo-title { color: #fff !important; }
+    body.theme-orange .logo-subtitle { color: #9bb8e8 !important; }
+    body.theme-orange .btn-voice {
+        background: rgba(255,255,255,0.1) !important;
+        border: 1px solid rgba(120,200,255,0.3) !important;
+        color: #fff !important;
+    }
+
+    /* ===== 4. Hero 标题区：透明，让星空透出 ===== */
+    body.theme-orange .hero-page-hero {
+        background: transparent !important;
+        border-bottom: 1px solid rgba(120,200,255,0.12);
+    }
+    body.theme-orange .hero-page-hero::before,
+    body.theme-orange .hero-page-hero::after { display: none !important; }
+    body.theme-orange .hero-page-title {
+        font-family: "ZCOOL KuaiLe", "Microsoft YaHei", sans-serif !important;
+        color: #fff !important; font-size: 44px !important;
+        letter-spacing: 2px;
+        text-shadow: 0 0 18px rgba(165,232,90,0.55), 0 0 36px rgba(139,234,53,0.3);
+        animation: hero-title-glow 3.5s ease-in-out infinite;
+    }
+    @keyframes hero-title-glow {
+        0%,100% { text-shadow: 0 0 18px rgba(165,232,90,0.55), 0 0 36px rgba(139,234,53,0.3); }
+        50%      { text-shadow: 0 0 26px rgba(165,232,90,0.75), 0 0 50px rgba(139,234,53,0.45); }
+    }
+    body.theme-orange .hero-page-text p,
+    body.theme-orange .hero-page-subtitle { color: #cfe0ff !important; }
+    body.theme-orange .hero-page-tip {
+        color: #b8d4ff !important;
+        background: rgba(255,255,255,0.08) !important;
+        border: 1px solid rgba(255,255,255,0.15) !important;
+    }
+    /* 小光仔：柔光 + 浮动 */
+    body.theme-orange .hero-guide-img-wrap img {
+        filter: drop-shadow(0 4px 12px rgba(0,0,0,0.45)) drop-shadow(0 0 22px rgba(165,232,90,0.28));
+        animation: hero-xgz-float 4s ease-in-out infinite;
+    }
+    @keyframes hero-xgz-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+    /* 小光仔周围星尘 */
+    body.theme-orange .hero-guide-img-wrap::after {
+        content: "✦  ✧  ✦"; position: absolute; inset: 0; pointer-events: none;
+        color: rgba(255,229,138,0.6); font-size: 12px; letter-spacing: 18px;
+        animation: hero-dust-spin 12s linear infinite; opacity: .7;
+    }
+    @keyframes hero-dust-spin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+    body.theme-orange .hero-guide-bubble {
+        background: rgba(255,255,255,0.12) !important;
+        backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255,255,255,0.25) !important;
+        border-radius: 20px !important;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.18);
+        color: #e8f0ff !important;
+    }
+
+    /* ===== 5. 统计卡 / 任务卡 / 勋章卡：玻璃拟态探索卡 ===== */
+    body.theme-orange .hero-stat-card,
+    body.theme-orange .hero-task-card,
+    body.theme-orange .hero-badge-card,
+    body.theme-orange .hero-section .content-card {
+        background: rgba(255,255,255,0.12) !important;
+        backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255,255,255,0.25) !important;
+        border-radius: 24px !important;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.15) !important;
+        color: #e8f0ff !important;
+        transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+    }
+    body.theme-orange .hero-stat-card:hover,
+    body.theme-orange .hero-task-card:hover,
+    body.theme-orange .hero-badge-card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(165,232,90,0.6) !important;
+        box-shadow: 0 16px 48px rgba(165,232,90,0.22), inset 0 1px 0 rgba(255,255,255,0.22) !important;
+    }
+    body.theme-orange .hero-stat-card .stat-label { color: #9bb8e8 !important; }
+    body.theme-orange .hero-stat-card .stat-value {
+        color: #FFD45A !important;
+        text-shadow: 0 0 12px rgba(255,212,90,0.5);
+        transition: transform .3s ease;
+    }
+    body.theme-orange .stat-points .stat-value { color: #a5e85a !important; text-shadow: 0 0 12px rgba(165,232,90,0.5); }
+    body.theme-orange .stat-points .stat-value.bump { animation: hero-num-bump .5s ease; }
+    @keyframes hero-num-bump { 0%{transform:scale(1)} 50%{transform:scale(1.35);color:#fff} 100%{transform:scale(1)} }
+    /* 进度条：绿色能量条 */
+    body.theme-orange .stat-progress-bar {
+        background: rgba(255,255,255,0.12) !important;
+        border: 1px solid rgba(255,255,255,0.2) !important;
+    }
+    body.theme-orange .stat-progress-fill {
+        background: linear-gradient(90deg, #42b72a, #8bea35) !important;
+        box-shadow: 0 0 10px rgba(139,234,53,0.6);
+        border-radius: 999px;
+    }
+    /* 任务卡内部：编号徽章 + icon + 按钮 */
+    body.theme-orange .task-point-badge {
+        background: linear-gradient(135deg, #8bea35, #42b72a) !important;
+        color: #fff !important;
+        box-shadow: 0 0 10px rgba(139,234,53,0.5);
+    }
+    body.theme-orange .task-icon-wrap {
+        background: rgba(255,255,255,0.12) !important;
+        border: 1px solid rgba(255,255,255,0.22) !important;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
+    }
+    body.theme-orange .hero-task-card h3,
+    body.theme-orange .hero-badge-card h3,
+    body.theme-orange .hero-section h2,
+    body.theme-orange .hero-section-title { color: #fff !important; }
+    body.theme-orange .hero-task-card p,
+    body.theme-orange .hero-badge-card p { color: #b8c8e8 !important; }
+    body.theme-orange .title-helper { color: #8fb0e0 !important; }
+    /* 已完成状态：绿色玻璃调 */
+    body.theme-orange .hero-task-card.done,
+    body.theme-orange .hero-task-card.is-done {
+        border-color: rgba(165,232,90,0.6) !important;
+        background: rgba(165,232,90,0.14) !important;
+        box-shadow: 0 10px 40px rgba(120,201,67,0.2), inset 0 1px 0 rgba(255,255,255,0.2) !important;
+    }
+    body.theme-orange .hero-task-card.done .task-title,
+    body.theme-orange .hero-task-card.is-done .task-title { color: #a5e85a !important; }
+    /* 勋章 */
+    body.theme-orange .badge-medal {
+        background: rgba(255,255,255,0.1) !important;
+        border: 1px solid rgba(255,255,255,0.22) !important;
+    }
+    body.theme-orange .hero-badge-card.is-unlocked .badge-medal {
+        border-color: rgba(255,212,90,0.7) !important;
+        box-shadow: 0 0 18px rgba(255,212,90,0.4);
+    }
+
+    /* ===== 6. 按钮：绿色发光渐变 ===== */
+    body.theme-orange .btn-theme,
+    body.theme-orange .btn-green,
+    body.theme-orange .task-action-btn {
+        background: linear-gradient(135deg, #8bea35, #42b72a) !important;
+        color: #fff !important; font-weight: 700;
+        border-radius: 999px !important; border: none !important;
+        box-shadow: 0 4px 16px rgba(66,183,42,0.4), 0 0 12px rgba(139,234,53,0.3);
+        transition: transform .2s ease, box-shadow .2s ease;
+    }
+    body.theme-orange .btn-theme:hover,
+    body.theme-orange .btn-green:hover,
+    body.theme-orange .task-action-btn:hover {
+        transform: scale(1.04);
+        box-shadow: 0 6px 24px rgba(139,234,53,0.55), 0 0 20px rgba(139,234,53,0.4) !important;
+    }
+    body.theme-orange .btn-purple {
+        background: linear-gradient(135deg, #b88aff, #7651D8) !important;
+        color: #fff !important; font-weight: 700;
+        border-radius: 999px !important; border: none !important;
+    }
+    body.theme-orange .btn-purple:hover {
+        transform: scale(1.04);
+        box-shadow: 0 6px 24px rgba(166,108,255,0.5) !important;
+    }
+    body.theme-orange .btn-secondary {
+        background: rgba(255,255,255,0.1) !important;
+        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255,255,255,0.25) !important;
+        color: #d6e4ff !important;
+        border-radius: 999px !important;
+    }
+    body.theme-orange .btn-secondary:hover {
+        background: rgba(165,232,90,0.18) !important;
+        border-color: rgba(165,232,90,0.5) !important;
+    }
+    body.theme-orange .btn-back-home {
+        background: linear-gradient(135deg, #8bea35, #42b72a) !important;
+        color: #fff !important; border-radius: 999px !important; border: none !important;
+    }
+
+    /* ===== 7. 庆祝层（透明，仅承载彩纸） ===== */
+    body.theme-orange .hero-celebrate-layer { background: transparent !important; }
+
+    /* ===== 8. 模态框：深蓝玻璃 ===== */
+    body.theme-orange .adv-modal-box {
+        background: rgba(11,40,96,0.92) !important;
+        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.2) !important;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.15);
+        color: #e8f0ff !important;
+    }
+    body.theme-orange .adv-modal-title,
+    body.theme-orange .adv-modal-desc { color: #e8f0ff !important; }
+    body.theme-orange .adv-modal-tip {
+        background: rgba(165,232,90,0.1) !important;
+        border: 1px solid rgba(165,232,90,0.3) !important;
+    }
+
+    /* ===== 9. 页脚：玻璃拟态 ===== */
+    body.theme-orange .footer {
+        background: rgba(10,25,60,0.55) !important;
+        backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        border-top: 1px solid rgba(120,200,255,0.18) !important;
+        color: #9bb8e8 !important;
+    }
+    body.theme-orange .footer a { color: #a5e85a !important; }
+    </style>
+</head>
+<body class="subpage theme-orange">
+    <div class="hero-stars" aria-hidden="true">
+        <span class="hero-star s1" style="top:10%;left:15%"></span>
+        <span class="hero-star s2" style="top:20%;left:80%"></span>
+        <span class="hero-star s1" style="top:35%;left:40%"></span>
+        <span class="hero-star s1" style="top:50%;left:25%"></span>
+        <span class="hero-star s2" style="top:65%;left:88%"></span>
+        <span class="hero-star s1" style="top:75%;left:55%"></span>
+        <span class="hero-star s1" style="top:28%;left:92%"></span>
+        <span class="hero-star s2" style="top:88%;left:35%"></span>
+        <span class="hero-star s1" style="top:45%;left:8%"></span>
+        <span class="hero-star s1" style="top:58%;left:62%"></span>
+    </div>
+
+    <!-- ============================================
+         1. 顶部导航栏
+         ============================================ -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="assets/images/logo-tongxue.jpg" alt="瞳学星球 Logo" class="logo-img">
+                <div class="logo-text">
+                    <h1 class="logo-title">瞳学星球</h1>
+                    <p class="logo-subtitle">近视防控科普与矫正指南</p>
+                </div>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="index.html" class="nav-link" data-page="index">首页</a></li>
+                    <li><a href="eyeball-adventure.html" class="nav-link" data-page="eyeball-adventure">眼球大冒险</a></li>
+                    <li><a href="vision-exploration.html" class="nav-link" data-page="vision-exploration">视界探索站</a></li>
+                    <li><a href="decoder.html" class="nav-link" data-page="decoder">天书解码器</a></li>
+                    <li><a href="hero.html" class="nav-link active" data-page="hero">护眼小英雄</a></li>
+                    <li><a href="qa.html" class="nav-link" data-page="qa">护眼问答机</a></li>
+                </ul>
+            </nav>
+            <div class="nav-right">
+                <button class="btn-voice">
+                    <span class="voice-icon">🔊</span>
+                    语音朗读
+                </button>
+                <div class="user-avatar" title="用户头像">
+                    <span class="avatar-emoji">👧</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================
+         2. Banner + 小光仔向导
+         ============================================ -->
+    <section class="hero-page-hero">
+        <div class="hero-page-inner">
+            <div class="hero-page-text">
+                <a href="index.html" class="subpage-back">← 返回首页</a>
+                <h1 class="hero-page-title">🌟 护眼小英雄</h1>
+                <p class="hero-page-subtitle">完成每日护眼任务，累积积分，解锁专属勋章！</p>
+                <div class="hero-page-tip">
+                    💡 小提示：每天坚持完成 5 个任务，你就是真正的护眼小英雄哦！
+                </div>
+            </div>
+            <div class="hero-page-guide">
+                <div class="hero-guide-img-wrap">
+                    <img src="assets/images/xiaoguangzi-new.png" alt="小光仔" class="hero-guide-xgz">
+                </div>
+                <div class="hero-guide-bubble">
+                    嗨！我是小光仔～<br>
+                    今天我们一起来完成<b> 5 个护眼小任务</b>吧！<br>
+                    每完成一个都能获得<b> 10 积分</b>，加油！💪
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         3. 主内容：状态面板 + 任务列表 + 勋章墙
+         ============================================ -->
+    <main class="subpage-container">
+
+        <!-- ---- 顶部状态条：积分 / 进度 / 连续打卡 ---- -->
+        <section class="hero-stats-row">
+            <div class="hero-stat-card stat-points">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-info">
+                    <div class="stat-label">累计积分</div>
+                    <div class="stat-value" id="totalPoints">0</div>
+                </div>
+            </div>
+            <div class="hero-stat-card stat-progress">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-info">
+                    <div class="stat-label">今日进度</div>
+                    <div class="stat-value"><span id="todayDone">0</span> / <span id="todayTotal">5</span></div>
+                </div>
+                <div class="stat-progress-bar">
+                    <div class="stat-progress-fill" id="todayProgressFill" style="width:0%"></div>
+                </div>
+            </div>
+            <div class="hero-stat-card stat-streak">
+                <div class="stat-icon">🔥</div>
+                <div class="stat-info">
+                    <div class="stat-label">连续打卡</div>
+                    <div class="stat-value"><span id="streakDays">0</span> 天</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ---- 今日护眼任务 ---- -->
+        <section class="hero-section">
+            <h2 class="hero-section-title">
+                <span class="title-deco">📋</span>
+                今日护眼任务
+                <span class="title-helper">每完成一个任务可获得 10 积分</span>
+            </h2>
+
+            <div class="hero-tasks-grid" id="tasksGrid">
+                <!-- 任务 1 -->
+                <div class="hero-task-card" data-task-id="outdoor">
+                    <div class="task-card-head">
+                        <div class="task-icon-wrap icon-green">
+                            <span class="task-icon">🌳</span>
+                        </div>
+                        <div class="task-point-badge">+10</div>
+                    </div>
+                    <h3 class="task-title">户外活动 2 小时</h3>
+                    <p class="task-desc">到阳光下奔跑、玩耍，自然光能让眼睛更健康！</p>
+                    <button class="task-action-btn btn-green" data-action="complete">
+                        <span class="btn-text">完成任务</span>
+                        <span class="btn-check">✓ 已完成</span>
+                    </button>
+                </div>
+
+                <!-- 任务 2 -->
+                <div class="hero-task-card" data-task-id="rule202020">
+                    <div class="task-card-head">
+                        <div class="task-icon-wrap icon-blue">
+                            <span class="task-icon">👀</span>
+                        </div>
+                        <div class="task-point-badge">+10</div>
+                    </div>
+                    <h3 class="task-title">遵守 20-20-20 规则</h3>
+                    <p class="task-desc">每用眼 20 分钟，看 20 英尺（约 6 米）外的物体 20 秒。</p>
+                    <button class="task-action-btn btn-blue" data-action="complete">
+                        <span class="btn-text">完成任务</span>
+                        <span class="btn-check">✓ 已完成</span>
+                    </button>
+                </div>
+
+                <!-- 任务 3 -->
+                <div class="hero-task-card" data-task-id="posture">
+                    <div class="task-card-head">
+                        <div class="task-icon-wrap icon-purple">
+                            <span class="task-icon">📖</span>
+                        </div>
+                        <div class="task-point-badge">+10</div>
+                    </div>
+                    <h3 class="task-title">保持正确读写姿势</h3>
+                    <p class="task-desc">记住"一拳一尺一寸"：胸离桌一拳，眼离书一尺，手离笔尖一寸。</p>
+                    <button class="task-action-btn btn-purple" data-action="complete">
+                        <span class="btn-text">完成任务</span>
+                        <span class="btn-check">✓ 已完成</span>
+                    </button>
+                </div>
+
+                <!-- 任务 4 -->
+                <div class="hero-task-card" data-task-id="sleep">
+                    <div class="task-card-head">
+                        <div class="task-icon-wrap icon-teal">
+                            <span class="task-icon">😴</span>
+                        </div>
+                        <div class="task-point-badge">+10</div>
+                    </div>
+                    <h3 class="task-title">保证充足睡眠</h3>
+                    <p class="task-desc">小学生每天睡够 10 小时，初中生 9 小时，让眼睛好好休息～</p>
+                    <button class="task-action-btn btn-teal" data-action="complete">
+                        <span class="btn-text">完成任务</span>
+                        <span class="btn-check">✓ 已完成</span>
+                    </button>
+                </div>
+
+                <!-- 任务 5 -->
+                <div class="hero-task-card" data-task-id="screen">
+                    <div class="task-card-head">
+                        <div class="task-icon-wrap icon-orange">
+                            <span class="task-icon">📱</span>
+                        </div>
+                        <div class="task-point-badge">+10</div>
+                    </div>
+                    <h3 class="task-title">控制电子屏幕时间</h3>
+                    <p class="task-desc">每次看屏幕不超过 20 分钟，每天累计不超过 1 小时哦！</p>
+                    <button class="task-action-btn btn-orange" data-action="complete">
+                        <span class="btn-text">完成任务</span>
+                        <span class="btn-check">✓ 已完成</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ---- 勋章墙 ---- -->
+        <section class="hero-section">
+            <h2 class="hero-section-title">
+                <span class="title-deco">🏆</span>
+                我的护眼勋章
+                <span class="title-helper">完成任务累计积分即可解锁</span>
+            </h2>
+
+            <div class="hero-badges-grid" id="badgesGrid">
+                <!-- 勋章 1：护眼新星 -->
+                <div class="hero-badge-card" data-badge="star" data-points="30">
+                    <div class="badge-medal medal-bronze">
+                        <span class="medal-emoji">⭐</span>
+                    </div>
+                    <h4 class="badge-name">护眼新星</h4>
+                    <p class="badge-cond">累计积分 ≥ 30 解锁</p>
+                    <div class="badge-status">
+                        <span class="status-locked">🔒 未解锁</span>
+                        <span class="status-unlocked">🎉 已获得</span>
+                    </div>
+                </div>
+
+                <!-- 勋章 2：坚持小达人 -->
+                <div class="hero-badge-card" data-badge="persist" data-points="100">
+                    <div class="badge-medal medal-silver">
+                        <span class="medal-emoji">🔥</span>
+                    </div>
+                    <h4 class="badge-name">坚持小达人</h4>
+                    <p class="badge-cond">累计积分 ≥ 100 解锁</p>
+                    <div class="badge-status">
+                        <span class="status-locked">🔒 未解锁</span>
+                        <span class="status-unlocked">🎉 已获得</span>
+                    </div>
+                </div>
+
+                <!-- 勋章 3：护眼英雄 -->
+                <div class="hero-badge-card" data-badge="hero" data-points="210">
+                    <div class="badge-medal medal-gold">
+                        <span class="medal-emoji">🦸</span>
+                    </div>
+                    <h4 class="badge-name">护眼英雄</h4>
+                    <p class="badge-cond">累计积分 ≥ 210 解锁</p>
+                    <div class="badge-status">
+                        <span class="status-locked">🔒 未解锁</span>
+                        <span class="status-unlocked">🎉 已获得</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ---- 底部操作 ---- -->
+        <section class="hero-bottom-row">
+            <button class="btn-theme btn-orange" id="heroBackHome" onclick="location.href='index.html'">
+                🏠 返回首页
+            </button>
+            <button class="btn-theme btn-outline-orange" id="heroResetBtn"
+                    data-toast="🔄 已重置今日任务（仅演示）">
+                🔄 重置今日任务
+            </button>
+        </section>
+
+    </main>
+
+    <!-- ============================================
+         庆祝动画浮层（完成任务时触发）
+         ============================================ -->
+    <div class="hero-celebrate-layer" id="celebrateLayer" aria-hidden="true"></div>
+
+    <!-- ============================================
+         勋章解锁弹窗
+         ============================================ -->
+    <div class="adv-modal hero-badge-modal" id="badgeModal" hidden>
+        <div class="adv-modal-mask" data-close-modal="1"></div>
+        <div class="adv-modal-box badge-modal-box">
+            <button class="adv-modal-close" data-close-modal="1" aria-label="关闭">×</button>
+            <div class="badge-modal-content">
+                <div class="badge-modal-glow"></div>
+                <div class="badge-modal-medal" id="badgeModalMedal">⭐</div>
+                <div class="badge-modal-title">🎊 恭喜解锁勋章！</div>
+                <div class="badge-modal-name" id="badgeModalName">护眼新星</div>
+                <div class="badge-modal-desc" id="badgeModalDesc">你已经迈出了护眼的第一步，加油！</div>
+                <button class="btn-theme btn-orange" data-close-modal="1">我知道啦！</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         Footer
+         ============================================ -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <img src="assets/images/logo-tongxue.jpg" alt="瞳学星球" class="footer-logo">
+                <div class="footer-text">
+                    <h4>瞳学星球</h4>
+                    <p>守护每个孩子的明亮视界</p>
+                </div>
+            </div>
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h5>探索内容</h5>
+                    <a href="adventure.html">眼球大冒险</a>
+                    <a href="qa.html">护眼问答机</a>
+                    <a href="selftest.html">视界实验室</a>
+                </div>
+                <div class="footer-col">
+                    <h5>趣味挑战</h5>
+                    <a href="hero.html">护眼小英雄</a>
+                    <a href="decoder.html">天书解码器</a>
+                    <a href="#">成就徽章</a>
+                </div>
+                <div class="footer-col">
+                    <h5>关于我们</h5>
+                    <a href="#">平台介绍</a>
+                    <a href="#">联系我们</a>
+                    <a href="#">隐私政策</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 瞳学星球 · 专为青少年打造</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js?v=5"></script>
+</body>
+</html>

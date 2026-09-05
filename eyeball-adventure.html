@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>眼球大冒险 · 正在跳转…</title>
+    <!-- 0 秒立即跳转，兼容禁用 JS 的浏览器 -->
+    <meta http-equiv="refresh" content="0; url=adventure.html">
+    <style>
+        html, body { margin: 0; padding: 0; height: 100%; }
+        body {
+            background: #F7FBF8;
+            display: flex; align-items: center; justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+            color: #263238;
+        }
+        .wrap { text-align: center; }
+        .logo {
+            width: 72px; height: 72px; margin: 0 auto 16px;
+            border-radius: 50%;
+            background: transparent;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(79,174,69,.3);
+            animation: bob 2s ease-in-out infinite;
+        }
+        .logo img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        @keyframes bob {
+            0%,100% { transform: translateY(0); }
+            50%     { transform: translateY(-6px); }
+        }
+        .title { font-size: 20px; font-weight: 900; margin: 0 0 6px; color: #4FAE45; }
+        .sub   { font-size: 13px; color: #546E7A; margin: 0; }
+        .link  { margin-top: 14px; display: inline-block; font-size: 12px; color: #5BA3D9; }
+        .link a { color: #5BA3D9; text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="logo"><img src="assets/images/logo-tongxue.jpg" alt="瞳学星球"></div>
+        <p class="title">正在进入眼球大冒险…</p>
+        <p class="sub">小光仔马上带我们出发！🚀</p>
+        <p class="link">如果没有自动跳转，<a href="adventure.html">点这里</a></p>
+    </div>
+    <script>
+        // 立即跳转（保留查询参数和 hash）
+        var rest = window.location.search + window.location.hash;
+        window.location.replace('adventure.html' + rest);
+    </script>
+</body>
+</html>
