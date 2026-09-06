@@ -874,10 +874,21 @@
            ============================================================ */
 
         // ============ AI 智能体配置 ============
-        // 使用 OVHcloud AI Endpoints（免费、无需 API Key、支持 CORS）
-        // 小光仔人设：亲切、有趣、适合 6-15 岁学生
-        var AI_ENDPOINT = 'https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/chat/completions';
-        var AI_MODELS = ['Qwen3-32B', 'gpt-oss-20b', 'Mistral-Small-3.2-24B-Instruct-2506', 'Qwen3.5-9B'];
+        // 多 API 备选，确保免费可用
+        var AI_PROVIDERS = [
+            {
+                name: 'FreeAPI',
+                endpoint: 'https://openai.good.hidns.vip/v1/chat/completions',
+                key: 'https://github.com/smanx/free-api',
+                models: ['moonshotai/kimi-k3', 'openai/gpt-oss-20b']
+            },
+            {
+                name: 'OVHcloud',
+                endpoint: 'https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/chat/completions',
+                key: '',
+                models: ['Qwen3-32B', 'gpt-oss-20b']
+            }
+        ];
         var SYSTEM_PROMPT = '你是「小光仔」，一个亲切可爱、活泼有趣的护眼AI助手，专门为6到15岁的小朋友解答关于眼睛、视力和护眼的问题。' +
             '你的语气要像好朋友一样热情，回答要简短易懂，千万不要用医学专业长篇大论。' +
             '可以适当使用可爱的emoji增加趣味性。每次回答先热情回应小朋友，再用简单通俗的语言解释，最后可以给一个小小的护眼小建议。';
@@ -1022,50 +1033,60 @@
             $sendBtn.style.cursor = on ? 'not-allowed' : 'pointer';
         }
 
-        /* ---- 3. 问答：OVHcloud免费AI（无需Key）→ 本地知识库兜底 ---- */
+        /* ---- 3. 问答：多API备选（免费无需注册）→ 本地知识库兜底 ---- */
         async function callAI(userMessage) {
-            // ① 优先使用 OVHcloud 免费 AI（无需 Key，支持 CORS，任何人可直接用）
-            for (var i = 0; i < AI_MODELS.length; i++) {
-                try {
-                    var response = await fetch(AI_ENDPOINT, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            model: AI_MODELS[i],
-                            messages: [
-                                { role: 'system', content: SYSTEM_PROMPT },
-                                { role: 'user', content: userMessage }
-                            ]
-                        })
-                    });
+            for (var p = 0; p < AI_PROVIDERS.length; p++) {
+                var provider = AI_PROVIDERS[p];
+                for (var i = 0; i < provider.models.length; i++) {
+                    try {
+                        var controller = new AbortController();
+                        var timeoutId = setTimeout(function() { controller.abort(); }, 45000);
 
-                    if (!response.ok) {
-                        if (i < AI_MODELS.length - 1) continue;
-                        throw new Error('HTTP ' + response.status);
+                        var headers = { 'Content-Type': 'application/json' };
+                        if (provider.key) headers['Authorization'] = 'Bearer ' + provider.key;
+
+                        var response = await fetch(provider.endpoint, {
+                            method: 'POST',
+                            headers: headers,
+                            body: JSON.stringify({
+                                model: provider.models[i],
+                                messages: [
+                                    { role: 'system', content: SYSTEM_PROMPT },
+                                    { role: 'user', content: userMessage }
+                                ]
+                            }),
+                            signal: controller.signal
+                        });
+                        clearTimeout(timeoutId);
+
+                        if (!response.ok) {
+                            if (i < provider.models.length - 1) continue;
+                            throw new Error('HTTP ' + response.status);
+                        }
+
+                        var data = await response.json();
+                        var reply = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+                        if (!reply) {
+                            if (i < provider.models.length - 1) continue;
+                            throw new Error('返回内容为空');
+                        }
+
+                        // 去除模型思考过程（<think>...</think>），只保留最终回答
+                        reply = reply.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+                        if (!reply && i < provider.models.length - 1) continue;
+
+                        return String(reply).replace(/\n/g, '<br>');
+                    } catch (err) {
+                        console.warn(provider.name + ' 模型 ' + provider.models[i] + ' 调用失败:', err.message);
                     }
-
-                    var data = await response.json();
-                    var reply = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
-                    if (!reply) {
-                        if (i < AI_MODELS.length - 1) continue;
-                        throw new Error('返回内容为空');
-                    }
-
-                    // 去除模型的思考过程（<think>...</think>），只保留最终回答
-                    reply = reply.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
-                    if (!reply && i < AI_MODELS.length - 1) continue;
-
-                    return String(reply).replace(/\n/g, '<br>');
-                } catch (err) {
-                    console.warn('模型 ' + AI_MODELS[i] + ' 调用失败:', err);
                 }
             }
 
-            // ② 所有 AI 都失败，回退到本地知识库
+            // 所有 AI 都失败，回退到本地知识库
             var localAnswer = matchKnowledge(userMessage);
             if (localAnswer) return localAnswer;
 
-            // ③ 最终兜底：友好回复
+            // 最终兜底：友好回复
             return getFriendlyReply(userMessage);
         }
 
