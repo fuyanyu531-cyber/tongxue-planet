@@ -111,22 +111,76 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     // ============================================
-    // 2. 语音朗读按钮：简单点击反馈 + 模拟提示
+    // 2. 语音朗读功能（Web Speech API）
     // ============================================
-    var voiceBtn = document.querySelector('.btn-voice');
+    var isSpeaking = false;
+    var currentUtterance = null;
 
+    // 朗读文本
+    function speakText(text) {
+        if (!('speechSynthesis' in window)) {
+            showToast('😅 你的浏览器不支持语音朗读');
+            return;
+        }
+        // 停止当前朗读
+        window.speechSynthesis.cancel();
+
+        var utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'zh-CN';
+        utterance.rate = 1.0;
+        utterance.pitch = 1.1;
+        utterance.volume = 1.0;
+
+        // 优先选择中文语音
+        var voices = window.speechSynthesis.getVoices();
+        var zhVoice = voices.find(function(v) {
+            return v.lang.indexOf('zh') >= 0;
+        });
+        if (zhVoice) utterance.voice = zhVoice;
+
+        utterance.onend = function() { isSpeaking = false; };
+        utterance.onerror = function() { isSpeaking = false; };
+
+        currentUtterance = utterance;
+        isSpeaking = true;
+        window.speechSynthesis.speak(utterance);
+    }
+
+    // 停止朗读
+    function stopSpeaking() {
+        window.speechSynthesis.cancel();
+        isSpeaking = false;
+    }
+
+    // 朗读导航栏按钮：朗读页面主要内容
+    var voiceBtn = document.querySelector('.btn-voice');
     if (voiceBtn) {
         voiceBtn.addEventListener('click', function () {
-            // 按钮轻微震动/放大反馈
             this.style.transform = 'scale(0.95)';
-            setTimeout(function () {
-                voiceBtn.style.transform = '';
-            }, 150);
+            var self = this;
+            setTimeout(function () { self.style.transform = ''; }, 150);
 
-            // 弹出友好提示（实际功能后续开发）
-            showToast('🔊 语音朗读功能即将上线～');
+            if (isSpeaking) {
+                stopSpeaking();
+                showToast('⏹ 已停止朗读');
+                return;
+            }
+
+            // 读取页面主要文字内容
+            var mainContent = document.querySelector('main') || document.querySelector('.page-content') || document.body;
+            var text = mainContent.innerText.replace(/\s+/g, ' ').trim().slice(0, 500);
+            if (text) {
+                speakText(text);
+                showToast('🔊 开始朗读...');
+            } else {
+                showToast('没有可朗读的内容');
+            }
         });
     }
+
+    // 暴露给全局，供各页面调用
+    window.speakText = speakText;
+    window.stopSpeaking = stopSpeaking;
 
 
     // ============================================
