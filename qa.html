@@ -615,6 +615,8 @@
         body.page-qa .chat-main { width: 100%; height: 500px; }
     }
     </style>
+    <!-- Puter.js 免费 AI SDK（无需 API Key，开箱即用） -->
+    <script src="https://js.puter.com/v2/"></script>
 </head>
 <body class="page-qa">
 
@@ -1176,16 +1178,34 @@
             $sendBtn.style.cursor = on ? 'not-allowed' : 'pointer';
         }
 
-        /* ---- 3. 问答：优先免费AI（Pollinations），备选OpenRouter，兜底本地知识库 ---- */
+        /* ---- 3. 问答：优先免费AI（Puter.js），备选Pollinations，兜底本地知识库 ---- */
         async function callAI(userMessage) {
-            // ① 优先使用免费 AI（Pollinations.ai，无需 Key，开箱即用）
+            // ① 优先使用 Puter.js 免费 AI（无需 Key，浏览器端直接调用）
+            try {
+                if (window.puter && puter.ai) {
+                    var result = await puter.ai.chat([
+                        { role: 'system', content: SYSTEM_PROMPT },
+                        { role: 'user', content: userMessage }
+                    ]);
+                    if (result && result.message && result.message.content) {
+                        return String(result.message.content).replace(/\n/g, '<br>');
+                    }
+                    if (typeof result === 'string' && result.trim()) {
+                        return result.replace(/\n/g, '<br>');
+                    }
+                }
+            } catch (e) {
+                console.warn('Puter AI 调用失败:', e);
+            }
+
+            // ② 备选：Pollinations.ai 免费文本 API
             try {
                 var prompt = SYSTEM_PROMPT + '\n\n用户问题：' + userMessage;
                 var url = 'https://text.pollinations.ai/' + encodeURIComponent(prompt);
                 var resp = await fetch(url, { method: 'GET' });
                 if (resp.ok) {
                     var text = await resp.text();
-                    if (text && text.trim()) {
+                    if (text && text.trim() && !text.includes('402') && !text.includes('error')) {
                         return String(text).replace(/\n/g, '<br>');
                     }
                 }
@@ -1193,7 +1213,7 @@
                 console.warn('Pollinations AI 调用失败:', e);
             }
 
-            // ② 如果用户配置了 OpenRouter Key，尝试使用
+            // ③ 如果用户配置了 OpenRouter Key，尝试使用
             var userKey = getUserApiKey();
             if (userKey) {
                 var models = [AI_CONFIG.model].concat(AI_CONFIG.fallbackModels || []);
@@ -1234,11 +1254,11 @@
                 }
             }
 
-            // ③ 所有 AI 都失败，回退到本地知识库
+            // ④ 所有 AI 都失败，回退到本地知识库
             var localAnswer = matchKnowledge(userMessage);
             if (localAnswer) return localAnswer;
 
-            // ④ 最终兜底：友好回复
+            // ⑤ 最终兜底：友好回复
             return getFriendlyReply(userMessage);
         }
 
