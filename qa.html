@@ -416,6 +416,30 @@
         border-top-right-radius: 6px;
         box-shadow: 0 2px 10px rgba(66,183,42,0.3);
     }
+    /* 朗读按钮 */
+    body.page-qa .msg-speak-btn {
+        margin-left: 8px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(165,232,90,0.15);
+        font-size: 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        align-self: flex-end;
+        transition: all .2s ease;
+    }
+    body.page-qa .msg-speak-btn:hover {
+        background: rgba(165,232,90,0.35);
+        transform: scale(1.15);
+    }
+    body.page-qa .msg-bot {
+        align-items: flex-start;
+    }
     /* 思考中三点 */
     body.page-qa .thinking { display: inline-flex; gap: 5px; align-items: center; padding: 4px 0; }
     body.page-qa .thinking span {
@@ -630,6 +654,7 @@
                             你好呀！我是小光仔～<br>
                             有什么护眼问题都可以问我哦！
                         </div>
+                        <button class="msg-speak-btn" title="朗读这条消息" onclick="window.speakText &amp;&amp; window.speakText(this.parentElement.querySelector('.bubble').innerText)">🔊</button>
                     </div>
                 </div>
 
@@ -991,6 +1016,25 @@
             b.innerHTML = text;
             wrap.appendChild(av);
             wrap.appendChild(b);
+
+            // AI 回复添加朗读按钮
+            if (who === 'bot') {
+                var speakBtn = document.createElement('button');
+                speakBtn.className = 'msg-speak-btn';
+                speakBtn.innerHTML = '🔊';
+                speakBtn.title = '朗读这条消息';
+                speakBtn.addEventListener('click', function() {
+                    // 去除 HTML 标签后朗读
+                    var plainText = b.innerText;
+                    if (window.speakText) {
+                        window.speakText(plainText);
+                    } else {
+                        alert('语音功能加载中，请刷新页面重试');
+                    }
+                });
+                wrap.appendChild(speakBtn);
+            }
+
             $msgBox.appendChild(wrap);
             scrollToBottom();
             return wrap;
