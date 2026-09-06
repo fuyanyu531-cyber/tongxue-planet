@@ -535,8 +535,6 @@
         body.page-qa .chat-main { width: 100%; height: 500px; }
     }
     </style>
-    <!-- Puter.js 免费 AI SDK（无需 API Key，开箱即用） -->
-    <script src="https://js.puter.com/v2/"></script>
 </head>
 <body class="page-qa">
 
@@ -876,8 +874,10 @@
            ============================================================ */
 
         // ============ AI 智能体配置 ============
-        // 使用 Puter.js 免费 AI（无需 API Key，浏览器端直接调用）
+        // 使用 OVHcloud AI Endpoints（免费、无需 API Key、支持 CORS）
         // 小光仔人设：亲切、有趣、适合 6-15 岁学生
+        var AI_ENDPOINT = 'https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/chat/completions';
+        var AI_MODELS = ['Qwen3-32B', 'gpt-oss-20b', 'Mistral-Small-3.2-24B-Instruct-2506', 'Qwen3.5-9B'];
         var SYSTEM_PROMPT = '你是「小光仔」，一个亲切可爱、活泼有趣的护眼AI助手，专门为6到15岁的小朋友解答关于眼睛、视力和护眼的问题。' +
             '你的语气要像好朋友一样热情，回答要简短易懂，千万不要用医学专业长篇大论。' +
             '可以适当使用可爱的emoji增加趣味性。每次回答先热情回应小朋友，再用简单通俗的语言解释，最后可以给一个小小的护眼小建议。';
@@ -1022,46 +1022,50 @@
             $sendBtn.style.cursor = on ? 'not-allowed' : 'pointer';
         }
 
-        /* ---- 3. 问答：Puter.js 免费AI → Pollinations备选 → 本地知识库兜底 ---- */
+        /* ---- 3. 问答：OVHcloud免费AI（无需Key）→ 本地知识库兜底 ---- */
         async function callAI(userMessage) {
-            // ① 优先使用 Puter.js 免费 AI（无需 Key，浏览器端直接调用）
-            try {
-                if (window.puter && puter.ai) {
-                    var result = await puter.ai.chat([
-                        { role: 'system', content: SYSTEM_PROMPT },
-                        { role: 'user', content: userMessage }
-                    ]);
-                    if (result && result.message && result.message.content) {
-                        return String(result.message.content).replace(/\n/g, '<br>');
+            // ① 优先使用 OVHcloud 免费 AI（无需 Key，支持 CORS，任何人可直接用）
+            for (var i = 0; i < AI_MODELS.length; i++) {
+                try {
+                    var response = await fetch(AI_ENDPOINT, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            model: AI_MODELS[i],
+                            messages: [
+                                { role: 'system', content: SYSTEM_PROMPT },
+                                { role: 'user', content: userMessage }
+                            ]
+                        })
+                    });
+
+                    if (!response.ok) {
+                        if (i < AI_MODELS.length - 1) continue;
+                        throw new Error('HTTP ' + response.status);
                     }
-                    if (typeof result === 'string' && result.trim()) {
-                        return result.replace(/\n/g, '<br>');
+
+                    var data = await response.json();
+                    var reply = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+                    if (!reply) {
+                        if (i < AI_MODELS.length - 1) continue;
+                        throw new Error('返回内容为空');
                     }
+
+                    // 去除模型的思考过程（<think>...</think>），只保留最终回答
+                    reply = reply.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+                    if (!reply && i < AI_MODELS.length - 1) continue;
+
+                    return String(reply).replace(/\n/g, '<br>');
+                } catch (err) {
+                    console.warn('模型 ' + AI_MODELS[i] + ' 调用失败:', err);
                 }
-            } catch (e) {
-                console.warn('Puter AI 调用失败:', e);
             }
 
-            // ② 备选：Pollinations.ai 免费文本 API
-            try {
-                var prompt = SYSTEM_PROMPT + '\n\n用户问题：' + userMessage;
-                var url = 'https://text.pollinations.ai/' + encodeURIComponent(prompt);
-                var resp = await fetch(url, { method: 'GET' });
-                if (resp.ok) {
-                    var text = await resp.text();
-                    if (text && text.trim() && !text.includes('402') && !text.includes('error')) {
-                        return String(text).replace(/\n/g, '<br>');
-                    }
-                }
-            } catch (e) {
-                console.warn('Pollinations AI 调用失败:', e);
-            }
-
-            // ③ 所有 AI 都失败，回退到本地知识库
+            // ② 所有 AI 都失败，回退到本地知识库
             var localAnswer = matchKnowledge(userMessage);
             if (localAnswer) return localAnswer;
 
-            // ④ 最终兜底：友好回复
+            // ③ 最终兜底：友好回复
             return getFriendlyReply(userMessage);
         }
 
