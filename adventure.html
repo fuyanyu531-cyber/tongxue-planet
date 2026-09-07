@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,22 +28,43 @@
     body.page-adventure .adv3-sky {
         position: fixed; inset: 0; z-index: -1; overflow: hidden;
     }
+    /* 梦幻宇宙冒险背景 · 深蓝宇宙 + 蓝紫星云 + 柔和光晕（儿童友好卡通宇宙）
+       · 不再使用 planet-scene.png 草地房屋道路图
+       · 纯 CSS 多层渐变 + 星云 + 光晕，与上方星空层叠加形成纵深 */
     body.page-adventure .adv3-sky .adv3-bg-layer {
         position: absolute; inset: 0;
-        background-image: url("assets/images/planet-scene.png") !important;
-        background-size: cover !important;
-        background-position: center top !important;
-        background-repeat: no-repeat !important;
-        background-attachment: fixed !important;
+        background-color: #050B1F;
+        background-image:
+            /* L1 深空主底色：从顶部深蓝到中部稍亮的蓝紫，再回到底部深空 */
+            linear-gradient(180deg, #050B1F 0%, #0A1A3A 35%, #0D2452 55%, #0A1A3A 75%, #050B1F 100%),
+            /* L2 大块蓝紫星云（左上 + 右中 + 左下） */
+            radial-gradient(ellipse 70% 50% at 15% 20%, rgba(118, 86, 214, 0.32) 0%, rgba(118, 86, 214, 0) 60%),
+            radial-gradient(ellipse 65% 45% at 85% 55%, rgba(60, 110, 220, 0.28) 0%, rgba(60, 110, 220, 0) 65%),
+            radial-gradient(ellipse 60% 40% at 30% 90%, rgba(90, 70, 200, 0.22) 0%, rgba(90, 70, 200, 0) 60%),
+            /* L3 柔和空间光晕（金色 + 青绿点缀，儿童友好） */
+            radial-gradient(ellipse 50% 35% at 75% 15%, rgba(255, 213, 90, 0.14) 0%, rgba(255, 213, 90, 0) 70%),
+            radial-gradient(ellipse 45% 30% at 20% 70%, rgba(80, 200, 180, 0.12) 0%, rgba(80, 200, 180, 0) 70%),
+            /* L4 远处微弱星云带（横向贯穿） */
+            linear-gradient(110deg, transparent 30%, rgba(100, 80, 200, 0.10) 45%, rgba(140, 100, 220, 0.14) 50%, rgba(100, 80, 200, 0.10) 55%, transparent 70%);
+        background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 200% 100%;
+        background-position: center, center, center, center, center, center, 0% 50%;
+        background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat-x;
+        background-attachment: fixed;
+        animation: adv3-cosmos-drift 120s linear infinite;
     }
+    @keyframes adv3-cosmos-drift {
+        0%   { background-position: center, center, center, center, center, center, 0% 50%; }
+        100% { background-position: center, center, center, center, center, center, 200% 50%; }
+    }
+    /* 遮罩层：保留柔和暗化，让上方文字/卡片可读 */
     body.page-adventure .adv3-sky .adv3-bg-overlay {
         position: absolute; inset: 0;
         background:
-            radial-gradient(900px 420px at 18% -10%, rgba(101,200,255,0.30), rgba(10,36,90,0) 62%),
-            radial-gradient(1100px 520px at 110% 8%, rgba(118,86,214,0.20), rgba(14,30,84,0) 58%),
-            radial-gradient(860px 460px at 115% 110%, rgba(255,213,90,0.16), rgba(14,30,84,0) 58%),
-            radial-gradient(1100px 640px at -12% 110%, rgba(120,201,67,0.10), rgba(4,10,34,0) 60%),
-            linear-gradient(180deg, rgba(4,10,34,0.22), rgba(4,10,34,0.60));
+            radial-gradient(900px 420px at 18% -10%, rgba(101,200,255,0.18), rgba(10,36,90,0) 62%),
+            radial-gradient(1100px 520px at 110% 8%, rgba(118,86,214,0.14), rgba(14,30,84,0) 58%),
+            radial-gradient(860px 460px at 115% 110%, rgba(255,213,90,0.10), rgba(14,30,84,0) 58%),
+            radial-gradient(1100px 640px at -12% 110%, rgba(120,201,67,0.08), rgba(4,10,34,0) 60%),
+            linear-gradient(180deg, rgba(4,10,34,0.30), rgba(4,10,34,0.55));
     }
     /* --- 远景星 (远) · 冷白色 · 慢闪烁 · 不动 --- */
     body.page-adventure .adv3-sky .adv3-stars {
@@ -187,592 +208,496 @@
     body.page-adventure main > section + section { margin-top: 40px; }
 
     /* ============================================================
-       4. Hero 冒险主视觉（左48%文案+节点；右52%主视觉"小光仔+飞船+眼球星球"）
-          · 视觉中心在右侧组合，不是标题
-          · z-index 严格：装饰 <=2  小光仔 = 3  文字 = 4  交互按钮 = 5
+       4. Hero 第一幕 · 宇宙发现眼睛星球（沉浸式镜头推进动画）
+          · 命名空间 body.page-adventure .adv3-hero / .adv3-stage / .adv3-camera / .adv3-act1-*
+          · 0~12s 动画：远景→眼睛星球出现→镜头靠近→飞船飞入→停留
+          · z-index 严格：宇宙底色0 星云1 远星2 中星3 近星4 流星4 星尘5 星球6 飞船7 文字8 提示9
        ============================================================ */
     body.page-adventure .adv3-hero {
         position: relative;
-        min-height: 520px; height: clamp(520px, 58vh, 600px);
-        border-radius: 28px;
+        width: 100%;
+        height: 100vh;
+        min-height: 560px;
+        max-height: 920px;
+        border-radius: 0;
         overflow: hidden;
-        padding: 36px 40px 32px 44px;
-        border: 1px solid rgba(150, 200, 255, 0.24);
-        background:
-            radial-gradient(600px 320px at 0% 0%, rgba(101,200,255,0.18), rgba(101,200,255,0) 60%),
-            radial-gradient(700px 460px at 110% 20%, rgba(118,86,214,0.20), rgba(118,86,214,0) 60%),
-            radial-gradient(700px 460px at 100% 110%, rgba(255,213,90,0.16), rgba(255,213,90,0) 62%),
-            linear-gradient(135deg, rgba(10,38,86,0.82), rgba(6,24,61,0.66));
-        backdrop-filter: blur(10px) saturate(118%);
-        -webkit-backdrop-filter: blur(10px) saturate(118%);
-        box-shadow:
-            inset 0 1px 0 rgba(255,255,255,0.06),
-            inset 0 -1px 0 rgba(0,0,0,0.22),
-            0 0 0 1px rgba(255,255,255,0.03) inset,
-            0 24px 64px rgba(0,0,0,.38),
-            0 0 48px rgba(101,200,255,0.08);
+        padding: 0;
+        border: none;
+        background: #050B1F;
+        display: block;
     }
     body.page-adventure .adv3-hero::after {
-        /* 顶部极薄金色电影光边 */
-        content:""; position:absolute; left:14px; right:14px; top:0; height:1px;
-        background: linear-gradient(90deg, transparent 0%, rgba(101,200,255,0.45) 20%, rgba(255,255,255,0.55) 50%, rgba(255,213,90,0.45) 80%, transparent 100%);
-        opacity: .6; z-index: 2; pointer-events:none; mix-blend-mode: screen;
+        content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 120px;
+        background: linear-gradient(180deg, transparent 0%, rgba(5,11,31,0.85) 100%);
+        z-index: 9; pointer-events: none;
     }
-    /* Hero 内部星尘层（局部，不影响阅读） · z=1（装饰层） */
-    body.page-adventure .adv3-hero .adv3-hero-dust,
-    body.page-adventure .adv3-hero .adv3-hero-stars-a,
-    body.page-adventure .adv3-hero .adv3-hero-stars-b {
-        position:absolute; inset:0; z-index:1; pointer-events:none;
+
+    /* ---------- 沉浸式舞台 ---------- */
+    body.page-adventure .adv3-stage {
+        position: absolute; inset: 0;
+        overflow: hidden;
+        perspective: 1200px;
     }
-    body.page-adventure .adv3-hero .adv3-hero-dust {
-        opacity: .45; mix-blend-mode: screen;
+
+    /* ---------- 镜头层：模拟相机推进 0~10s ---------- */
+    body.page-adventure .adv3-camera {
+        position: absolute; inset: 0;
+        transform-origin: 60% 50%;
+        animation: adv3-camera-dolly 12s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+        will-change: transform;
+    }
+    @keyframes adv3-camera-dolly {
+        0%   { transform: scale(1) translate3d(0, 0, 0); }
+        25%  { transform: scale(1.15) translate3d(-30px, -10px, 0); }
+        45%  { transform: scale(1.35) translate3d(-60px, -20px, 0); }
+        70%  { transform: scale(1.45) translate3d(-70px, -22px, 0); }
+        100% { transform: scale(1.5) translate3d(-75px, -24px, 0); }
+    }
+
+    /* ---------- L2 深空底色 ---------- */
+    body.page-adventure .adv3-space-bg {
+        position: absolute; inset: 0; z-index: 0;
         background:
-            radial-gradient(1px 1px at 12% 30%, rgba(255,255,255,0.9), transparent 60%),
-            radial-gradient(1px 1px at 22% 60%, rgba(255,245,200,0.9), transparent 60%),
-            radial-gradient(1px 1px at 35% 24%, rgba(255,255,255,0.8), transparent 60%),
-            radial-gradient(1px 1px at 60% 80%, rgba(200,230,255,0.9), transparent 60%),
-            radial-gradient(1px 1px at 75% 30%, rgba(255,255,255,0.8), transparent 60%),
-            radial-gradient(1px 1px at 88% 65%, rgba(255,240,200,0.9), transparent 60%);
-        background-size: 420px 420px;
-        animation: adv3-dust 120s linear infinite;
+            radial-gradient(ellipse 80% 60% at 50% 50%, rgba(20,50,120,0.5), rgba(5,11,31,0) 70%),
+            radial-gradient(ellipse 60% 50% at 80% 30%, rgba(40,30,100,0.35), rgba(5,11,31,0) 65%),
+            radial-gradient(ellipse 60% 50% at 20% 70%, rgba(10,80,80,0.25), rgba(5,11,31,0) 65%),
+            linear-gradient(180deg, #050B1F 0%, #0A1A3A 40%, #0D2452 70%, #050B1F 100%);
     }
-    body.page-adventure .adv3-hero .adv3-hero-stars-a {
-        background:
-            radial-gradient(2px 2px at 10% 20%, #FFFFFF 50%, transparent 51%),
-            radial-gradient(2px 2px at 40% 70%, #FFE58A 50%, transparent 51%),
-            radial-gradient(2px 2px at 70% 20%, #FFFFFF 50%, transparent 51%);
-        opacity: .6; animation: adv3-twinkle 6s ease-in-out infinite alternate;
+
+    /* ---------- L2 星云层（3 块缓慢漂移） ---------- */
+    body.page-adventure .adv3-nebula {
+        position: absolute; z-index: 1;
+        border-radius: 50%; filter: blur(40px); mix-blend-mode: screen;
+        pointer-events: none;
     }
-    body.page-adventure .adv3-hero .adv3-hero-stars-b {
-        background:
-            radial-gradient(1.5px 1.5px at 24% 76%, #FFE58A 50%, transparent 51%),
-            radial-gradient(1.5px 1.5px at 52% 18%, #FFFFFF 50%, transparent 51%),
-            radial-gradient(1.5px 1.5px at 90% 40%, #FFFFFF 50%, transparent 51%);
-        opacity: .55; animation: adv3-twinkle 10s ease-in-out infinite alternate-reverse;
+    body.page-adventure .adv3-nebula-purple {
+        left: 10%; top: 15%; width: 500px; height: 380px;
+        background: radial-gradient(closest-side, rgba(118,86,214,0.30), rgba(118,86,214,0) 70%);
+        animation: adv3-neb-drift-a 24s ease-in-out infinite alternate;
     }
-    /* 左：文案区 — z-index 4（文字在最上层） */
-    body.page-adventure .adv3-hero-copy {
-        position: relative; z-index: 4;
-        width: 44%;
-        min-width: 42%;
-        display: flex; flex-direction: column; justify-content: center; height: 100%;
+    body.page-adventure .adv3-nebula-blue {
+        right: 5%; top: 40%; width: 600px; height: 400px;
+        background: radial-gradient(closest-side, rgba(60,140,255,0.22), rgba(60,140,255,0) 70%);
+        animation: adv3-neb-drift-b 30s ease-in-out infinite alternate;
+    }
+    body.page-adventure .adv3-nebula-green {
+        left: 35%; bottom: 5%; width: 450px; height: 300px;
+        background: radial-gradient(closest-side, rgba(80,200,120,0.18), rgba(80,200,120,0) 70%);
+        animation: adv3-neb-drift-c 28s ease-in-out infinite alternate;
+    }
+    @keyframes adv3-neb-drift-a {
+        from { transform: translate3d(0,0,0) scale(1); opacity: 0.7; }
+        to   { transform: translate3d(40px,30px,0) scale(1.12); opacity: 1; }
+    }
+    @keyframes adv3-neb-drift-b {
+        from { transform: translate3d(0,0,0) scale(1.05); opacity: 0.8; }
+        to   { transform: translate3d(-30px,-20px,0) scale(1); opacity: 1; }
+    }
+    @keyframes adv3-neb-drift-c {
+        from { transform: translate3d(0,0,0) scale(1); opacity: 0.6; }
+        to   { transform: translate3d(20px,-15px,0) scale(1.1); opacity: 0.9; }
+    }
+
+    /* ---------- L3 三层星星（远/中/近） ---------- */
+    body.page-adventure .adv3-star-field {
+        position: absolute; inset: 0; pointer-events: none;
+    }
+    body.page-adventure .adv3-star-far { z-index: 2; }
+    body.page-adventure .adv3-star-mid { z-index: 3; }
+    body.page-adventure .adv3-star-near { z-index: 4; }
+
+    /* 远景星星：JS 动态生成小点，慢闪 */
+    body.page-adventure .adv3-star-far .adv3-sfar {
+        position: absolute; width: 1.5px; height: 1.5px; border-radius: 50%;
+        background: rgba(255,255,255,0.6);
+        animation: adv3-twinkle-far 5s ease-in-out infinite;
+    }
+    @keyframes adv3-twinkle-far {
+        0%, 100% { opacity: 0.3; }
+        50%      { opacity: 0.8; }
+    }
+    /* 中景星星：稍大，中速闪烁+轻微漂移 */
+    body.page-adventure .adv3-star-mid .adv3-smid {
+        position: absolute; width: 2.5px; height: 2.5px; border-radius: 50%;
+        background: rgba(255,255,255,0.85);
+        box-shadow: 0 0 4px rgba(180,220,255,0.5);
+        animation: adv3-twinkle-mid 4s ease-in-out infinite, adv3-star-drift 60s linear infinite;
+    }
+    @keyframes adv3-twinkle-mid {
+        0%, 100% { opacity: 0.45; transform: scale(0.9); }
+        50%      { opacity: 1; transform: scale(1.1); }
+    }
+    @keyframes adv3-star-drift {
+        from { transform: translate3d(0,0,0); }
+        to   { transform: translate3d(15px, -10px, 0); }
+    }
+    /* 近景大星：少、亮、缓慢闪烁 */
+    body.page-adventure .adv3-star-near .adv3-snear {
+        position: absolute; width: 3px; height: 3px; border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 0 6px rgba(255,255,255,0.9), 0 0 12px rgba(120,200,255,0.5);
+        animation: adv3-twinkle-near 6s ease-in-out infinite;
+    }
+    @keyframes adv3-twinkle-near {
+        0%, 100% { opacity: 0.5; transform: scale(0.85); }
+        50%      { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* ---------- L4 流星（2 条，偶尔划过） ---------- */
+    body.page-adventure .adv3-meteor {
+        position: absolute; z-index: 4;
+        width: 120px; height: 1.5px;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), rgba(120,200,255,0.6), transparent);
+        border-radius: 999px; opacity: 0;
+        filter: drop-shadow(0 0 4px rgba(255,255,255,0.6));
+        pointer-events: none;
+    }
+    body.page-adventure .adv3-meteor-1 {
+        left: -10%; top: 25%;
+        transform: rotate(18deg);
+        animation: adv3-meteor-streak 8s ease-in 2s infinite;
+    }
+    body.page-adventure .adv3-meteor-2 {
+        left: -10%; top: 55%;
+        transform: rotate(12deg);
+        animation: adv3-meteor-streak 10s ease-in 5s infinite;
+    }
+    @keyframes adv3-meteor-streak {
+        0%   { transform: translate3d(0,0,0) rotate(18deg); opacity: 0; }
+        5%   { opacity: 1; }
+        40%  { opacity: 1; }
+        60%  { opacity: 0; }
+        100% { transform: translate3d(120vw, 30vh, 0) rotate(18deg); opacity: 0; }
+    }
+
+    /* ---------- L4 漂浮星尘粒子 ---------- */
+    body.page-adventure .adv3-dust-field { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
+    body.page-adventure .adv3-dust-field .adv3-dust-p {
+        position: absolute; width: 2px; height: 2px; border-radius: 50%;
+        background: rgba(255,240,200,0.6);
+        box-shadow: 0 0 3px rgba(255,240,200,0.4);
+        animation: adv3-dust-float 12s ease-in-out infinite;
+    }
+    @keyframes adv3-dust-float {
+        0%, 100% { transform: translate3d(0,0,0); opacity: 0.3; }
+        50%      { transform: translate3d(10px,-15px,0); opacity: 0.7; }
+    }
+
+    /* ---------- ★ L5 眼睛星球（主视觉，远处逐渐靠近） ---------- */
+    body.page-adventure .adv3-planet {
+        position: absolute; z-index: 6;
+        right: 18%; top: 50%;
+        width: 280px; height: 280px;
+        transform: translate3d(0, -50%, 0) scale(0.15);
+        opacity: 0;
+        animation: adv3-planet-approach 12s cubic-bezier(0.22, 0.61, 0.36, 1) forwards,
+                   adv3-planet-float 8s ease-in-out 12s infinite;
+        will-change: transform, opacity;
+    }
+    @keyframes adv3-planet-approach {
+        0%   { transform: translate3d(0, -50%, 0) scale(0.15); opacity: 0; }
+        15%  { opacity: 0.4; }
+        40%  { transform: translate3d(0, -50%, 0) scale(0.6); opacity: 0.85; }
+        65%  { transform: translate3d(0, -50%, 0) scale(0.9); opacity: 1; }
+        85%  { transform: translate3d(0, -50%, 0) scale(1); opacity: 1; }
+        100% { transform: translate3d(0, -50%, 0) scale(1); opacity: 1; }
+    }
+    @keyframes adv3-planet-float {
+        0%, 100% { transform: translate3d(0, -50%, 0) scale(1) rotate(0deg); }
+        50%      { transform: translate3d(0, calc(-50% - 12px), 0) scale(1) rotate(2deg); }
+    }
+    /* 星球外发光 */
+    body.page-adventure .adv3-planet-glow {
+        position: absolute; inset: -20%; border-radius: 50%;
+        background: radial-gradient(circle, rgba(120,200,100,0.35) 0%, rgba(120,200,100,0.1) 40%, transparent 70%);
+        filter: blur(20px);
+        animation: adv3-planet-glow 4s ease-in-out infinite;
+    }
+    @keyframes adv3-planet-glow {
+        0%, 100% { opacity: 0.6; transform: scale(1); }
+        50%      { opacity: 1; transform: scale(1.08); }
+    }
+    /* 星球图片 */
+    body.page-adventure .adv3-planet-body {
+        position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    }
+    body.page-adventure .adv3-planet-img {
+        width: 100%; height: 100%; object-fit: contain;
+        filter:
+            drop-shadow(0 20px 50px rgba(0,0,0,0.5))
+            drop-shadow(0 0 30px rgba(120,200,100,0.4))
+            drop-shadow(0 0 50px rgba(165,232,90,0.2));
+        animation: adv3-planet-spin 60s linear 12s infinite;
+    }
+    @keyframes adv3-planet-spin {
+        from { transform: rotate(0deg); }
+        to   { transform: rotate(360deg); }
+    }
+    /* 星球轨道环（2 条） */
+    body.page-adventure .adv3-planet-ring {
+        position: absolute; border-radius: 50%;
+        border: 1.5px dashed rgba(165,232,90,0.2);
+        pointer-events: none;
+    }
+    body.page-adventure .adv3-planet-ring-1 {
+        inset: -15%;
+        transform: rotate(-8deg);
+        animation: adv3-ring-spin-1 50s linear 12s infinite;
+    }
+    body.page-adventure .adv3-planet-ring-2 {
+        inset: -25%;
+        border-color: rgba(120,200,255,0.15);
+        transform: rotate(6deg);
+        animation: adv3-ring-spin-2 70s linear 12s infinite reverse;
+    }
+    @keyframes adv3-ring-spin-1 { to { transform: rotate(352deg); } }
+    @keyframes adv3-ring-spin-2 { to { transform: rotate(366deg); } }
+    /* 星球周围光粒子 */
+    body.page-adventure .adv3-planet-particles { position: absolute; inset: -30%; pointer-events: none; }
+    body.page-adventure .adv3-planet-particles .adv3-pp {
+        position: absolute; width: 4px; height: 4px; border-radius: 50%;
+        background: rgba(165,232,90,0.7);
+        box-shadow: 0 0 6px rgba(165,232,90,0.5);
+    }
+    body.page-adventure .adv3-planet-particles .adv3-pp.p1 { left: 10%; top: 20%; animation: adv3-pp-orbit 6s linear 12s infinite; }
+    body.page-adventure .adv3-planet-particles .adv3-pp.p2 { left: 80%; top: 30%; animation: adv3-pp-orbit 8s linear 12.5s infinite reverse; }
+    body.page-adventure .adv3-planet-particles .adv3-pp.p3 { left: 20%; top: 75%; animation: adv3-pp-orbit 7s linear 13s infinite; }
+    body.page-adventure .adv3-planet-particles .adv3-pp.p4 { left: 75%; top: 70%; animation: adv3-pp-orbit 9s linear 12.8s infinite reverse; }
+    body.page-adventure .adv3-planet-particles .adv3-pp.p5 { left: 50%; top: 10%; animation: adv3-pp-orbit 10s linear 13.5s infinite; }
+    @keyframes adv3-pp-orbit {
+        0%   { transform: translate3d(0,0,0) scale(0.5); opacity: 0.3; }
+        50%  { transform: translate3d(20px,-15px,0) scale(1); opacity: 0.8; }
+        100% { transform: translate3d(0,0,0) scale(0.5); opacity: 0.3; }
+    }
+
+    /* ---------- ★ L6 小光仔探索舱（左侧飞入 → 靠近星球） ---------- */
+    body.page-adventure .adv3-craft {
+        position: absolute; z-index: 7;
+        left: -20%; top: 55%;
+        width: 180px; height: 180px;
+        transform: translate3d(0, 0, 0) scale(0.3);
+        opacity: 0;
+        animation: adv3-craft-flyin 12s cubic-bezier(0.22, 0.61, 0.36, 1) forwards,
+                   adv3-craft-hover 5s ease-in-out 12s infinite;
+        will-change: transform, opacity;
+    }
+    @keyframes adv3-craft-flyin {
+        0%   { left: -20%; top: 55%; transform: translate3d(0,0,0) scale(0.3) rotate(8deg); opacity: 0; }
+        35%  { opacity: 0.6; }
+        45%  { left: 5%; top: 50%; transform: translate3d(0,0,0) scale(0.6) rotate(5deg); opacity: 0.85; }
+        65%  { left: 25%; top: 48%; transform: translate3d(0,0,0) scale(0.85) rotate(2deg); opacity: 1; }
+        85%  { left: 38%; top: 50%; transform: translate3d(0,0,0) scale(1) rotate(0deg); opacity: 1; }
+        100% { left: 42%; top: 52%; transform: translate3d(0,0,0) scale(1) rotate(-1deg); opacity: 1; }
+    }
+    @keyframes adv3-craft-hover {
+        0%, 100% { transform: translate3d(0,0,0) scale(1) rotate(-1deg); }
+        50%      { transform: translate3d(0,-10px,0) scale(1) rotate(1deg); }
+    }
+    /* 探索舱光晕 */
+    body.page-adventure .adv3-craft-glow {
+        position: absolute; inset: -15%; border-radius: 50%;
+        background: radial-gradient(circle, rgba(120,200,255,0.30) 0%, rgba(165,232,90,0.15) 35%, transparent 68%);
+        filter: blur(12px);
+        animation: adv3-craft-glow 3s ease-in-out infinite;
+    }
+    @keyframes adv3-craft-glow {
+        0%, 100% { opacity: 0.6; transform: scale(1); }
+        50%      { opacity: 0.9; transform: scale(1.06); }
+    }
+    /* 探索舱主体 */
+    body.page-adventure .adv3-craft-ship {
+        position: absolute; left: 5%; top: 5%; width: 90%; height: 90%;
+        object-fit: contain; z-index: 2;
+        filter:
+            drop-shadow(0 8px 20px rgba(0,0,0,0.4))
+            drop-shadow(0 0 12px rgba(120,200,255,0.3));
+    }
+    /* 小光仔坐在舱内 */
+    body.page-adventure .adv3-craft-pilot {
+        position: absolute; left: 18%; top: -8%; width: 65%; height: auto;
+        object-fit: contain; z-index: 3;
+        filter:
+            drop-shadow(0 6px 12px rgba(0,0,0,0.4))
+            drop-shadow(0 0 8px rgba(165,232,90,0.25));
+        animation: adv3-pilot-bob 3.5s ease-in-out infinite;
+    }
+    @keyframes adv3-pilot-bob {
+        0%, 100% { transform: translateY(0); }
+        50%      { transform: translateY(-4px); }
+    }
+    /* 蓝绿色尾焰 */
+    body.page-adventure .adv3-craft-trail {
+        position: absolute; right: -25%; top: 35%; width: 60%; height: 30%; z-index: 1;
+    }
+    body.page-adventure .adv3-trail-particle {
+        position: absolute; border-radius: 50%; pointer-events: none;
+    }
+    body.page-adventure .adv3-trail-particle.p1 {
+        right: 80%; top: 30%; width: 12px; height: 12px;
+        background: radial-gradient(circle, rgba(120,200,255,0.9), rgba(120,200,255,0) 70%);
+        filter: blur(2px);
+        animation: adv3-trail-pulse 1.2s ease-in-out infinite;
+    }
+    body.page-adventure .adv3-trail-particle.p2 {
+        right: 60%; top: 40%; width: 10px; height: 10px;
+        background: radial-gradient(circle, rgba(165,232,90,0.85), rgba(165,232,90,0) 70%);
+        filter: blur(2px);
+        animation: adv3-trail-pulse 1.5s ease-in-out 0.2s infinite;
+    }
+    body.page-adventure .adv3-trail-particle.p3 {
+        right: 45%; top: 50%; width: 8px; height: 8px;
+        background: radial-gradient(circle, rgba(255,255,255,0.8), rgba(120,200,255,0) 70%);
+        filter: blur(1.5px);
+        animation: adv3-trail-pulse 1s ease-in-out 0.4s infinite;
+    }
+    body.page-adventure .adv3-trail-particle.p4 {
+        right: 30%; top: 35%; width: 6px; height: 6px;
+        background: radial-gradient(circle, rgba(120,200,255,0.7), transparent 70%);
+        filter: blur(1px);
+        animation: adv3-trail-pulse 1.3s ease-in-out 0.6s infinite;
+    }
+    body.page-adventure .adv3-trail-particle.p5 {
+        right: 15%; top: 45%; width: 5px; height: 5px;
+        background: radial-gradient(circle, rgba(165,232,90,0.6), transparent 70%);
+        filter: blur(1px);
+        animation: adv3-trail-pulse 0.8s ease-in-out 0.8s infinite;
+    }
+    body.page-adventure .adv3-trail-particle.p6 {
+        right: 0%; top: 38%; width: 4px; height: 4px;
+        background: radial-gradient(circle, rgba(255,255,255,0.6), transparent 70%);
+        filter: blur(1px);
+        animation: adv3-trail-pulse 1.1s ease-in-out 1s infinite;
+    }
+    @keyframes adv3-trail-pulse {
+        0%, 100% { opacity: 0.4; transform: scale(0.7); }
+        50%      { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* ---------- L7 标题文字层（独立于镜头，避免缩放模糊） ---------- */
+    body.page-adventure .adv3-hero-text {
+        position: absolute; left: 6%; top: 50%; z-index: 8;
+        transform: translateY(-50%);
+        opacity: 0;
+        animation: adv3-text-fadein 2s ease-out 7s forwards;
+        pointer-events: none;
+    }
+    @keyframes adv3-text-fadein {
+        from { opacity: 0; transform: translate(-20px, -50%); }
+        to   { opacity: 1; transform: translate(0, -50%); }
     }
     body.page-adventure .adv3-hero-chip {
-        align-self:flex-start; position: relative; z-index: 5;
-        display:inline-flex; align-items:center; gap:8px;
-        padding:8px 14px; border-radius:999px;
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 8px 16px; border-radius: 999px;
         background: linear-gradient(135deg, rgba(14,40,92,0.82), rgba(8,28,72,0.70));
-        border: 1px solid rgba(101,200,255,0.42);
-        color:#FFE79B; font-weight:900; letter-spacing:1px;
-        font-size:13px;
+        border: 1px solid rgba(120,200,255,0.42);
+        color: #FFE79B; font-weight: 900; letter-spacing: 1px; font-size: 13px;
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
-        box-shadow: 0 0 0 1px rgba(255,255,255,0.04) inset, 0 0 18px rgba(101,200,255,0.18) inset, 0 0 22px rgba(101,200,255,0.12);
-        transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
-    }
-    body.page-adventure .adv3-hero-chip:hover {
-        transform: translateY(-1px);
-        border-color: rgba(165,232,90,0.45);
-        box-shadow: 0 0 0 1px rgba(255,255,255,0.06) inset, 0 0 22px rgba(165,232,90,0.22) inset, 0 0 28px rgba(120,201,67,0.22);
+        box-shadow: 0 0 18px rgba(120,200,255,0.18), 0 0 22px rgba(120,200,255,0.12);
+        margin-bottom: 16px;
     }
     body.page-adventure .adv3-hero-chip .dot {
-        width:10px; height:10px; border-radius:50%;
+        width: 10px; height: 10px; border-radius: 50%;
         background: radial-gradient(circle at 30% 30%, #FFF6D4, #FFD45A 55%, #C48E10 100%);
-        box-shadow: 0 0 14px rgba(255,213,90,0.7), 0 0 30px rgba(255,213,90,0.28);
+        box-shadow: 0 0 14px rgba(255,213,90,0.7);
         animation: adv3-pulse-gold 2.6s ease-in-out infinite;
     }
     @keyframes adv3-pulse-gold {
-        0%, 100% { box-shadow: 0 0 10px rgba(255,213,90,0.55), 0 0 22px rgba(255,213,90,0.20); }
-        50%      { box-shadow: 0 0 18px rgba(255,213,90,0.90), 0 0 38px rgba(255,213,90,0.38); }
+        0%, 100% { box-shadow: 0 0 10px rgba(255,213,90,0.55); }
+        50%      { box-shadow: 0 0 18px rgba(255,213,90,0.90); }
     }
-    /* 游戏化粗圆润标题字体：ZCOOL KuaiLe → 兜底 Noto Sans SC Black → system-ui */
     body.page-adventure .adv3-hero-title {
-        margin: 18px 0 10px; font-weight: 900; line-height: 0.96; letter-spacing: 2px;
-        font-family: "ZCOOL KuaiLe", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
-        position: relative; z-index: 4;
+        margin: 0; font-weight: 900; line-height: 0.96; letter-spacing: 2px;
+        font-family: "ZCOOL KuaiLe", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
     }
     body.page-adventure .adv3-hero-title .l1 {
-        display:block;
-        font-size: clamp(72px, 8.2vw, 118px);
+        display: block;
+        font-size: clamp(40px, 5vw, 64px);
         background: linear-gradient(180deg, #FFFFFF 0%, #ECF6FF 52%, #9FC8F0 100%);
-        -webkit-background-clip: text; background-clip:text; color:transparent;
-        filter: drop-shadow(0 8px 26px rgba(101,200,255,0.28)) drop-shadow(0 -1px 0 rgba(255,255,255,0.10));
+        -webkit-background-clip: text; background-clip: text; color: transparent;
+        filter: drop-shadow(0 6px 20px rgba(120,200,255,0.28));
     }
     body.page-adventure .adv3-hero-title .l2 {
-        display:block;
-        font-size: clamp(72px, 8.2vw, 118px);
+        display: block;
+        font-size: clamp(56px, 7vw, 88px);
         background: linear-gradient(180deg, #FFFCE0 0%, #FFE79A 28%, #FFD45A 60%, #FFB72E 100%);
-        -webkit-background-clip: text; background-clip:text; color:transparent;
-        filter: drop-shadow(0 8px 30px rgba(255,183,46,0.36)) drop-shadow(0 0 24px rgba(255,213,90,0.14));
-    }
-    body.page-adventure .adv3-hero-sub {
-        position: relative; z-index: 4;
-        color: rgba(255,255,255,.9);
-        font-size: 18px; line-height: 1.6; margin: 4px 0 18px;
-        font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
-        font-weight: 500;
-        letter-spacing: 0.4px;
-        text-shadow: 0 2px 12px rgba(6,24,61,0.60);
-    }
-    /* Hero 5 圆形节点 + 连接线（横向）· 节点直径 38px，不要过大 */
-    body.page-adventure .adv3-hero-nodes {
-        position: relative; z-index: 4;
-        display: grid;
-        grid-template-columns: auto 1fr auto 1fr auto 1fr auto 1fr auto;
-        align-items: center;
-        gap: 0 10px;
-        margin-bottom: 20px;
-        width: 100%;
-        max-width: 620px;
-    }
-    body.page-adventure .adv3-hnode {
-        display:flex; flex-direction:column; align-items:center; gap:6px; min-width: 0;
-        position: relative; z-index: 5;
-    }
-    body.page-adventure .adv3-hnode-btn {
-        position: relative;
-        width: 38px; height: 38px; border-radius: 50%;
-        color:#fff; font-weight: 900; font-size: 12px; cursor: pointer; border: none;
-        background: radial-gradient(circle at 30% 28%, #EAF5FF, rgba(101,200,255,0.60) 40%, rgba(14,42,82,0.85) 100%);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        box-shadow:
-            inset 0 1px 0 rgba(255,255,255,0.30),
-            inset 0 -2px 6px rgba(0,0,0,0.24),
-            0 0 0 1px rgba(101,200,255,0.45),
-            0 0 14px rgba(101,200,255,0.28),
-            0 6px 14px rgba(0,0,0,0.20);
-        transition: transform .18s ease, box-shadow .2s ease, filter .18s ease;
-    }
-    body.page-adventure .adv3-hnode-btn::after {
-        content:""; position:absolute; inset:-5px; border-radius:50%;
-        border: 1px dashed rgba(255,255,255,0.16);
-        opacity: 0; transition: opacity .2s ease;
-    }
-    body.page-adventure .adv3-hnode-btn:hover { transform: translateY(-1px) scale(1.06); filter: brightness(1.08); }
-    body.page-adventure .adv3-hnode-btn:hover::after { opacity: 1; }
-    body.page-adventure .adv3-hnode-btn.done {
-        background: radial-gradient(circle at 30% 28%, #F0FFD6, rgba(180,236,122,0.70) 40%, rgba(47,97,28,0.90) 100%);
-        box-shadow:
-            inset 0 1px 0 rgba(255,255,255,0.32),
-            inset 0 -2px 6px rgba(0,0,0,0.22),
-            0 0 0 1px rgba(165,232,90,0.50),
-            0 0 16px rgba(120,201,67,0.45),
-            0 6px 14px rgba(0,0,0,0.18);
-    }
-    body.page-adventure .adv3-hnode-btn.active {
-        background: radial-gradient(circle at 30% 28%, #FFF7C7, #FFD45A 40%, #8A5D00 100%);
-        box-shadow:
-            inset 0 1px 0 rgba(255,255,255,0.40),
-            inset 0 -2px 6px rgba(0,0,0,0.28),
-            0 0 0 1px rgba(255,213,90,0.75),
-            0 0 16px rgba(255,213,90,0.60),
-            0 0 28px rgba(120,201,67,0.26),
-            0 8px 20px rgba(0,0,0,0.20);
-        animation: adv3-halo-breath 2.4s ease-in-out infinite;
-    }
-    body.page-adventure .adv3-hnode-label {
-        font-size: 11.5px; color: #E7EEFC; letter-spacing:0.4px; text-align:center; font-weight:800;
-        white-space: nowrap;
-        text-shadow: 0 1px 6px rgba(6,24,61,0.60);
-    }
-    body.page-adventure .adv3-hline {
-        position: relative;
-        height: 2px; align-self: center; min-width: 10px;
-        background: linear-gradient(90deg, rgba(101,200,255,0.75), rgba(165,232,90,0.55), rgba(255,213,90,0.75));
-        box-shadow: 0 0 10px rgba(101,200,255,0.28), 0 0 14px rgba(255,213,90,0.30);
-    }
-    body.page-adventure .adv3-hline::before {
-        /* → 箭头：连接线尾端一个小三角 */
-        content:""; position:absolute; right:-1px; top:50%;
-        width: 0; height: 0; transform: translateY(-50%);
-        border-top: 5px solid transparent;
-        border-bottom: 5px solid transparent;
-        border-left: 7px solid rgba(255,213,90,0.95);
-        filter: drop-shadow(0 0 6px rgba(255,213,90,0.75));
-    }
-    body.page-adventure .adv3-hline::after {
-        /* 发光光点沿连接线移动（缓慢，1 次 / 4s） */
-        content:""; position:absolute; left:0; top:50%;
-        width: 8px; height: 8px; transform: translate(-40%,-50%);
-        border-radius: 50%;
-        background: radial-gradient(circle, #FFFFFF 0%, rgba(255,213,90,0.75) 45%, rgba(255,213,90,0) 72%);
-        animation: adv3-hline-comet 4.2s ease-in-out infinite;
-    }
-    @keyframes adv3-hline-comet {
-        0%   { transform: translate(-40%,-50%); opacity: 0; }
-        12%  { opacity: 1; }
-        100% { transform: translate(1450%,-50%); opacity: 0; }
-    }
-    /* Hero 积分 + 等级（玻璃胶囊 · 放在节点下方） */
-    body.page-adventure .adv3-hero-meta {
-        position: relative; z-index: 5;
-        display:flex; flex-wrap:wrap; gap:12px; align-items:center;
-        color:#FFE79B; font-weight:900; letter-spacing:0.6px;
-    }
-    body.page-adventure .adv3-hero-meta span {
-        padding: 9px 15px; border-radius: 999px;
-        background: linear-gradient(135deg, rgba(14,40,92,0.74), rgba(10,28,62,0.62));
-        border: 1px solid rgba(255,255,255,0.14);
-        box-shadow:
-            inset 0 1px 0 rgba(255,255,255,0.06),
-            inset 0 -1px 0 rgba(0,0,0,0.22),
-            0 0 0 1px rgba(255,213,90,0.18),
-            0 10px 20px rgba(0,0,0,0.20),
-            0 0 18px rgba(255,213,90,0.16);
-        backdrop-filter: blur(12px) saturate(120%);
-        -webkit-backdrop-filter: blur(12px) saturate(120%);
-        transition: transform .18s ease, box-shadow .18s ease;
-    }
-    body.page-adventure .adv3-hero-meta span:hover {
-        transform: translateY(-1px);
-        box-shadow:
-            inset 0 1px 0 rgba(255,255,255,0.08),
-            inset 0 -1px 0 rgba(0,0,0,0.22),
-            0 0 0 1px rgba(255,213,90,0.28),
-            0 14px 26px rgba(0,0,0,0.22),
-            0 0 28px rgba(255,213,90,0.28);
-    }
-    body.page-adventure .adv3-hero-meta span.green {
-        color:#E9FFCE;
-        border: 1px solid rgba(165,232,90,0.42);
-        box-shadow:
-            inset 0 1px 0 rgba(255,255,255,0.06),
-            inset 0 -1px 0 rgba(0,0,0,0.22),
-            0 0 0 1px rgba(120,201,67,0.40),
-            0 10px 20px rgba(0,0,0,0.18),
-            0 0 18px rgba(120,201,67,0.30);
-    }
-    body.page-adventure .adv3-hero-meta span.green:hover {
-        box-shadow:
-            inset 0 1px 0 rgba(255,255,255,0.08),
-            inset 0 -1px 0 rgba(0,0,0,0.22),
-            0 0 0 1px rgba(120,201,67,0.55),
-            0 14px 26px rgba(0,0,0,0.22),
-            0 0 32px rgba(165,232,90,0.40);
+        -webkit-background-clip: text; background-clip: text; color: transparent;
+        filter: drop-shadow(0 8px 26px rgba(255,183,46,0.36));
     }
 
-    /* Hero 右氛围层 + 小光仔 + 眼球星球 + 飞船 + 小行星 + 光轨
-       规则：
-       - 装饰层 z=1/2
-       - 人物组合（小光仔+飞船）z=3（绝对不能被裁切）
-       - 文字 z=4   交互按钮 z=5
-    */
-    body.page-adventure .adv3-hero-scene {
-        position:absolute; inset:0; z-index:1; pointer-events:none;
-    }
-    body.page-adventure .adv3-hero-scene-bg {
-        position:absolute; right:-6%; top: 6%; width:70%; height: 124%;
-        background:
-            radial-gradient(closest-side, rgba(101,200,255,0.28), rgba(101,200,255,0.06) 55%, rgba(101,200,255,0) 76%),
-            radial-gradient(closest-side at 60% 70%, rgba(255,213,90,0.20), rgba(255,213,90,0) 70%),
-            radial-gradient(closest-side at 80% 30%, rgba(118,86,214,0.22), rgba(118,86,214,0) 72%);
-        filter: blur(10px);
-        animation: adv3-aurora 18s ease-in-out infinite alternate;
-    }
-    @keyframes adv3-aurora {
-        from { transform: translate3d(0,0,0) scale(1); opacity: .88; }
-        to   { transform: translate3d(-14px, 10px, 0) scale(1.05); opacity: 1; }
-    }
-    body.page-adventure .adv3-hero-planet {
-        position:absolute; right: 26%; top: 20%;
-        width: 260px; height:auto; max-height: 58%;
-        object-fit: contain;
-        filter:
-            drop-shadow(0 24px 56px rgba(0,0,0,0.55))
-            drop-shadow(0 0 28px rgba(101,200,255,0.26))
-            drop-shadow(0 0 44px rgba(255,213,90,0.18));
-        animation: adv3-planet 9s ease-in-out infinite;
-    }
-    @keyframes adv3-planet {
-        0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
-        50%      { transform: translate3d(2px, -6px, 0) rotate(-1.2deg); }
-    }
-    body.page-adventure .adv3-hero-ship {
-        position:absolute; right: 22%; top: 46%;
-        width: 170px; height:auto; object-fit: contain;
-        transform: rotate(-10deg);
-        filter:
-            drop-shadow(0 18px 36px rgba(0,0,0,0.55))
-            drop-shadow(0 0 16px rgba(255,213,90,0.30))
-            drop-shadow(0 0 28px rgba(120,201,67,0.20));
-        animation: adv3-float-ship 7.6s ease-in-out infinite, adv3-ship-drift 22s ease-in-out infinite;
-        z-index: 3;              /* 和人物同级 */
-    }
-    @keyframes adv3-float-ship {
-        0%, 100% { transform: rotate(-12deg) translate(0, 0); }
-        50%      { transform: rotate(-7deg) translate(-4px, -10px); }
-    }
-    @keyframes adv3-ship-drift {
-        0%, 100% { translate: 0 0; }
-        50%      { translate: 18px -10px; }
-    }
-    /* ★ 飞船光轨（装饰层 z=1） */
-    body.page-adventure .adv3-hero-trail {
-        position:absolute; right: 34%; top: 58%; width: 240px; height: 60px;
-        background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(101,200,255,0.55) 30%, rgba(255,213,90,0.75) 65%, rgba(255,255,255,0.85) 100%);
-        filter: blur(6px);
-        opacity: 0.85;
-        border-radius: 999px;
-        transform: rotate(6deg);
-        mix-blend-mode: screen;
-        box-shadow: 0 0 24px rgba(255,213,90,0.60), 0 0 42px rgba(101,200,255,0.22);
-        z-index: 1;
-        animation: adv3-trail-pulse 3.2s ease-in-out infinite;
-    }
-    @keyframes adv3-trail-pulse {
-        0%, 100% { opacity: .55; transform: rotate(6deg) scaleX(.94); }
-        50%      { opacity: 1;   transform: rotate(6deg) scaleX(1.04); }
-    }
-    /* 星云 · 装饰层 z=2，作为整体氛围补色 */
-    body.page-adventure .adv3-hero-nebula {
-        position:absolute; right: 10%; top: 18%; width: 520px; height: 340px;
-        background:
-            radial-gradient(closest-side, rgba(118,86,214,0.22), rgba(118,86,214,0) 70%),
-            radial-gradient(closest-side at 60% 70%, rgba(101,200,255,0.18), rgba(101,200,255,0) 70%),
-            radial-gradient(closest-side at 80% 30%, rgba(255,213,90,0.12), rgba(255,213,90,0) 70%);
-        filter: blur(6px);
-        mix-blend-mode: screen;
-        z-index: 2; pointer-events:none;
-    }
-    /* 小行星 · 装饰层 z=2（3 个小点） */
-    body.page-adventure .adv3-hero-ast {
-        position:absolute; border-radius:50%; z-index:2; pointer-events:none;
-        background: radial-gradient(circle at 32% 32%, rgba(255,255,255,0.85), rgba(180,196,220,0.55) 40%, rgba(90,112,148,0.32) 70%, rgba(48,62,90,0.10) 100%);
-        box-shadow: 0 0 0 1px rgba(255,255,255,0.14) inset, 0 0 10px rgba(101,200,255,0.22);
-    }
-    body.page-adventure .adv3-hero-ast.a1 { right: 12%; top: 18%; width: 22px; height: 22px; animation: adv3-float 8s ease-in-out infinite; }
-    body.page-adventure .adv3-hero-ast.a2 { right: 44%; top: 68%; width: 14px; height: 14px; animation: adv3-float 6s ease-in-out infinite reverse; opacity: .8; }
-    body.page-adventure .adv3-hero-ast.a3 { right: 58%; top: 12%; width: 10px; height: 10px; opacity: .75; animation: adv3-sparkle 2.8s ease-in-out infinite; }
-    /* 闪光星 */
-    body.page-adventure .adv3-hero-star1 {
-        position:absolute; right: 48%; top: 28%; width:22px;
-        filter: drop-shadow(0 0 10px rgba(255,213,90,0.82));
-        animation: adv3-sparkle 2.8s ease-in-out infinite;
-        z-index: 2;
-    }
-    body.page-adventure .adv3-hero-star2 {
-        position:absolute; right: 10%; top: 62%; width:18px;
-        filter: drop-shadow(0 0 8px rgba(255,255,255,0.68));
-        animation: adv3-sparkle 3.6s ease-in-out infinite reverse;
-        z-index: 2;
-    }
-    @keyframes adv3-sparkle {
-        0%, 100% { opacity: .55; transform: scale(.92); }
-        50%      { opacity: 1;   transform: scale(1.10); }
-    }
-    body.page-adventure .adv3-hero-orbit {
-        position:absolute; right: 26%; top: 32%; width:420px; height: 320px;
-        border:1.4px dashed rgba(255,244,214,0.22);
-        border-radius:50%;
-        transform: rotate(-10deg);
-        animation: adv3-spin 70s linear infinite;
-        filter: drop-shadow(0 0 10px rgba(101,200,255,0.18));
-        z-index: 1;
-    }
-    body.page-adventure .adv3-hero-orbit.gold {
-        width: 360px; height: 260px; right: 29%; top: 36%;
-        border-color: rgba(255,213,90,0.28);
-        transform: rotate(-6deg);
-        animation-duration: 55s;
-        animation-direction: reverse;
-        filter: drop-shadow(0 0 10px rgba(255,213,90,0.24));
-    }
-    @keyframes adv3-spin { to { transform: rotate(350deg) rotate(-10deg); } }
-
-    /* ★ Hero 右：小光仔驾驶眼球飞船穿越宇宙 */
-    body.page-adventure .adv3-hero-char {
-        position:absolute;
-        right: 4%;
-        top: 50%;
-        transform: translateY(-50%);
-        width: clamp(300px, 32vw, 440px);
-        height: clamp(300px, 32vw, 440px);
-        z-index: 3;
+    /* ---------- L9 底部滚动提示 ---------- */
+    body.page-adventure .adv3-hero .adv3-scroll-hint {
+        position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); z-index: 9;
+        display: flex; flex-direction: column; align-items: center; gap: 8px;
+        opacity: 0;
+        animation: adv3-hint-fadein 1.5s ease-out 11s forwards;
         pointer-events: none;
-        animation: adv3-ship-float 6s ease-in-out infinite;
-        isolation: isolate;
     }
-    /* 飞船外层光晕 */
-    body.page-adventure .adv3-ship-glow {
-        position:absolute; inset: -8%;
-        border-radius: 50%;
-        background: radial-gradient(circle, rgba(101,200,255,0.35) 0%, rgba(165,232,90,0.18) 35%, rgba(0,0,0,0) 68%);
-        filter: blur(14px);
-        animation: adv3-ship-glow 4s ease-in-out infinite;
+    @keyframes adv3-hint-fadein {
+        from { opacity: 0; transform: translate(-50%, 20px); }
+        to   { opacity: 0.85; transform: translate(-50%, 0); }
     }
-    @keyframes adv3-ship-glow {
-        0%,100% { opacity:.7; transform: scale(1); }
-        50%     { opacity:1; transform: scale(1.06); }
+    body.page-adventure .adv3-hero .adv3-hint-text {
+        font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.7);
+        letter-spacing: 1px; text-shadow: 0 1px 6px rgba(5,11,31,0.6);
     }
-    /* 飞船主体：眼球造型 */
-    body.page-adventure .adv3-ship-body {
-        position:absolute; left:15%; top:20%; width:70%; height:60%;
-        border-radius: 50% 46% 50% 54% / 52% 48% 52% 48%;
-        background:
-            radial-gradient(circle at 32% 28%, rgba(220,245,255,0.75) 0%, rgba(140,210,255,0.30) 28%, rgba(40,90,160,0.20) 55%, rgba(10,30,80,0.45) 100%);
-        border: 2px solid rgba(150,210,255,0.55);
-        box-shadow:
-            inset 0 2px 12px rgba(255,255,255,0.35),
-            inset 0 -4px 16px rgba(10,30,80,0.35),
-            0 0 24px rgba(101,200,255,0.40),
-            0 0 48px rgba(165,232,90,0.20);
-        overflow: hidden;
+    body.page-adventure .adv3-hero .adv3-hint-arrow {
+        width: 18px; height: 18px;
+        border-right: 2px solid rgba(255,255,255,0.6);
+        border-bottom: 2px solid rgba(255,255,255,0.6);
+        transform: rotate(45deg);
+        animation: adv3-hint-bounce 1.8s ease-in-out infinite;
     }
-    /* 驾驶舱舷窗 */
-    body.page-adventure .adv3-ship-window {
-        position:absolute; left:18%; top:18%; width:64%; height:64%;
-        border-radius: 50%;
-        background: radial-gradient(circle at 40% 35%, rgba(180,230,255,0.85), rgba(60,130,200,0.25) 50%, rgba(10,30,80,0.40) 100%);
-        border: 1.5px solid rgba(200,235,255,0.5);
-        box-shadow: inset 0 0 16px rgba(255,255,255,0.25);
-    }
-    /* 瞳孔黑洞 */
-    body.page-adventure .adv3-ship-pupil {
-        position:absolute; left:38%; top:34%; width:24%; height:32%;
-        border-radius: 50%;
-        background: radial-gradient(circle, #020818 0%, #0a1a3a 60%, #1a3a6a 100%);
-        box-shadow: 0 0 12px rgba(80,180,255,0.5), inset 0 0 8px rgba(120,201,67,0.3);
-    }
-    /* 高光 */
-    body.page-adventure .adv3-ship-shine {
-        position:absolute; left:26%; top:22%; width:22%; height:16%;
-        border-radius: 50%;
-        background: radial-gradient(ellipse, rgba(255,255,255,0.85), rgba(255,255,255,0) 70%);
-        filter: blur(1px);
-    }
-    /* 小光仔坐在飞船里 */
-    body.page-adventure .adv3-ship-pilot {
-        position:absolute; left:28%; top:14%; width:44%; height:auto;
-        object-fit: contain;
-        filter: drop-shadow(0 6px 12px rgba(0,0,0,0.45)) drop-shadow(0 0 10px rgba(165,232,90,0.3));
-        z-index: 2;
-        transform: translateY(var(--adv3-ty)) scaleY(var(--adv3-sy));
-        animation: adv3-pilot-bob 3s ease-in-out infinite, adv3-blink 4.5s ease-in-out infinite;
-        will-change: transform;
-    }
-    @keyframes adv3-pilot-bob {
-        0%,100% { --adv3-ty: 0px; }
-        50%     { --adv3-ty: -4px; }
-    }
-    /* 推进尾焰 */
-    body.page-adventure .adv3-ship-thruster {
-        position:absolute; left:50%; bottom:6%; transform: translateX(-50%);
-        width: 40%; height: 30%;
-        z-index: 1;
-    }
-    body.page-adventure .adv3-thruster-flame {
-        position:absolute; left:50%; bottom:0; transform: translateX(-50%);
-        border-radius: 50% 50% 50% 50% / 70% 70% 30% 30%;
-        background: linear-gradient(180deg, rgba(255,240,180,0.95) 0%, rgba(255,180,60,0.85) 35%, rgba(255,100,30,0.6) 70%, rgba(255,60,0,0) 100%);
-        filter: blur(2px);
-        animation: adv3-flame-flicker 0.4s ease-in-out infinite alternate;
-    }
-    body.page-adventure .adv3-thruster-flame.f1 { width:60%; height:100%; opacity:.95; }
-    body.page-adventure .adv3-thruster-flame.f2 { width:42%; height:78%; opacity:.85; background: linear-gradient(180deg, rgba(180,230,255,0.9), rgba(101,200,255,0.7) 40%, rgba(60,140,220,0) 100%); }
-    body.page-adventure .adv3-thruster-flame.f3 { width:28%; height:55%; opacity:.9; background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(165,232,90,0.7) 50%, rgba(120,201,67,0) 100%); }
-    @keyframes adv3-flame-flicker {
-        from { transform: translateX(-50%) scaleY(1) scaleX(1); opacity:.85; }
-        to   { transform: translateX(-50%) scaleY(1.15) scaleX(0.92); opacity:1; }
-    }
-    /* 星星轨迹 */
-    body.page-adventure .adv3-ship-trails {
-        position:absolute; inset:0; pointer-events:none; z-index:0;
-    }
-    body.page-adventure .adv3-trail {
-        position:absolute; width:2px; height:2px; border-radius:50%;
-        background:#fff;
-        box-shadow: 0 0 6px rgba(255,255,255,0.9), 0 0 12px rgba(101,200,255,0.6);
-        animation: adv3-trail-streak 1.8s linear infinite;
-    }
-    body.page-adventure .adv3-trail.t1 { left:8%; top:30%; animation-delay:0s; }
-    body.page-adventure .adv3-trail.t2 { left:14%; top:55%; animation-delay:.3s; }
-    body.page-adventure .adv3-trail.t3 { left:5%; top:70%; animation-delay:.6s; }
-    body.page-adventure .adv3-trail.t4 { left:20%; top:40%; animation-delay:.9s; }
-    body.page-adventure .adv3-trail.t5 { left:10%; top:82%; animation-delay:1.2s; }
-    @keyframes adv3-trail-streak {
-        0%   { transform: translateX(0); opacity:0; }
-        20%  { opacity:1; }
-        100% { transform: translateX(-120px); opacity:0; }
-    }
-    @keyframes adv3-ship-float {
-        0%,100% { transform: translateY(-50%) rotate(-2deg); }
-        50%     { transform: translateY(calc(-50% - 12px)) rotate(2deg); }
+    @keyframes adv3-hint-bounce {
+        0%, 100% { transform: rotate(45deg) translate(0,0); opacity: 0.6; }
+        50%      { transform: rotate(45deg) translate(3px,3px); opacity: 1; }
     }
 
-    /* Hero 左侧：探索进度 + 光线能量 */
-    body.page-adventure .adv3-hero-progress {
-        margin: 18px 0 16px;
-        padding: 14px 18px;
-        border-radius: 18px;
-        background: linear-gradient(135deg, rgba(16,40,92,0.65), rgba(8,24,61,0.50));
-        border: 1px solid rgba(101,200,255,0.25);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 8px 20px rgba(0,0,0,0.25);
+    /* ---------- 保留旧 Hero 隐藏数据（不影响下游 JS） ---------- */
+    body.page-adventure .adv3-hero-legacy { display: none !important; }
+
+    /* ---------- 响应式 ---------- */
+    @media (max-width: 768px) {
+        body.page-adventure .adv3-hero {
+            height: 100vh; min-height: 480px;
+        }
+        body.page-adventure .adv3-planet {
+            width: 200px; height: 200px;
+            right: 8%;
+        }
+        body.page-adventure .adv3-craft {
+            width: 130px; height: 130px;
+        }
+        body.page-adventure .adv3-hero-text {
+            left: 5%; top: 40%;
+        }
+        body.page-adventure .adv3-hero-title .l1 { font-size: clamp(28px, 6vw, 40px); }
+        body.page-adventure .adv3-hero-title .l2 { font-size: clamp(40px, 9vw, 56px); }
     }
-    body.page-adventure .adv3-hp-label {
-        font-size: 13px; font-weight: 800; color:#C9DBF7; letter-spacing:0.5px; margin-bottom:6px;
+
+    /* ---------- 无障碍：尊重 prefers-reduced-motion ---------- */
+    @media (prefers-reduced-motion: reduce) {
+        body.page-adventure .adv3-camera,
+        body.page-adventure .adv3-planet,
+        body.page-adventure .adv3-craft,
+        body.page-adventure .adv3-hero-text,
+        body.page-adventure .adv3-hero .adv3-scroll-hint,
+        body.page-adventure .adv3-nebula,
+        body.page-adventure .adv3-meteor,
+        body.page-adventure .adv3-planet-glow,
+        body.page-adventure .adv3-planet-img,
+        body.page-adventure .adv3-craft-glow,
+        body.page-adventure .adv3-craft-pilot,
+        body.page-adventure .adv3-trail-particle,
+        body.page-adventure .adv3-hero .adv3-hint-arrow {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+        }
+        body.page-adventure .adv3-planet { transform: translate3d(0,-50%,0) scale(1); opacity: 1; }
+        body.page-adventure .adv3-craft { left: 42%; top: 52%; transform: scale(1); opacity: 1; }
+        body.page-adventure .adv3-hero-text { opacity: 1; }
     }
-    body.page-adventure .adv3-hp-stars {
-        font-size: 22px; letter-spacing: 4px; color:#FFD45A;
-        text-shadow: 0 0 12px rgba(255,213,90,0.7), 0 0 24px rgba(255,183,46,0.4);
-        margin-bottom: 8px;
-        animation: adv3-stars-shine 3s ease-in-out infinite;
-    }
-    @keyframes adv3-stars-shine {
-        0%,100% { filter: brightness(1); }
-        50%     { filter: brightness(1.25); }
-    }
-    body.page-adventure .adv3-hp-energy {
-        font-size: 13px; font-weight: 800; color:#A5E85A; letter-spacing:0.5px;
-        display:flex; align-items:center; gap:8px;
-    }
-    body.page-adventure .adv3-hp-energy b {
-        padding: 2px 10px; border-radius: 999px;
-        background: linear-gradient(180deg, #C5F197, #78C943);
-        color:#0A2C10; font-size:12px;
-        box-shadow: 0 0 10px rgba(120,201,67,0.5);
-    }
-    /* Hero 三个数据卡 */
-    body.page-adventure .adv3-hero-stats {
-        display:grid; grid-template-columns: repeat(3, 1fr); gap:12px;
-        margin-bottom: 18px;
-    }
-    body.page-adventure .adv3-hstat {
-        text-align:center;
-        padding: 14px 8px;
-        border-radius: 18px;
-        background: linear-gradient(135deg, rgba(20,50,110,0.60), rgba(8,24,61,0.45));
-        border: 1px solid rgba(165,232,90,0.28);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 6px 16px rgba(0,0,0,0.22), 0 0 16px rgba(101,200,255,0.08);
-        transition: transform .2s ease, box-shadow .2s ease;
-    }
-    body.page-adventure .adv3-hstat:hover {
-        transform: translateY(-3px);
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 12px 24px rgba(0,0,0,0.28), 0 0 22px rgba(165,232,90,0.22);
-    }
-    body.page-adventure .adv3-hstat-num {
-        font-size: 28px; font-weight: 900; color:#fff;
-        font-family: "ZCOOL KuaiLe", "Noto Sans SC", sans-serif;
-        text-shadow: 0 0 12px rgba(101,200,255,0.4);
-        line-height:1; margin-bottom:4px;
-    }
-    body.page-adventure .adv3-hstat-num.gold {
-        background: linear-gradient(180deg, #FFF7C7, #FFD45A 60%, #FFB72E);
-        -webkit-background-clip: text; background-clip:text; color:transparent;
-        filter: drop-shadow(0 0 10px rgba(255,183,46,0.4));
-    }
-    body.page-adventure .adv3-hstat-num.green {
-        background: linear-gradient(180deg, #E6FFB0, #A5E85A 60%, #5EA936);
-        -webkit-background-clip: text; background-clip:text; color:transparent;
-        filter: drop-shadow(0 0 10px rgba(120,201,67,0.4));
-    }
-    body.page-adventure .adv3-hstat-label {
-        font-size: 12px; font-weight: 800; color:#B8CCEE; letter-spacing:0.4px;
-    }
+
 
     /* ============================================================
        5. 章节/眼球探索地图（三栏：任务 250 | 眼球 1fr | 奖励 280）
@@ -996,6 +921,26 @@
         0%, 100% { opacity: .7; }
         50%      { opacity: 1; }
     }
+    /* ===== 星际探险路线（柔和发光虚线 + 流动光粒子） ===== */
+    body.page-adventure .adv3-route {
+        position: absolute; inset: 0;
+        width: 100%; height: 100%;
+        pointer-events: none;
+        z-index: 2;
+        overflow: visible;
+    }
+    body.page-adventure .adv3-route-path {
+        stroke-dasharray: 1.4 1.6;
+        animation: adv3-route-dash 30s linear infinite;
+    }
+    @keyframes adv3-route-dash {
+        0%   { stroke-dashoffset: 0; }
+        100% { stroke-dashoffset: -60; }
+    }
+    body.page-adventure .adv3-route-particle {
+        filter: drop-shadow(0 0 3px rgba(255,255,255,0.9)) drop-shadow(0 0 6px rgba(180,200,255,0.6));
+    }
+
     /* ===== 眼球星球主体（纯 CSS 3D 玻璃球） ===== */
     body.page-adventure .eye-planet {
         position: absolute;
@@ -1163,18 +1108,24 @@
         0%,100% { transform: translateX(-50%) translateY(0); }
         50%     { transform: translateX(-50%) translateY(-4px); }
     }
-    /* ★ 星际站点节点 */
+    /* ★ 星际站点节点（远近层次：近大远小） */
     body.page-adventure .adv3-eye-node {
         position:absolute;
         left: var(--nx);
         top: var(--ny);
-        transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%) scale(var(--node-scale, 1));
         z-index: 4;
         display:flex; flex-direction:column; align-items:center; gap:5px;
         cursor:pointer;
         transition: transform .22s cubic-bezier(.2,.7,.2,1), filter .22s ease;
         animation: adv3-station-float 4s ease-in-out infinite;
     }
+    /* 近处站点：最大、最亮、阴影最重 */
+    body.page-adventure .adv3-eye-node.adv3-node-near { --node-scale: 1.15; z-index: 6; }
+    /* 中等距离：中等大小 */
+    body.page-adventure .adv3-eye-node.adv3-node-mid  { --node-scale: 1.00; z-index: 5; }
+    /* 远处站点：最小、最暗、模糊一点（营造空间纵深） */
+    body.page-adventure .adv3-eye-node.adv3-node-far  { --node-scale: 0.82; z-index: 3; filter: brightness(0.92) saturate(0.92); }
     body.page-adventure .adv3-eye-node:nth-child(3) { animation-delay: .3s; }
     body.page-adventure .adv3-eye-node:nth-child(4) { animation-delay: .6s; }
     body.page-adventure .adv3-eye-node:nth-child(5) { animation-delay: .9s; }
@@ -1269,15 +1220,16 @@
             0 0 26px rgba(120,255,200,0.55);
     }
     body.page-adventure .adv3-eye-node button.adv3-pin:hover .station-icon { transform: scale(1.12) rotate(-6deg); }
-    /* ★ 激活站点：金色光环 + 解锁脉冲 */
+    /* ★ 激活站点：金色光环 + 解锁脉冲（继承远近层次 --node-scale） */
     body.page-adventure .adv3-eye-node.is-active {
-        transform: translate(-50%, -50%) scale(1.10);
+        transform: translate(-50%, -50%) scale(var(--node-scale, 1));
         animation: adv3-station-unlock .5s cubic-bezier(.2,.8,.2,1) both, adv3-station-float 4s ease-in-out .5s infinite;
+        filter: brightness(1.05) saturate(1.05);
     }
     @keyframes adv3-station-unlock {
-        0%   { transform: translate(-50%,-50%) scale(0.85); filter: brightness(2) blur(2px); }
-        60%  { transform: translate(-50%,-50%) scale(1.18); filter: brightness(1.2); }
-        100% { transform: translate(-50%,-50%) scale(1.10); filter: brightness(1); }
+        0%   { transform: translate(-50%,-50%) scale(calc(var(--node-scale, 1) * 0.85)); filter: brightness(2) blur(2px); }
+        60%  { transform: translate(-50%,-50%) scale(calc(var(--node-scale, 1) * 1.06)); filter: brightness(1.2); }
+        100% { transform: translate(-50%,-50%) scale(var(--node-scale, 1)); filter: brightness(1.05); }
     }
     body.page-adventure .adv3-eye-node.is-active button.adv3-pin {
         background:
@@ -2652,96 +2604,104 @@
              · 左 45%：标签 + 大标题 + 副标题 + 5圆形节点+连接线 + 积分/等级
              · 右装饰：眼球星球(island-eye-full) + 飞船(spaceship) + 小光仔右上 absolute
              ============================================================ -->
-        <section class="adv3-hero">
-            <div class="adv3-hero-copy">
-                <span class="adv3-hero-chip">
-                    <span class="dot" aria-hidden="true"></span>
-                    🎯 第一模块 · 冒险篇
-                </span>
-                <h1 class="adv3-hero-title">
-                    <span class="l1">眼球</span>
-                    <span class="l2">大冒险</span>
-                </h1>
-                <p class="adv3-hero-sub">跟着小光仔进入眼睛王国，<br>探索光线穿越眼球的奇妙旅程！</p>
+        <!-- ============================================================
+             第一幕 · 宇宙中发现眼睛星球（沉浸式镜头推进动画）
+             · 命名空间 body.page-adventure .adv3-hero / .adv3-stage / .adv3-camera
+             · 0~12s：远景→眼睛星球出现→镜头靠近→飞船飞入→停留
+             ============================================================ -->
+        <section class="adv3-hero" aria-label="第一幕 宇宙发现眼睛星球">
 
-                <!-- 探索进度 + 光线能量 -->
-                <div class="adv3-hero-progress">
-                    <div class="adv3-hp-label">⭐ 探索进度</div>
-                    <div class="adv3-hp-stars">★★★★★</div>
-                    <div class="adv3-hp-energy">光线能量 <b>Lv.2</b></div>
+            <!-- 沉浸式动画舞台 -->
+            <div class="adv3-stage" aria-hidden="true">
+
+                <!-- 镜头层：模拟相机推进 -->
+                <div class="adv3-camera" id="adv3Camera">
+
+                    <!-- L2 深空底色 + 星云 -->
+                    <div class="adv3-space-bg"></div>
+                    <div class="adv3-nebula adv3-nebula-purple"></div>
+                    <div class="adv3-nebula adv3-nebula-blue"></div>
+                    <div class="adv3-nebula adv3-nebula-green"></div>
+
+                    <!-- L3 远景星星（小、密、慢闪） -->
+                    <div class="adv3-star-field adv3-star-far" id="adv3StarFar"></div>
+                    <!-- L3 中景星星 -->
+                    <div class="adv3-star-field adv3-star-mid" id="adv3StarMid"></div>
+                    <!-- L3 近景大星 -->
+                    <div class="adv3-star-field adv3-star-near" id="adv3StarNear"></div>
+
+                    <!-- L4 流星 -->
+                    <div class="adv3-meteor adv3-meteor-1"></div>
+                    <div class="adv3-meteor adv3-meteor-2"></div>
+
+                    <!-- L4 漂浮星尘粒子 -->
+                    <div class="adv3-dust-field" id="adv3DustField"></div>
+
+                    <!-- ★ L5 眼睛星球（主视觉，远处逐渐靠近） -->
+                    <div class="adv3-planet" id="adv3Planet">
+                        <div class="adv3-planet-glow"></div>
+                        <div class="adv3-planet-body">
+                            <img class="adv3-planet-img" src="assets/images/adventure/island-eye-full.png" alt="眼睛星球">
+                            <div class="adv3-planet-ring adv3-planet-ring-1"></div>
+                            <div class="adv3-planet-ring adv3-planet-ring-2"></div>
+                            <div class="adv3-planet-particles" id="adv3PlanetParticles">
+                                <span class="adv3-pp p1"></span>
+                                <span class="adv3-pp p2"></span>
+                                <span class="adv3-pp p3"></span>
+                                <span class="adv3-pp p4"></span>
+                                <span class="adv3-pp p5"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ★ L6 小光仔探索舱（左侧飞入 → 靠近星球） -->
+                    <div class="adv3-craft" id="adv3Craft">
+                        <!-- 飞船尾焰粒子（蓝绿色） -->
+                        <div class="adv3-craft-trail" aria-hidden="true">
+                            <span class="adv3-trail-particle p1"></span>
+                            <span class="adv3-trail-particle p2"></span>
+                            <span class="adv3-trail-particle p3"></span>
+                            <span class="adv3-trail-particle p4"></span>
+                            <span class="adv3-trail-particle p5"></span>
+                            <span class="adv3-trail-particle p6"></span>
+                        </div>
+                        <!-- 飞船光晕 -->
+                        <div class="adv3-craft-glow"></div>
+                        <!-- 探索舱主体 -->
+                        <img class="adv3-craft-ship" src="assets/images/adventure/spaceship.png" alt="探索舱">
+                        <!-- 小光仔坐在舱内 -->
+                        <img class="adv3-craft-pilot" src="assets/images/adventure/xiaoguangzi-new.png" alt="小光仔">
+                    </div>
+
+                </div><!-- /.adv3-camera -->
+
+                <!-- L7 标题文字层（独立于镜头，避免缩放模糊） -->
+                <div class="adv3-hero-text" id="adv3HeroText">
+                    <span class="adv3-hero-chip">
+                        <span class="dot" aria-hidden="true"></span>
+                        第一幕 · 星际发现
+                    </span>
+                    <h1 class="adv3-hero-title">
+                        <span class="l1">小光仔的</span>
+                        <span class="l2">眼睛大冒险</span>
+                    </h1>
                 </div>
 
-                <!-- 三个数据卡 -->
-                <div class="adv3-hero-stats" role="list" aria-label="冒险数据">
-                    <div class="adv3-hstat" role="listitem">
-                        <div class="adv3-hstat-num" data-target="5">5</div>
-                        <div class="adv3-hstat-label">已探索区域</div>
-                    </div>
-                    <div class="adv3-hstat" role="listitem">
-                        <div class="adv3-hstat-num gold" data-target="4">4</div>
-                        <div class="adv3-hstat-label">完成挑战</div>
-                    </div>
-                    <div class="adv3-hstat" role="listitem">
-                        <div class="adv3-hstat-num green">Lv.2</div>
-                        <div class="adv3-hstat-label">护眼等级</div>
-                    </div>
+                <!-- L8 底部滚动提示 -->
+                <div class="adv3-scroll-hint" aria-hidden="true">
+                    <span class="adv3-hint-text">向下滑动 · 开始探索</span>
+                    <span class="adv3-hint-arrow"></span>
                 </div>
 
-                <div class="adv3-hero-meta">
+                <!-- 保留旧 Hero 数据（隐藏，避免影响下游 JS 查找 #adv3ScoreText） -->
+                <div class="adv3-hero-legacy" aria-hidden="true" style="display:none">
                     <span id="adv3ScoreText">⭐ 1280 积分</span>
-                    <span class="green">🧑‍🚀 眼球探索家 LV.2</span>
                 </div>
-            </div>
 
-            <!-- 右氛围层 · 装饰层 z=1/2：星云/小行星/光轨/星星 -->
-            <div class="adv3-hero-scene" aria-hidden="true">
-                <div class="adv3-hero-scene-bg"></div>
-                <div class="adv3-hero-nebula"></div>
-                <div class="adv3-hero-stars-a" aria-hidden="true"></div>
-                <div class="adv3-hero-stars-b" aria-hidden="true"></div>
-                <div class="adv3-hero-dust" aria-hidden="true"></div>
-                <div class="adv3-hero-orbit"></div>
-                <div class="adv3-hero-orbit gold"></div>
-                <!-- 3 个小行星（装饰层 z=2） -->
-                <div class="adv3-hero-ast a1" aria-hidden="true"></div>
-                <div class="adv3-hero-ast a2" aria-hidden="true"></div>
-                <div class="adv3-hero-ast a3" aria-hidden="true"></div>
-                
-                
-                <!-- 飞船光轨（装饰层 z=1） -->
-                <div class="adv3-hero-trail" aria-hidden="true"></div>
-                <img class="adv3-hero-star1" src="assets/images/vision/star-big.png" alt="">
-                <img class="adv3-hero-star2" src="assets/images/vision/star-small.png" alt="">
-            </div>
+            </div><!-- /.adv3-stage -->
 
-            <!-- ★ 小光仔驾驶眼球飞船穿越宇宙（推进尾焰+星星轨迹+发光） z=3 -->
-            <div class="adv3-hero-char" aria-hidden="true">
-                <!-- 飞船外层光晕 -->
-                <div class="adv3-ship-glow"></div>
-                <!-- 飞船主体：眼球造型 -->
-                <div class="adv3-ship-body">
-                    <div class="adv3-ship-window"></div>
-                    <div class="adv3-ship-pupil"></div>
-                    <div class="adv3-ship-shine"></div>
-                </div>
-                <!-- 小光仔坐在飞船里 -->
-                <img class="adv3-ship-pilot" src="assets/images/xiaoguangzi-new.png" alt="小光仔驾驶飞船">
-                <!-- 推进尾焰 -->
-                <div class="adv3-ship-thruster">
-                    <div class="adv3-thruster-flame f1"></div>
-                    <div class="adv3-thruster-flame f2"></div>
-                    <div class="adv3-thruster-flame f3"></div>
-                </div>
-                <!-- 星星轨迹 -->
-                <div class="adv3-ship-trails" aria-hidden="true">
-                    <span class="adv3-trail t1"></span>
-                    <span class="adv3-trail t2"></span>
-                    <span class="adv3-trail t3"></span>
-                    <span class="adv3-trail t4"></span>
-                    <span class="adv3-trail t5"></span>
-                </div>
-            </div>
         </section>
+
 
         <!-- ============================================================
              03. 三栏探索地图
@@ -2789,6 +2749,48 @@
                     <!-- 深空星尘背景 -->
                     <div class="eye-space"></div>
 
+                    <!-- 星际探险路线（柔和发光虚线 + 流动光粒子） -->
+                    <svg class="adv3-route" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                        <defs>
+                            <linearGradient id="adv3RouteGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%"   stop-color="#7BC6FF" stop-opacity="0.55"/>
+                                <stop offset="35%"  stop-color="#B585FF" stop-opacity="0.65"/>
+                                <stop offset="65%"  stop-color="#FFD45A" stop-opacity="0.65"/>
+                                <stop offset="100%" stop-color="#78FFC8" stop-opacity="0.55"/>
+                            </linearGradient>
+                            <filter id="adv3RouteGlow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="0.8" result="blur"/>
+                                <feMerge>
+                                    <feMergeNode in="blur"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                        </defs>
+                        <!-- 主路线：连接 5 站点的高低错落曲线 -->
+                        <path class="adv3-route-path" d="M 10,58 C 18,32 26,28 30,30 C 38,34 40,72 44,68 C 52,60 60,42 72,22 C 80,12 86,30 90,38"
+                              stroke="url(#adv3RouteGrad)" stroke-width="0.8" fill="none"
+                              stroke-linecap="round" stroke-dasharray="1.4 1.6"
+                              filter="url(#adv3RouteGlow)"/>
+                        <!-- 流动光粒子（沿路径运动） -->
+                        <circle class="adv3-route-particle" r="0.9" fill="#FFFFFF" opacity="0.9">
+                            <animateMotion dur="9s" repeatCount="indefinite">
+                                <mpath href="#adv3RouteMotionPath"/>
+                            </animateMotion>
+                        </circle>
+                        <circle class="adv3-route-particle" r="0.7" fill="#FFE58A" opacity="0.85">
+                            <animateMotion dur="9s" begin="-3s" repeatCount="indefinite">
+                                <mpath href="#adv3RouteMotionPath"/>
+                            </animateMotion>
+                        </circle>
+                        <circle class="adv3-route-particle" r="0.8" fill="#B585FF" opacity="0.85">
+                            <animateMotion dur="9s" begin="-6s" repeatCount="indefinite">
+                                <mpath href="#adv3RouteMotionPath"/>
+                            </animateMotion>
+                        </circle>
+                        <!-- 路径定义（供 animateMotion 引用） -->
+                        <path id="adv3RouteMotionPath" d="M 10,58 C 18,32 26,28 30,30 C 38,34 40,72 44,68 C 52,60 60,42 72,22 C 80,12 86,30 90,38" fill="none" style="display:none"/>
+                    </svg>
+
                     <!-- 眼球星球主体（纯 CSS 3D 玻璃球） -->
                     <div class="eye-planet" aria-hidden="true">
                         <div class="ep-glow"></div>
@@ -2812,8 +2814,8 @@
                         <div class="eye-bubble-arrow"></div>
                     </div>
 
-                    <!-- 01 角膜基地（左前 · 透明护盾） -->
-                    <div class="adv3-eye-node is-active" style="--nx:13%; --ny:50%;" data-part="cornea" data-num="01" data-title="角膜基地" data-subtitle="保护眼睛的第一道防线" data-desc="角膜是眼睛最外面透明的小护盾，就像星球的透明防护罩，帮助我们把光线安全送进眼睛里！" data-tip="角膜需要保持湿润，平时千万&lt;b&gt;不要用脏手揉眼睛&lt;/b&gt;哦~">
+                    <!-- 01 角膜基地（左前 · 透明护盾 · 最近最大） -->
+                    <div class="adv3-eye-node is-active adv3-node-near" style="--nx:10%; --ny:58%;" data-part="cornea" data-num="01" data-title="角膜基地" data-subtitle="保护眼睛的第一道防线" data-desc="角膜是眼睛最外面透明的小护盾，就像星球的透明防护罩，帮助我们把光线安全送进眼睛里！" data-tip="角膜需要保持湿润，平时千万&lt;b&gt;不要用脏手揉眼睛&lt;/b&gt;哦~">
                         <button type="button" class="adv3-pin" aria-label="01 角膜基地">
                             <span class="station-icon">🛡️</span>
                             <span class="station-num">01</span>
@@ -2821,8 +2823,8 @@
                         <div class="stars">★★★</div>
                         <div class="name">角膜基地</div>
                     </div>
-                    <!-- 02 瞳孔黑洞（中央 · 小黑洞） -->
-                    <div class="adv3-eye-node" style="--nx:30%; --ny:50%;" data-part="pupil" data-num="02" data-title="瞳孔黑洞" data-subtitle="控制光线进入的小黑洞" data-desc="瞳孔是眼睛中间黑黑的小圆洞，就像宇宙中的小黑洞。光线强的时候它会变小，光线暗的时候它会变大！" data-tip="在&lt;b&gt;黑暗的环境&lt;/b&gt;里看手机，瞳孔会努力放大，眼睛很容易累哦。">
+                    <!-- 02 瞳孔黑洞（中央 · 小黑洞 · 远处稍小） -->
+                    <div class="adv3-eye-node adv3-node-far" style="--nx:30%; --ny:30%;" data-part="pupil" data-num="02" data-title="瞳孔黑洞" data-subtitle="控制光线进入的小黑洞" data-desc="瞳孔是眼睛中间黑黑的小圆洞，就像宇宙中的小黑洞。光线强的时候它会变小，光线暗的时候它会变大！" data-tip="在&lt;b&gt;黑暗的环境&lt;/b&gt;里看手机，瞳孔会努力放大，眼睛很容易累哦。">
                         <button type="button" class="adv3-pin" aria-label="02 瞳孔黑洞">
                             <span class="station-icon">🕳️</span>
                             <span class="station-num">02</span>
@@ -2830,8 +2832,8 @@
                         <div class="stars">★★★</div>
                         <div class="name">瞳孔黑洞</div>
                     </div>
-                    <!-- 03 晶状体水晶宫（瞳孔后 · 水晶宝石） -->
-                    <div class="adv3-eye-node" style="--nx:44%; --ny:50%;" data-part="lens" data-num="03" data-title="晶状体水晶宫" data-subtitle="帮助我们看清世界的水晶" data-desc="晶状体就像一颗能扁能圆的透明水晶，是自动变焦镜头，帮助我们看清楚近处和远处的东西！" data-tip="如果&lt;b&gt;长时间看近处&lt;/b&gt;，晶状体一直紧绷，就容易近视啦！记得每20分钟看看远处~">
+                    <!-- 03 晶状体水晶宫（瞳孔后 · 水晶宝石 · 中等距离） -->
+                    <div class="adv3-eye-node adv3-node-mid" style="--nx:44%; --ny:68%;" data-part="lens" data-num="03" data-title="晶状体水晶宫" data-subtitle="帮助我们看清世界的水晶" data-desc="晶状体就像一颗能扁能圆的透明水晶，是自动变焦镜头，帮助我们看清楚近处和远处的东西！" data-tip="如果&lt;b&gt;长时间看近处&lt;/b&gt;，晶状体一直紧绷，就容易近视啦！记得每20分钟看看远处~">
                         <button type="button" class="adv3-pin" aria-label="03 晶状体水晶宫">
                             <span class="station-icon">💎</span>
                             <span class="station-num">03</span>
@@ -2839,8 +2841,8 @@
                         <div class="stars">★★★</div>
                         <div class="name">晶状体水晶宫</div>
                     </div>
-                    <!-- 04 视网膜星云（后壁 · 星光接收器） -->
-                    <div class="adv3-eye-node" style="--nx:72%; --ny:50%;" data-part="retina" data-num="04" data-title="视网膜星云" data-subtitle="捕捉信息的星光接收器" data-desc="视网膜就像一张发光的星云画布，能把光信号变成电信号，让我们'看见'整个宇宙的图像！" data-tip="多吃深绿色蔬菜和富含 &lt;b&gt;DHA&lt;/b&gt; 的食物，可以帮助视网膜更健康哦~">
+                    <!-- 04 视网膜星云（后壁 · 星光接收器 · 最远最小） -->
+                    <div class="adv3-eye-node adv3-node-far" style="--nx:72%; --ny:22%;" data-part="retina" data-num="04" data-title="视网膜星云" data-subtitle="捕捉信息的星光接收器" data-desc="视网膜就像一张发光的星云画布，能把光信号变成电信号，让我们'看见'整个宇宙的图像！" data-tip="多吃深绿色蔬菜和富含 &lt;b&gt;DHA&lt;/b&gt; 的食物，可以帮助视网膜更健康哦~">
                         <button type="button" class="adv3-pin" aria-label="04 视网膜星云">
                             <span class="station-icon">📡</span>
                             <span class="station-num">04</span>
@@ -2848,8 +2850,8 @@
                         <div class="stars">★★★</div>
                         <div class="name">视网膜星云</div>
                     </div>
-                    <!-- 05 视神经传输站（后极 · 能量通道） -->
-                    <div class="adv3-eye-node" style="--nx:90%; --ny:50%;" data-part="nerve" data-num="05" data-title="视神经传输站" data-subtitle="传递画面的能量通道" data-desc="视神经是眼睛连接大脑的能量通道，视网膜捕捉到的画面会通过它光速送到大脑里！" data-tip="运动时注意保护后脑，&lt;b&gt;均衡饮食+充足睡眠&lt;/b&gt;能让视神经工作得更顺畅~">
+                    <!-- 05 视神经传输站（后极 · 能量通道 · 中等距离） -->
+                    <div class="adv3-eye-node adv3-node-mid" style="--nx:90%; --ny:38%;" data-part="nerve" data-num="05" data-title="视神经传输站" data-subtitle="传递画面的能量通道" data-desc="视神经是眼睛连接大脑的能量通道，视网膜捕捉到的画面会通过它光速送到大脑里！" data-tip="运动时注意保护后脑，&lt;b&gt;均衡饮食+充足睡眠&lt;/b&gt;能让视神经工作得更顺畅~">
                         <button type="button" class="adv3-pin" aria-label="05 视神经传输站">
                             <span class="station-icon">⚡</span>
                             <span class="station-num">05</span>
@@ -3016,6 +3018,108 @@
     </footer>
 
     <script src="js/main.js?v=5"></script>
+
+    <!-- ============================================================
+         07. 第一幕动画 · 星星/星尘动态生成 + 镜头时序
+         · 仅作用于 .adv3-hero 第一幕动画区
+         · 不影响 main.js / 其他板块
+         ============================================================ -->
+    <script>
+    (function(){
+        // ---------- 工具：随机数 ----------
+        function rand(min, max) { return Math.random() * (max - min) + min; }
+        function randInt(min, max) { return Math.floor(rand(min, max + 1)); }
+
+        // ---------- 1. 远景星星（30 个小点，慢闪） ----------
+        var farField = document.getElementById('adv3StarFar');
+        if (farField) {
+            for (var i = 0; i < 30; i++) {
+                var s = document.createElement('span');
+                s.className = 'adv3-sfar';
+                s.style.left = rand(2, 98) + '%';
+                s.style.top = rand(2, 98) + '%';
+                s.style.animationDelay = rand(0, 5) + 's';
+                s.style.animationDuration = rand(4, 7) + 's';
+                farField.appendChild(s);
+            }
+        }
+
+        // ---------- 2. 中景星星（18 个，中速闪烁 + 漂移） ----------
+        var midField = document.getElementById('adv3StarMid');
+        if (midField) {
+            for (var i = 0; i < 18; i++) {
+                var s = document.createElement('span');
+                s.className = 'adv3-smid';
+                s.style.left = rand(2, 98) + '%';
+                s.style.top = rand(2, 98) + '%';
+                s.style.animationDelay = rand(0, 4) + 's, ' + rand(0, 60) + 's';
+                midField.appendChild(s);
+            }
+        }
+
+        // ---------- 3. 近景大星（10 个，亮、缓慢闪烁） ----------
+        var nearField = document.getElementById('adv3StarNear');
+        if (nearField) {
+            for (var i = 0; i < 10; i++) {
+                var s = document.createElement('span');
+                s.className = 'adv3-snear';
+                s.style.left = rand(5, 95) + '%';
+                s.style.top = rand(5, 95) + '%';
+                s.style.animationDelay = rand(0, 6) + 's';
+                s.style.animationDuration = rand(5, 8) + 's';
+                nearField.appendChild(s);
+            }
+        }
+
+        // ---------- 4. 漂浮星尘（16 个，柔和飘动） ----------
+        var dustField = document.getElementById('adv3DustField');
+        if (dustField) {
+            for (var i = 0; i < 16; i++) {
+                var d = document.createElement('span');
+                d.className = 'adv3-dust-p';
+                d.style.left = rand(3, 97) + '%';
+                d.style.top = rand(5, 95) + '%';
+                d.style.animationDelay = rand(0, 12) + 's';
+                d.style.animationDuration = rand(10, 16) + 's';
+                dustField.appendChild(d);
+            }
+        }
+
+        // ---------- 5. 眼睛星球眨眼（可选：轻微scale Y模拟眨眼） ----------
+        var planetImg = document.querySelector('.adv3-planet-img');
+        if (planetImg) {
+            // 12s 后（星球到位）开始偶尔眨眼
+            setTimeout(function startBlink() {
+                planetImg.style.transition = 'transform 0.15s ease';
+                planetImg.style.transform = 'scaleY(0.85)';
+                setTimeout(function() {
+                    planetImg.style.transform = '';
+                    setTimeout(startBlink, rand(3000, 6000));
+                }, 150);
+            }, 12000);
+        }
+
+        // ---------- 6. 滚动提示：用户滚动后淡出 Hero 动画 ----------
+        var heroSec = document.querySelector('.adv3-hero');
+        var scrollHint = document.querySelector('.adv3-scroll-hint');
+        if (heroSec && scrollHint) {
+            var fadeTimer = null;
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    scrollHint.style.opacity = '0';
+                    scrollHint.style.transition = 'opacity 0.5s ease';
+                    if (heroSec.style.opacity !== '0.6') {
+                        heroSec.style.transition = 'opacity 0.8s ease';
+                        heroSec.style.opacity = '0.6';
+                    }
+                } else {
+                    scrollHint.style.opacity = '';
+                    heroSec.style.opacity = '';
+                }
+            }, { passive: true });
+        }
+    })();
+    </script>
 
     <!-- ============================================================
          08. 本页内联脚本（仅作用于 adv3-* 结构，不影响 main.js）
