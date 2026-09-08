@@ -640,6 +640,309 @@
         font-size: 18px; font-weight: 800; color: #C9DBF7;
         max-width: 280px; line-height: 1.6;
     }
+
+    /* ============================================================
+       章节导航系统 — 左上角悬浮按钮 + 章节地图 + 章节面板
+       ============================================================ */
+
+    /* ---- 左上角导航按钮组 ---- */
+    .ei-nav-btns {
+        position: fixed; top: 58px; left: 20px; z-index: 25;
+        display: flex; gap: 10px;
+        opacity: 0;
+        animation: ei-fade-in-simple 1s ease-out 1.5s forwards;
+    }
+    .ei-nav-btn {
+        display: inline-flex; align-items: center; gap: 5px;
+        padding: 7px 14px; border-radius: 999px;
+        border: 1px solid rgba(120,200,255,0.25);
+        background: rgba(7,27,73,0.5);
+        backdrop-filter: blur(8px);
+        color: #CDE4FF; font-size: 12px; font-weight: 700;
+        cursor: pointer;
+        transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+        box-shadow: 0 2px 12px rgba(6,24,61,0.3);
+    }
+    .ei-nav-btn:hover {
+        transform: translateY(-1px) scale(1.05);
+        border-color: rgba(120,200,255,0.5);
+        box-shadow: 0 4px 20px rgba(101,200,255,0.2), 0 0 15px rgba(120,200,255,0.15);
+    }
+    .ei-nav-btn:active { transform: scale(0.96); }
+    .ei-nav-btn .ic { font-size: 14px; }
+
+    /* ---- 章节地图全屏 ---- */
+    .ei-chapter-map {
+        position: fixed; inset: 0; z-index: 50;
+        display: none;
+        flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: 0;
+        overflow-y: auto;
+        padding: 40px 20px;
+    }
+    .ei-chapter-map.is-show { display: flex; }
+    .ei-chapter-map .cm-bg {
+        position: absolute; inset: 0; z-index: -1;
+        background:
+            radial-gradient(ellipse 70% 50% at 15% 20%, rgba(118, 86, 214, 0.22) 0%, transparent 60%),
+            radial-gradient(ellipse 65% 45% at 85% 55%, rgba(60, 110, 220, 0.20) 0%, transparent 65%),
+            linear-gradient(180deg, #050B1F 0%, #0A1A3A 35%, #0D2452 55%, #0A1A3A 75%, #050B1F 100%);
+    }
+    .ei-chapter-map .cm-bg::before {
+        content: ""; position: absolute; inset: 0;
+        background-image:
+            radial-gradient(1.5px 1.5px at 9% 18%, #fff, transparent 51%),
+            radial-gradient(1.2px 1.2px at 17% 64%, #E6F0FF, transparent 51%),
+            radial-gradient(1.3px 1.3px at 22% 34%, #fff, transparent 51%),
+            radial-gradient(1.6px 1.6px at 31% 82%, #CFE6FF, transparent 51%),
+            radial-gradient(1.4px 1.4px at 41% 10%, #D4E4FF, transparent 51%),
+            radial-gradient(1.2px 1.2px at 48% 48%, #fff, transparent 51%),
+            radial-gradient(1.4px 1.4px at 58% 28%, #fff, transparent 51%),
+            radial-gradient(1.6px 1.6px at 68% 32%, #FFE58A, transparent 51%),
+            radial-gradient(1.5px 1.5px at 78% 68%, #fff, transparent 51%),
+            radial-gradient(1.3px 1.3px at 88% 42%, #DCE7FF, transparent 51%);
+        animation: ei-twinkle 5s ease-in-out infinite alternate;
+    }
+    .ei-chapter-map .cm-header {
+        text-align: center; margin-bottom: 28px;
+    }
+    .ei-chapter-map .cm-title {
+        font-size: clamp(28px, 5vw, 42px);
+        font-weight: 900;
+        background: linear-gradient(90deg, #FFD93D, #4ECDC4, #5B8DEF);
+        background-size: 200% 200%;
+        -webkit-background-clip: text; background-clip: text; color: transparent;
+        filter: drop-shadow(0 4px 20px rgba(255,200,100,0.3));
+        animation: gr-rainbow 3s ease infinite;
+        margin-bottom: 6px;
+    }
+    .ei-chapter-map .cm-sub {
+        font-size: clamp(13px, 2vw, 16px);
+        color: #9FB6E0; font-weight: 700;
+        letter-spacing: 1px;
+    }
+    .ei-chapter-map .cm-close {
+        position: absolute; top: 20px; right: 20px;
+        width: 36px; height: 36px; border-radius: 50%;
+        border: 1px solid rgba(120,200,255,0.3);
+        background: rgba(7,27,73,0.6);
+        backdrop-filter: blur(8px);
+        color: #CDE4FF; font-size: 18px; cursor: pointer;
+        display: grid; place-items: center;
+        transition: transform .2s, border-color .2s;
+    }
+    .ei-chapter-map .cm-close:hover {
+        transform: scale(1.1); border-color: rgba(165,232,90,0.5);
+    }
+    .ei-chapter-list {
+        display: flex; flex-direction: column; gap: 14px;
+        width: 100%; max-width: 520px;
+    }
+    .ei-chapter-item {
+        display: flex; align-items: center; gap: 14px;
+        padding: 16px 20px; border-radius: 18px;
+        background: rgba(7,27,73,0.5);
+        border: 1px solid rgba(120,200,255,0.2);
+        backdrop-filter: blur(10px);
+        cursor: pointer;
+        transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+        position: relative; overflow: hidden;
+    }
+    .ei-chapter-item:hover {
+        transform: translateY(-3px);
+        border-color: rgba(120,200,255,0.45);
+        box-shadow: 0 8px 30px rgba(6,24,61,0.4), 0 0 20px rgba(101,200,255,0.12);
+    }
+    .ei-chapter-item .ci-num {
+        font-size: 22px; font-weight: 900;
+        min-width: 36px; text-align: center;
+        opacity: 0.5;
+    }
+    .ei-chapter-item .ci-icon { font-size: 28px; }
+    .ei-chapter-item .ci-body { flex: 1; }
+    .ei-chapter-item .ci-name {
+        font-size: 16px; font-weight: 800; color: #E8F2FF;
+        margin-bottom: 2px;
+    }
+    .ei-chapter-item .ci-desc {
+        font-size: 12px; color: #9FB6E0; font-weight: 600;
+    }
+    .ei-chapter-item .ci-status {
+        font-size: 13px; font-weight: 800;
+        min-width: 70px; text-align: right;
+    }
+    .ei-chapter-item.cm-done { border-color: rgba(107,203,119,0.35); }
+    .ei-chapter-item.cm-done .ci-status { color: #6BCB77; }
+    .ei-chapter-item.cm-current { border-color: rgba(255,217,61,0.4); box-shadow: 0 0 18px rgba(255,217,61,0.12); }
+    .ei-chapter-item.cm-current .ci-status { color: #FFD93D; }
+    .ei-chapter-item.cm-locked { opacity: 0.45; cursor: not-allowed; }
+    .ei-chapter-item.cm-locked .ci-status { color: #7A8FB0; }
+    .ei-chapter-item.cm-locked:hover { transform: none; border-color: rgba(120,200,255,0.2); }
+
+    /* ---- 章节侧滑面板 ---- */
+    .ei-chapter-panel-overlay {
+        position: fixed; inset: 0; z-index: 45;
+        background: rgba(5,11,31,0.5);
+        opacity: 0; pointer-events: none;
+        transition: opacity .3s ease;
+    }
+    .ei-chapter-panel-overlay.is-show { opacity: 1; pointer-events: auto; }
+    .ei-chapter-panel {
+        position: fixed; top: 0; right: 0; bottom: 0; z-index: 46;
+        width: 400px; max-width: 80vw;
+        background:
+            radial-gradient(ellipse 50% 30% at 50% 0%, rgba(60,110,220,0.15), transparent 70%),
+            linear-gradient(180deg, rgba(7,20,50,0.97) 0%, rgba(5,11,31,0.97) 100%);
+        border-left: 1px solid rgba(120,200,255,0.2);
+        backdrop-filter: blur(20px);
+        transform: translateX(100%);
+        transition: transform .35s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow-y: auto;
+        padding: 24px 20px;
+    }
+    .ei-chapter-panel.is-show { transform: translateX(0); }
+    .ei-chapter-panel .cp-header { text-align: center; margin-bottom: 24px; margin-top: 8px; }
+    .ei-chapter-panel .cp-title {
+        font-size: 22px; font-weight: 900;
+        background: linear-gradient(90deg, #FFD93D, #4ECDC4, #5B8DEF);
+        background-size: 200% 200%;
+        -webkit-background-clip: text; background-clip: text; color: transparent;
+        animation: gr-rainbow 3s ease infinite;
+        margin-bottom: 4px;
+    }
+    .ei-chapter-panel .cp-sub {
+        font-size: 12px; color: #9FB6E0; font-weight: 600;
+        letter-spacing: 1px;
+    }
+    .ei-chapter-panel .cp-close {
+        position: absolute; top: 16px; right: 16px;
+        width: 32px; height: 32px; border-radius: 50%;
+        border: 1px solid rgba(120,200,255,0.3);
+        background: rgba(7,27,73,0.6);
+        color: #CDE4FF; font-size: 16px; cursor: pointer;
+        display: grid; place-items: center;
+        transition: transform .2s;
+    }
+    .ei-chapter-panel .cp-close:hover { transform: scale(1.1) rotate(90deg); }
+    .ei-chapter-panel .cp-list {
+        display: flex; flex-direction: column; gap: 12px;
+    }
+    .ei-chapter-panel .cp-item {
+        display: flex; align-items: center; gap: 12px;
+        padding: 14px 16px; border-radius: 14px;
+        background: rgba(7,27,73,0.5);
+        border: 1px solid rgba(120,200,255,0.2);
+        cursor: pointer;
+        transition: transform .2s ease, border-color .2s ease;
+        position: relative;
+    }
+    .ei-chapter-panel .cp-item:hover {
+        transform: translateX(-3px);
+        border-color: rgba(120,200,255,0.4);
+    }
+    .ei-chapter-panel .cp-item .ci-num { font-size: 18px; font-weight: 900; min-width: 28px; opacity: 0.5; }
+    .ei-chapter-panel .cp-item .ci-icon { font-size: 24px; }
+    .ei-chapter-panel .cp-item .ci-body { flex: 1; }
+    .ei-chapter-panel .cp-item .ci-name { font-size: 14px; font-weight: 800; color: #E8F2FF; }
+    .ei-chapter-panel .cp-item .ci-desc { font-size: 11px; color: #9FB6E0; }
+    .ei-chapter-panel .cp-item .ci-status { font-size: 12px; font-weight: 800; min-width: 60px; text-align: right; }
+    .ei-chapter-panel .cp-item.cm-done { border-color: rgba(107,203,119,0.3); }
+    .ei-chapter-panel .cp-item.cm-done .ci-status { color: #6BCB77; }
+    .ei-chapter-panel .cp-item.cm-current { border-color: rgba(255,217,61,0.35); }
+    .ei-chapter-panel .cp-item.cm-current .ci-status { color: #FFD93D; }
+    .ei-chapter-panel .cp-item.cm-locked { opacity: 0.45; cursor: not-allowed; }
+    .ei-chapter-panel .cp-item.cm-locked .ci-status { color: #7A8FB0; }
+    .ei-chapter-panel .cp-item.cm-locked:hover { transform: none; }
+
+    /* ---- 离开确认弹窗 ---- */
+    .ei-leave-confirm {
+        position: fixed; inset: 0; z-index: 55;
+        display: none;
+        align-items: center; justify-content: center;
+        background: rgba(5,11,31,0.7);
+        backdrop-filter: blur(8px);
+    }
+    .ei-leave-confirm.is-show { display: flex; }
+    .ei-leave-confirm .lc-box {
+        text-align: center;
+        padding: 36px 40px; border-radius: 24px;
+        background:
+            radial-gradient(ellipse 60% 40% at 50% 0%, rgba(60,110,220,0.15), transparent 70%),
+            linear-gradient(180deg, rgba(7,20,50,0.98), rgba(5,11,31,0.98));
+        border: 1px solid rgba(120,200,255,0.3);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 30px rgba(101,200,255,0.1);
+        max-width: 360px;
+        animation: ei-fade-in-simple .3s ease-out forwards;
+    }
+    .ei-leave-confirm .lc-icon { font-size: 42px; margin-bottom: 12px; animation: gr-mascot-float 2s ease-in-out infinite; }
+    .ei-leave-confirm .lc-title {
+        font-size: 20px; font-weight: 900; color: #FFE79B;
+        margin-bottom: 6px;
+    }
+    .ei-leave-confirm .lc-sub {
+        font-size: 13px; color: #9FB6E0; font-weight: 600;
+        margin-bottom: 24px;
+    }
+    .ei-leave-confirm .lc-btns {
+        display: flex; gap: 12px; justify-content: center;
+    }
+    .ei-leave-confirm .lc-btn {
+        padding: 12px 28px; border-radius: 999px;
+        border: none; cursor: pointer;
+        font-size: 15px; font-weight: 800;
+        transition: transform .2s, box-shadow .2s;
+    }
+    .ei-leave-confirm .lc-btn:hover { transform: translateY(-2px) scale(1.03); }
+    .ei-leave-confirm .lc-btn:active { transform: scale(0.96); }
+    .ei-leave-confirm .lc-continue {
+        background: linear-gradient(135deg, #1E5FB0, #7656D6);
+        color: #fff;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+    .ei-leave-confirm .lc-leave {
+        background: linear-gradient(135deg, rgba(107,203,119,0.8), rgba(78,205,196,0.8));
+        color: #fff;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+
+    /* ---- 锁定章节提示 ---- */
+    .ei-lock-tip {
+        position: fixed; top: 50%; left: 50%;
+        transform: translate(-50%, -50%) scale(0.9);
+        z-index: 60;
+        visibility: hidden;
+        text-align: center;
+        padding: 28px 36px; border-radius: 20px;
+        background:
+            radial-gradient(ellipse 60% 40% at 50% 0%, rgba(60,110,220,0.15), transparent 70%),
+            linear-gradient(180deg, rgba(7,20,50,0.98), rgba(5,11,31,0.98));
+        border: 1px solid rgba(120,200,255,0.3);
+        box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+        opacity: 0;
+        transition: opacity .25s ease, transform .25s ease, visibility 0s linear .25s;
+        pointer-events: none;
+    }
+    .ei-lock-tip.is-show {
+        visibility: visible;
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+        pointer-events: auto;
+        transition: opacity .25s ease, transform .25s ease, visibility 0s linear 0s;
+    }
+    .ei-lock-tip .lt-icon { font-size: 36px; margin-bottom: 8px; }
+    .ei-lock-tip .lt-title { font-size: 16px; font-weight: 900; color: #FFE79B; margin-bottom: 4px; }
+    .ei-lock-tip .lt-sub { font-size: 12px; color: #9FB6E0; font-weight: 600; }
+
+    @media (max-width: 768px) {
+        .ei-nav-btns { top: 50px; left: 14px; gap: 8px; }
+        .ei-nav-btn { font-size: 11px; padding: 6px 12px; }
+        .ei-nav-btn .ic { font-size: 13px; }
+        .ei-chapter-panel { width: 80vw; padding: 20px 16px; }
+        .ei-chapter-map { padding: 30px 16px; }
+        .ei-chapter-item { padding: 14px 16px; }
+        .ei-leave-confirm .lc-box { padding: 28px 24px; max-width: 280px; }
+    }
     </style>
 </head>
 <body class="eye-intro">
@@ -768,10 +1071,129 @@
     <!-- 结算视频 -->
     <video class="ei-result-video" id="resultVideo" src="assets/eye-adventure/result.mp4" muted playsinline preload="none"></video>
 
+    <!-- 第一关→第二关 剧情过场视频 -->
+    <video class="ei-result-video" id="transitionVideo" src="assets/eye-adventure/transition-01-to-02.mp4" muted playsinline preload="none"></video>
+
+    <!-- 瞳孔教学视频 -->
+    <video class="ei-result-video" id="pupilLessonVideo" src="assets/eye-adventure/pupil-lesson.mp4" muted playsinline preload="none"></video>
+
+    <!-- 瞳孔视频声音备用按钮 -->
+    <button class="ei-sound-btn" id="pupilSoundBtn" type="button">
+        <span class="icon">🔊</span>
+        <span class="label">点击播放剧情</span>
+    </button>
+
+    <!-- 03 晶状体水晶宫视频 -->
+    <video class="ei-result-video" id="lensPalaceVideo" src="assets/eye-adventure/lens-palace.mp4" muted playsinline preload="none"></video>
+
+    <!-- 晶状体视频声音备用按钮 -->
+    <button class="ei-sound-btn" id="lensSoundBtn" type="button">
+        <span class="icon">🔊</span>
+        <span class="label">点击播放剧情</span>
+    </button>
+
+    <!-- 03 晶状体水晶宫入口占位 -->
+    <div class="ei-game-ready" id="lensPalaceReady">
+        <div class="gr-bg" aria-hidden="true"></div>
+        <div class="gr-star" style="top:12%;left:15%;font-size:20px">✦</div>
+        <div class="gr-star" style="top:20%;right:18%;font-size:16px">✧</div>
+        <div class="gr-star" style="top:70%;left:10%;font-size:14px">✦</div>
+        <div class="gr-star" style="top:75%;right:12%;font-size:22px">✧</div>
+        <div class="gr-mascot">💎</div>
+        <div class="gr-title" style="font-size:42px;">03｜晶状体水晶宫</div>
+        <div class="gr-sub">小光仔，准备探索晶状体的秘密！</div>
+        <button class="gr-btn" id="lensPalaceBtn" type="button">🚀 开始探索</button>
+    </div>
+
+    <!-- 下一阶段入口占位 -->
+    <div class="ei-game-ready" id="nextStageReady">
+        <div class="gr-bg" aria-hidden="true"></div>
+        <div class="gr-star" style="top:12%;left:15%;font-size:20px">✦</div>
+        <div class="gr-star" style="top:20%;right:18%;font-size:16px">✧</div>
+        <div class="gr-star" style="top:70%;left:10%;font-size:14px">✦</div>
+        <div class="gr-star" style="top:75%;right:12%;font-size:22px">✧</div>
+        <div class="gr-mascot">🌟</div>
+        <div class="gr-title" style="font-size:36px;">准备继续探索</div>
+        <div class="gr-sub">更多眼睛的秘密等着你发现！</div>
+    </div>
+
+    <!-- 第二关入口占位 -->
+    <div class="ei-game-ready" id="level02Ready">
+        <div class="gr-bg" aria-hidden="true"></div>
+        <div class="gr-star" style="top:12%;left:15%;font-size:20px">✦</div>
+        <div class="gr-star" style="top:20%;right:18%;font-size:16px">✧</div>
+        <div class="gr-star" style="top:70%;left:10%;font-size:14px">✦</div>
+        <div class="gr-star" style="top:75%;right:12%;font-size:22px">✧</div>
+        <div class="gr-mascot">🌀</div>
+        <div class="gr-title" style="font-size:42px;">02｜瞳孔黑洞</div>
+        <div class="gr-sub">光线要继续前进啦！</div>
+        <button class="gr-btn" id="level02Btn" type="button">🚀 进入下一关</button>
+    </div>
+
     <!-- 手机竖屏提示 -->
     <div class="ei-rotate-hint" id="rotateHint">
         <div class="icon">📱</div>
         <div class="text">请横过手机，和小光仔一起追光吧！🚀</div>
+    </div>
+
+    <!-- ============================================================
+         章节导航系统
+         ============================================================ -->
+
+    <!-- 左上角导航按钮组 -->
+    <div class="ei-nav-btns" id="navBtns">
+        <button class="ei-nav-btn" id="navBackBtn" type="button">
+            <span class="ic">←</span> 返回
+        </button>
+        <button class="ei-nav-btn" id="navChapterBtn" type="button">
+            <span class="ic">☰</span> 章节
+        </button>
+    </div>
+
+    <!-- 章节地图全屏 -->
+    <div class="ei-chapter-map" id="chapterMap">
+        <div class="cm-bg" aria-hidden="true"></div>
+        <button class="cm-close" id="cmCloseBtn" type="button">✕</button>
+        <div class="cm-header">
+            <div class="cm-title">🌟 眼球大冒险</div>
+            <div class="cm-sub">跟着小光仔探索眼睛王国</div>
+        </div>
+        <div class="ei-chapter-list" id="cmList">
+            <!-- JS 动态生成 -->
+        </div>
+    </div>
+
+    <!-- 章节侧滑面板 -->
+    <div class="ei-chapter-panel-overlay" id="cpOverlay"></div>
+    <div class="ei-chapter-panel" id="chapterPanel">
+        <button class="cp-close" id="cpCloseBtn" type="button">✕</button>
+        <div class="cp-header">
+            <div class="cp-title">🌟 眼球大冒险</div>
+            <div class="cp-sub">跟着小光仔探索眼睛王国</div>
+        </div>
+        <div class="cp-list" id="cpList">
+            <!-- JS 动态生成 -->
+        </div>
+    </div>
+
+    <!-- 离开确认弹窗 -->
+    <div class="ei-leave-confirm" id="leaveConfirm">
+        <div class="lc-box">
+            <div class="lc-icon">🚀</div>
+            <div class="lc-title">要暂时离开冒险吗？</div>
+            <div class="lc-sub">当前进度会自动保存哦！</div>
+            <div class="lc-btns">
+                <button class="lc-btn lc-continue" id="lcContinueBtn" type="button">继续冒险</button>
+                <button class="lc-btn lc-leave" id="lcLeaveBtn" type="button">返回地图</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 锁定章节提示 -->
+    <div class="ei-lock-tip" id="lockTip">
+        <div class="lt-icon">🔒</div>
+        <div class="lt-title">这个章节还没有解锁哦！</div>
+        <div class="lt-sub">完成前面的冒险，就可以开启它啦！</div>
     </div>
 
     <script>
@@ -840,6 +1262,16 @@
         var hintText = document.getElementById('hintText');
         var successAnim = document.getElementById('successAnim');
         var resultVideo = document.getElementById('resultVideo');
+        var transitionVideo = document.getElementById('transitionVideo');
+        var pupilLessonVideo = document.getElementById('pupilLessonVideo');
+        var pupilSoundBtn = document.getElementById('pupilSoundBtn');
+        var level02Ready = document.getElementById('level02Ready');
+        var level02Btn = document.getElementById('level02Btn');
+        var lensPalaceVideo = document.getElementById('lensPalaceVideo');
+        var lensSoundBtn = document.getElementById('lensSoundBtn');
+        var lensPalaceReady = document.getElementById('lensPalaceReady');
+        var lensPalaceBtn = document.getElementById('lensPalaceBtn');
+        var nextStageReady = document.getElementById('nextStageReady');
         var rotateHint = document.getElementById('rotateHint');
 
         /* ============================================================
@@ -1253,6 +1685,7 @@
             STATE.paused = false;
             STATE.obstacles = [];
             STATE.collectStars = [];
+            setCurrentChapter(1);
             STATE.particles = [];
             STATE.lightTrail = [];
             STATE.invincible = 0;
@@ -1652,17 +2085,17 @@
         function finishResultVideo() {
             if (resultVideoHandled) return;
             resultVideoHandled = true;
-            STATE.phase = 'complete';
+            STATE.phase = 'storyTransition';
             resultVideo.classList.remove('is-show');
             resultVideo.pause();
-            // 显示完成画面
-            successAnim.querySelector('.ei-success-title').textContent = '🎉 第一关完成！';
-            successAnim.querySelector('.ei-success-title').style.animation = 'none';
-            successAnim.classList.add('is-show');
+            // 淡入播放过场视频
+            setTimeout(playTransitionVideo, 300);
         }
 
         function playResultVideo() {
             stopBGM();
+            markChapterComplete(1);
+            refreshChapterLists();
             // 隐藏游戏
             gameContainer.classList.remove('is-show');
             successAnim.classList.remove('is-show');
@@ -1704,12 +2137,239 @@
             }).catch(function() {
                 resultVideo.muted = true;
                 resultVideo.play().catch(function(){
-                    // 如果视频完全无法播放，5秒后直接显示完成
+                    // 如果视频完全不能播放，5秒后直接进入过场
                     clearTimeout(resultSafety);
                     resultSafety = setTimeout(finishResultVideo, 5000);
                 });
             });
         }
+
+        /* ============================================================
+           剧情过场视频 01→02
+           ============================================================ */
+        var transitionHandled = false;
+        function finishTransitionVideo() {
+            if (transitionHandled) return;
+            transitionHandled = true;
+            STATE.phase = 'level02Ready';
+            transitionVideo.classList.remove('is-show');
+            transitionVideo.pause();
+            // 显示第二关入口
+            level02Ready.classList.add('is-show');
+        }
+
+        function playTransitionVideo() {
+            transitionHandled = false;
+            setCurrentChapter(2);
+            transitionVideo.classList.add('is-show');
+            transitionVideo.muted = true;
+
+            // 安全兜底
+            var transSafety = setTimeout(function() {
+                if (!transitionHandled) finishTransitionVideo();
+            }, 20000);
+
+            // ended 事件
+            transitionVideo.addEventListener('ended', function() {
+                clearTimeout(transSafety);
+                finishTransitionVideo();
+            }, { once: true });
+
+            // timeupdate 兜底
+            transitionVideo.addEventListener('timeupdate', function() {
+                if (transitionVideo.duration && transitionVideo.currentTime >= transitionVideo.duration - 0.3) {
+                    clearTimeout(transSafety);
+                    finishTransitionVideo();
+                }
+            });
+
+            transitionVideo.play().then(function() {
+                // 尝试取消静音播放声音
+                transitionVideo.muted = false;
+                transitionVideo.play().catch(function() { transitionVideo.muted = true; });
+                if (transitionVideo.duration) {
+                    clearTimeout(transSafety);
+                    transSafety = setTimeout(function() {
+                        if (!transitionHandled) finishTransitionVideo();
+                    }, (transitionVideo.duration + 10) * 1000);
+                }
+            }).catch(function() {
+                transitionVideo.muted = true;
+                transitionVideo.play().catch(function() {
+                    clearTimeout(transSafety);
+                    transSafety = setTimeout(finishTransitionVideo, 5000);
+                });
+            });
+        }
+
+        // 第二关入口按钮 → 播放瞳孔教学视频
+        level02Btn.addEventListener('click', function() {
+            level02Ready.classList.remove('is-show');
+            playPupilLessonVideo();
+        });
+
+        /* ============================================================
+           瞳孔教学视频
+           ============================================================ */
+        var pupilLessonHandled = false;
+        function finishPupilLessonVideo() {
+            if (pupilLessonHandled) return;
+            pupilLessonHandled = true;
+            markChapterComplete(2);
+            refreshChapterLists();
+            STATE.phase = 'lensPalaceVideo';
+            pupilLessonVideo.classList.remove('is-show');
+            pupilLessonVideo.pause();
+            pupilSoundBtn.classList.remove('is-show');
+            // 淡入晶状体水晶宫视频
+            setTimeout(function() {
+                playLensPalaceVideo();
+            }, 300);
+        }
+
+        function playPupilLessonVideo() {
+            pupilLessonHandled = false;
+            STATE.phase = 'pupilLesson';
+            pupilLessonVideo.classList.add('is-show');
+            pupilLessonVideo.muted = true;
+            pupilSoundBtn.classList.remove('is-show');
+
+            var lessonSafety = setTimeout(function() {
+                if (!pupilLessonHandled) finishPupilLessonVideo();
+            }, 30000);
+
+            pupilLessonVideo.addEventListener('ended', function() {
+                clearTimeout(lessonSafety);
+                pupilSoundBtn.classList.remove('is-show');
+                finishPupilLessonVideo();
+            }, { once: true });
+
+            pupilLessonVideo.addEventListener('timeupdate', function() {
+                if (pupilLessonVideo.duration && pupilLessonVideo.currentTime >= pupilLessonVideo.duration - 0.3) {
+                    clearTimeout(lessonSafety);
+                    pupilSoundBtn.classList.remove('is-show');
+                    finishPupilLessonVideo();
+                }
+            });
+
+            pupilLessonVideo.play().then(function() {
+                // 尝试取消静音播放声音
+                pupilLessonVideo.muted = false;
+                pupilLessonVideo.play().then(function() {
+                    pupilSoundBtn.classList.remove('is-show');
+                }).catch(function() {
+                    // 浏览器阻止带声音播放，显示备用按钮
+                    pupilLessonVideo.muted = true;
+                    pupilLessonVideo.play().catch(function(){});
+                    pupilSoundBtn.classList.add('is-show');
+                });
+                if (pupilLessonVideo.duration) {
+                    clearTimeout(lessonSafety);
+                    lessonSafety = setTimeout(function() {
+                        if (!pupilLessonHandled) finishPupilLessonVideo();
+                    }, (pupilLessonVideo.duration + 10) * 1000);
+                }
+            }).catch(function() {
+                // autoplay 被完全阻止，显示备用按钮
+                pupilLessonVideo.muted = true;
+                pupilLessonVideo.play().catch(function(){});
+                pupilSoundBtn.classList.add('is-show');
+            });
+        }
+
+        // 瞳孔视频声音备用按钮
+        pupilSoundBtn.addEventListener('click', function() {
+            pupilSoundBtn.classList.remove('is-show');
+            pupilLessonVideo.muted = false;
+            pupilLessonVideo.currentTime = 0;
+            pupilLessonVideo.play().catch(function() {
+                pupilLessonVideo.muted = true;
+                pupilLessonVideo.play().catch(function(){});
+            });
+        });
+
+        /* ============================================================
+           03 晶状体水晶宫视频
+           ============================================================ */
+        var lensHandled = false;
+        function finishLensPalaceVideo() {
+            if (lensHandled) return;
+            lensHandled = true;
+            markChapterComplete(3);
+            refreshChapterLists();
+            STATE.phase = 'lensPalaceReady';
+            lensPalaceVideo.classList.remove('is-show');
+            lensPalaceVideo.pause();
+            lensSoundBtn.classList.remove('is-show');
+            lensPalaceReady.classList.add('is-show');
+        }
+
+        function playLensPalaceVideo() {
+            lensHandled = false;
+            setCurrentChapter(3);
+            STATE.phase = 'lensPalace';
+            lensPalaceVideo.classList.add('is-show');
+            lensPalaceVideo.muted = true;
+            lensSoundBtn.classList.remove('is-show');
+
+            var lensSafety = setTimeout(function() {
+                if (!lensHandled) finishLensPalaceVideo();
+            }, 30000);
+
+            lensPalaceVideo.addEventListener('ended', function() {
+                clearTimeout(lensSafety);
+                lensSoundBtn.classList.remove('is-show');
+                finishLensPalaceVideo();
+            }, { once: true });
+
+            lensPalaceVideo.addEventListener('timeupdate', function() {
+                if (lensPalaceVideo.duration && lensPalaceVideo.currentTime >= lensPalaceVideo.duration - 0.3) {
+                    clearTimeout(lensSafety);
+                    lensSoundBtn.classList.remove('is-show');
+                    finishLensPalaceVideo();
+                }
+            });
+
+            lensPalaceVideo.play().then(function() {
+                // 尝试取消静音播放声音
+                lensPalaceVideo.muted = false;
+                lensPalaceVideo.play().then(function() {
+                    lensSoundBtn.classList.remove('is-show');
+                }).catch(function() {
+                    // 浏览器阻止带声音播放，显示备用按钮
+                    lensPalaceVideo.muted = true;
+                    lensPalaceVideo.play().catch(function(){});
+                    lensSoundBtn.classList.add('is-show');
+                });
+                if (lensPalaceVideo.duration) {
+                    clearTimeout(lensSafety);
+                    lensSafety = setTimeout(function() {
+                        if (!lensHandled) finishLensPalaceVideo();
+                    }, (lensPalaceVideo.duration + 10) * 1000);
+                }
+            }).catch(function() {
+                // autoplay 被完全阻止，显示备用按钮
+                lensPalaceVideo.muted = true;
+                lensPalaceVideo.play().catch(function(){});
+                lensSoundBtn.classList.add('is-show');
+            });
+        }
+
+        // 晶状体视频声音备用按钮
+        lensSoundBtn.addEventListener('click', function() {
+            lensSoundBtn.classList.remove('is-show');
+            lensPalaceVideo.muted = false;
+            lensPalaceVideo.currentTime = 0;
+            lensPalaceVideo.play().catch(function() {
+                lensPalaceVideo.muted = true;
+                lensPalaceVideo.play().catch(function(){});
+            });
+        });
+
+        // 晶状体水晶宫入口按钮（暂时占位）
+        lensPalaceBtn.addEventListener('click', function() {
+            // 预留：后续接入晶状体小游戏
+        });
 
         /* ============================================================
            HUD 更新
@@ -1806,6 +2466,310 @@
 
         // Canvas resize on load
         resizeCanvas();
+
+        /* ============================================================
+           章节导航系统 — localStorage 进度 + 章节地图 + 侧滑面板
+           ============================================================ */
+        var PROGRESS_KEY = 'eyeAdventureProgress';
+
+        var CHAPTERS = [
+            { id: 1, icon: '🌈', name: '追光挑战', desc: '角膜基地' },
+            { id: 2, icon: '🌀', name: '瞳孔黑洞', desc: '光线入口' },
+            { id: 3, icon: '💎', name: '晶状体水晶宫', desc: '眼睛里的"镜头"' },
+            { id: 4, icon: '🌌', name: '视网膜星云', desc: '接收光线' },
+            { id: 5, icon: '⚡', name: '视神经传输站', desc: '传递信息' }
+        ];
+
+        // ---- DOM 引用 ----
+        var navBtns = document.getElementById('navBtns');
+        var navBackBtn = document.getElementById('navBackBtn');
+        var navChapterBtn = document.getElementById('navChapterBtn');
+        var chapterMap = document.getElementById('chapterMap');
+        var cmCloseBtn = document.getElementById('cmCloseBtn');
+        var cmList = document.getElementById('cmList');
+        var cpOverlay = document.getElementById('cpOverlay');
+        var chapterPanel = document.getElementById('chapterPanel');
+        var cpCloseBtn = document.getElementById('cpCloseBtn');
+        var cpList = document.getElementById('cpList');
+        var leaveConfirm = document.getElementById('leaveConfirm');
+        var lcContinueBtn = document.getElementById('lcContinueBtn');
+        var lcLeaveBtn = document.getElementById('lcLeaveBtn');
+        var lockTip = document.getElementById('lockTip');
+
+        // ---- 进度管理 ----
+        function loadProgress() {
+            try {
+                var raw = localStorage.getItem(PROGRESS_KEY);
+                var data = raw ? JSON.parse(raw) : null;
+                if (!data) return { currentChapter: 1, unlockedChapters: [1], completedChapters: [] };
+                if (!data.unlockedChapters || data.unlockedChapters.length === 0) data.unlockedChapters = [1];
+                if (!data.completedChapters) data.completedChapters = [];
+                if (!data.currentChapter) data.currentChapter = 1;
+                return data;
+            } catch(e) {
+                return { currentChapter: 1, unlockedChapters: [1], completedChapters: [] };
+            }
+        }
+
+        function saveProgress(data) {
+            try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(data)); } catch(e) {}
+        }
+
+        function markChapterComplete(chId) {
+            var p = loadProgress();
+            if (p.completedChapters.indexOf(chId) === -1) {
+                p.completedChapters.push(chId);
+            }
+            if (chId < 5 && p.unlockedChapters.indexOf(chId + 1) === -1) {
+                p.unlockedChapters.push(chId + 1);
+                p.currentChapter = chId + 1;
+            }
+            saveProgress(p);
+        }
+
+        function setCurrentChapter(chId) {
+            var p = loadProgress();
+            p.currentChapter = chId;
+            saveProgress(p);
+        }
+
+        // ---- 停止所有当前内容 ----
+        function stopAllContent() {
+            // 停止游戏循环
+            if (STATE.rafId) { cancelAnimationFrame(STATE.rafId); STATE.rafId = null; }
+            STATE.paused = false;
+
+            // 停止 BGM
+            stopBGM();
+
+            // 暂停所有视频
+            video.pause();
+            resultVideo.pause();
+            transitionVideo.pause();
+            pupilLessonVideo.pause();
+            lensPalaceVideo.pause();
+
+            // 隐藏所有视频
+            video.classList.remove('is-show');
+            resultVideo.classList.remove('is-show');
+            transitionVideo.classList.remove('is-show');
+            pupilLessonVideo.classList.remove('is-show');
+            lensPalaceVideo.classList.remove('is-show');
+
+            // 隐藏声音按钮
+            soundBtn.classList.remove('is-show');
+            pupilSoundBtn.classList.remove('is-show');
+            lensSoundBtn.classList.remove('is-show');
+
+            // 隐藏所有覆盖层
+            startBtn.classList.remove('is-show');
+            gameReadyEl.classList.remove('is-show');
+            countdownEl.classList.remove('is-show');
+            gameContainer.classList.remove('is-show');
+            pausePanel.classList.remove('is-show');
+            successAnim.classList.remove('is-show');
+            level02Ready.classList.remove('is-show');
+            lensPalaceReady.classList.remove('is-show');
+            nextStageReady.classList.remove('is-show');
+        }
+
+        // ---- 进入指定章节 ----
+        function enterChapter(chId) {
+            stopAllContent();
+
+            if (chId === 1) {
+                // 第一章：显示游戏准备界面
+                STATE.phase = 'gameReady';
+                gameReadyEl.classList.add('is-show');
+                setCurrentChapter(1);
+            } else if (chId === 2) {
+                // 第二章：播放瞳孔黑洞过场视频
+                playTransitionVideo();
+                setCurrentChapter(2);
+            } else if (chId === 3) {
+                // 第三章：播放晶状体水晶宫视频
+                playLensPalaceVideo();
+                setCurrentChapter(3);
+            } else if (chId === 4 || chId === 5) {
+                // 未开发章节：显示占位
+                STATE.phase = 'notReady';
+                nextStageReady.classList.add('is-show');
+                setCurrentChapter(chId);
+            }
+        }
+
+        // ---- 渲染章节列表 ----
+        function getChapterStatus(chId, progress) {
+            if (progress.completedChapters.indexOf(chId) !== -1) return 'done';
+            if (chId === progress.currentChapter) return 'current';
+            return 'locked';
+        }
+
+        function renderChapterList(container, progress) {
+            var html = '';
+            CHAPTERS.forEach(function(ch) {
+                var status = getChapterStatus(ch.id, progress);
+                var cls = '';
+                var statusText = '';
+                if (status === 'done') { cls = 'cm-done'; statusText = '✓'; }
+                else if (status === 'current') { cls = 'cm-current'; statusText = '● 当前探索'; }
+                else { cls = 'cm-locked'; statusText = '🔒'; }
+
+                html += '<div class="' + (container === cpList ? 'cp-item' : 'ei-chapter-item') + ' ' + cls + '" data-ch="' + ch.id + '">'
+                    + '<span class="ci-num">' + String(ch.id).padStart(2, '0') + '</span>'
+                    + '<span class="ci-icon">' + ch.icon + '</span>'
+                    + '<div class="ci-body">'
+                    + '<div class="ci-name">' + ch.name + '</div>'
+                    + '<div class="ci-desc">' + ch.desc + '</div>'
+                    + '</div>'
+                    + '<span class="ci-status">' + statusText + '</span>'
+                    + '</div>';
+            });
+            container.innerHTML = html;
+        }
+
+        function refreshChapterLists() {
+            var p = loadProgress();
+            renderChapterList(cmList, p);
+            renderChapterList(cpList, p);
+        }
+
+        // ---- 章节地图 ----
+        function showChapterMap() {
+            refreshChapterLists();
+            chapterMap.classList.add('is-show');
+        }
+        function hideChapterMap() {
+            chapterMap.classList.remove('is-show');
+        }
+        cmCloseBtn.addEventListener('click', hideChapterMap);
+
+        // 点击章节地图中的章节
+        cmList.addEventListener('click', function(e) {
+            var item = e.target.closest('[data-ch]');
+            if (!item) return;
+            handleChapterClick(parseInt(item.dataset.ch));
+        });
+
+        // ---- 章节侧滑面板 ----
+        function showChapterPanel() {
+            refreshChapterLists();
+            cpOverlay.classList.add('is-show');
+            chapterPanel.classList.add('is-show');
+        }
+        function hideChapterPanel() {
+            cpOverlay.classList.remove('is-show');
+            chapterPanel.classList.remove('is-show');
+        }
+        navChapterBtn.addEventListener('click', showChapterPanel);
+        cpCloseBtn.addEventListener('click', hideChapterPanel);
+        cpOverlay.addEventListener('click', hideChapterPanel);
+
+        // 点击侧滑面板中的章节
+        cpList.addEventListener('click', function(e) {
+            var item = e.target.closest('[data-ch]');
+            if (!item) return;
+            handleChapterClick(parseInt(item.dataset.ch));
+        });
+
+        // ---- 章节点击处理 ----
+        function handleChapterClick(chId) {
+            var p = loadProgress();
+            var status = getChapterStatus(chId, p);
+
+            if (status === 'locked') {
+                // 显示锁定提示
+                showLockTip();
+                return;
+            }
+
+            if (status === 'current') {
+                // 当前章节：关闭菜单/面板，继续当前内容
+                hideChapterMap();
+                hideChapterPanel();
+                return;
+            }
+
+            // 已完成章节：进入对应章节
+            // 如果正在游戏中，先确认
+            if (STATE.phase === 'playing') {
+                // 保存挂起的目标章节
+                pendingChapter = chId;
+                showLeaveConfirm();
+                return;
+            }
+
+            // 如果正在播放视频，先停止再切换
+            hideChapterMap();
+            hideChapterPanel();
+            enterChapter(chId);
+        }
+
+        // ---- 锁定提示 ----
+        var lockTipTimer = null;
+        function showLockTip() {
+            if (lockTipTimer) clearTimeout(lockTipTimer);
+            lockTip.classList.add('is-show');
+            lockTipTimer = setTimeout(function() {
+                lockTip.classList.remove('is-show');
+            }, 2200);
+        }
+
+        // ---- 离开确认弹窗 ----
+        var pendingChapter = null;
+
+        function showLeaveConfirm() {
+            leaveConfirm.classList.add('is-show');
+        }
+        function hideLeaveConfirm() {
+            leaveConfirm.classList.remove('is-show');
+            pendingChapter = null;
+        }
+
+        lcContinueBtn.addEventListener('click', hideLeaveConfirm);
+        lcLeaveBtn.addEventListener('click', function() {
+            // 保存当前进度
+            var p = loadProgress();
+            // 游戏中离开，标记当前章节为进行中（不标记完成）
+            hideLeaveConfirm();
+            hideChapterMap();
+            hideChapterPanel();
+            stopAllContent();
+
+            // 如果有挂起的目标章节，进入它
+            if (pendingChapter) {
+                var targetCh = pendingChapter;
+                pendingChapter = null;
+                enterChapter(targetCh);
+            } else {
+                // 显示章节地图
+                showChapterMap();
+            }
+        });
+
+        // ---- 返回按钮 ----
+        navBackBtn.addEventListener('click', function() {
+            if (STATE.phase === 'playing') {
+                // 游戏中：显示确认弹窗
+                pendingChapter = null;
+                showLeaveConfirm();
+            } else {
+                // 非游戏中：直接显示章节地图
+                showChapterMap();
+            }
+        });
+
+        // ---- ESC 关闭面板/地图 ----
+        window.addEventListener('keydown', function(e) {
+            if (e.key !== 'Escape') return;
+            if (leaveConfirm.classList.contains('is-show')) { hideLeaveConfirm(); return; }
+            if (chapterMap.classList.contains('is-show')) { hideChapterMap(); return; }
+            if (chapterPanel.classList.contains('is-show')) { hideChapterPanel(); return; }
+            if (lockTip.classList.contains('is-show')) { lockTip.classList.remove('is-show'); return; }
+        });
+
+        // ---- 初始化：加载进度 ----
+        refreshChapterLists();
 
     })();
     </script>
