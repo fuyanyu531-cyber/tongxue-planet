@@ -383,39 +383,44 @@
         50%      { transform: translate3d(10px,-15px,0); opacity: 0.7; }
     }
 
-    /* ---------- ★ L5 眼睛星球（主视觉，远处逐渐靠近） ---------- */
+    /* ---------- ★ L5 眼睛星球（主视觉，由远到近推进） ----------
+       参考视频构图：星球从画面右下远方由小到大推进到中央偏右位置
+       · 0~12s：从极远处（scale 0.08）缓慢推进到近处（scale 1）
+       · 位置从右下 75% 75% 推进到右中 68% 50%
+       · 配合镜头推进 adv3-camera-dolly 形成双重纵深
+       · 12s 后进入悬浮状态 */
     body.page-adventure .adv3-planet {
         position: absolute; z-index: 6;
         right: 18%; top: 50%;
-        width: 280px; height: 280px;
-        transform: translate3d(0, -50%, 0) scale(0.15);
+        width: 320px; height: 320px;
+        transform: translate3d(0, -50%, 0) scale(0.08);
         opacity: 0;
         animation: adv3-planet-approach 12s cubic-bezier(0.22, 0.61, 0.36, 1) forwards,
                    adv3-planet-float 8s ease-in-out 12s infinite;
         will-change: transform, opacity;
     }
     @keyframes adv3-planet-approach {
-        0%   { transform: translate3d(0, -50%, 0) scale(0.15); opacity: 0; }
-        15%  { opacity: 0.4; }
-        40%  { transform: translate3d(0, -50%, 0) scale(0.6); opacity: 0.85; }
-        65%  { transform: translate3d(0, -50%, 0) scale(0.9); opacity: 1; }
-        85%  { transform: translate3d(0, -50%, 0) scale(1); opacity: 1; }
+        0%   { transform: translate3d(120px, 120px, 0) scale(0.08); opacity: 0; }
+        12%  { opacity: 0.35; }
+        35%  { transform: translate3d(60px, 60px, 0) scale(0.35); opacity: 0.75; }
+        60%  { transform: translate3d(20px, 20px, 0) scale(0.7); opacity: 1; }
+        82%  { transform: translate3d(0, 0, 0) scale(0.95); opacity: 1; }
         100% { transform: translate3d(0, -50%, 0) scale(1); opacity: 1; }
     }
     @keyframes adv3-planet-float {
         0%, 100% { transform: translate3d(0, -50%, 0) scale(1) rotate(0deg); }
-        50%      { transform: translate3d(0, calc(-50% - 12px), 0) scale(1) rotate(2deg); }
+        50%      { transform: translate3d(0, calc(-50% - 14px), 0) scale(1) rotate(2deg); }
     }
-    /* 星球外发光 */
+    /* 星球外发光（绿色光晕，呼应"绿色眼球星球"） */
     body.page-adventure .adv3-planet-glow {
-        position: absolute; inset: -20%; border-radius: 50%;
-        background: radial-gradient(circle, rgba(120,200,100,0.35) 0%, rgba(120,200,100,0.1) 40%, transparent 70%);
-        filter: blur(20px);
+        position: absolute; inset: -25%; border-radius: 50%;
+        background: radial-gradient(circle, rgba(120,200,100,0.42) 0%, rgba(120,200,100,0.12) 40%, transparent 70%);
+        filter: blur(24px);
         animation: adv3-planet-glow 4s ease-in-out infinite;
     }
     @keyframes adv3-planet-glow {
-        0%, 100% { opacity: 0.6; transform: scale(1); }
-        50%      { opacity: 1; transform: scale(1.08); }
+        0%, 100% { opacity: 0.65; transform: scale(1); }
+        50%      { opacity: 1; transform: scale(1.1); }
     }
     /* 星球图片 */
     body.page-adventure .adv3-planet-body {
@@ -424,40 +429,40 @@
     body.page-adventure .adv3-planet-img {
         width: 100%; height: 100%; object-fit: contain;
         filter:
-            drop-shadow(0 20px 50px rgba(0,0,0,0.5))
-            drop-shadow(0 0 30px rgba(120,200,100,0.4))
-            drop-shadow(0 0 50px rgba(165,232,90,0.2));
+            drop-shadow(0 24px 56px rgba(0,0,0,0.55))
+            drop-shadow(0 0 36px rgba(120,200,100,0.5))
+            drop-shadow(0 0 60px rgba(165,232,90,0.28));
         animation: adv3-planet-spin 60s linear 12s infinite;
     }
     @keyframes adv3-planet-spin {
         from { transform: rotate(0deg); }
         to   { transform: rotate(360deg); }
     }
-    /* 星球轨道环（2 条） */
+    /* 星球轨道环（2 条 · 倾斜椭圆，强化 3D 感） */
     body.page-adventure .adv3-planet-ring {
         position: absolute; border-radius: 50%;
-        border: 1.5px dashed rgba(165,232,90,0.2);
+        border: 1.5px dashed rgba(165,232,90,0.22);
         pointer-events: none;
     }
     body.page-adventure .adv3-planet-ring-1 {
-        inset: -15%;
-        transform: rotate(-8deg);
+        inset: -18%;
+        transform: rotate(-12deg) scaleY(0.85);
         animation: adv3-ring-spin-1 50s linear 12s infinite;
     }
     body.page-adventure .adv3-planet-ring-2 {
-        inset: -25%;
-        border-color: rgba(120,200,255,0.15);
-        transform: rotate(6deg);
+        inset: -28%;
+        border-color: rgba(120,200,255,0.18);
+        transform: rotate(8deg) scaleY(0.7);
         animation: adv3-ring-spin-2 70s linear 12s infinite reverse;
     }
-    @keyframes adv3-ring-spin-1 { to { transform: rotate(352deg); } }
-    @keyframes adv3-ring-spin-2 { to { transform: rotate(366deg); } }
-    /* 星球周围光粒子 */
+    @keyframes adv3-ring-spin-1 { to { transform: rotate(348deg) scaleY(0.85); } }
+    @keyframes adv3-ring-spin-2 { to { transform: rotate(374deg) scaleY(0.7); } }
+    /* 星球周围光粒子（5 颗环绕） */
     body.page-adventure .adv3-planet-particles { position: absolute; inset: -30%; pointer-events: none; }
     body.page-adventure .adv3-planet-particles .adv3-pp {
-        position: absolute; width: 4px; height: 4px; border-radius: 50%;
-        background: rgba(165,232,90,0.7);
-        box-shadow: 0 0 6px rgba(165,232,90,0.5);
+        position: absolute; width: 5px; height: 5px; border-radius: 50%;
+        background: rgba(165,232,90,0.75);
+        box-shadow: 0 0 8px rgba(165,232,90,0.6), 0 0 14px rgba(120,200,255,0.3);
     }
     body.page-adventure .adv3-planet-particles .adv3-pp.p1 { left: 10%; top: 20%; animation: adv3-pp-orbit 6s linear 12s infinite; }
     body.page-adventure .adv3-planet-particles .adv3-pp.p2 { left: 80%; top: 30%; animation: adv3-pp-orbit 8s linear 12.5s infinite reverse; }
@@ -466,51 +471,56 @@
     body.page-adventure .adv3-planet-particles .adv3-pp.p5 { left: 50%; top: 10%; animation: adv3-pp-orbit 10s linear 13.5s infinite; }
     @keyframes adv3-pp-orbit {
         0%   { transform: translate3d(0,0,0) scale(0.5); opacity: 0.3; }
-        50%  { transform: translate3d(20px,-15px,0) scale(1); opacity: 0.8; }
+        50%  { transform: translate3d(24px,-18px,0) scale(1.1); opacity: 0.9; }
         100% { transform: translate3d(0,0,0) scale(0.5); opacity: 0.3; }
     }
 
-    /* ---------- ★ L6 小光仔探索舱（左侧飞入 → 靠近星球） ---------- */
+    /* ---------- ★ L6 小光仔探索舱（左侧飞入 → 朝眼球星球飞行） ----------
+       参考视频构图：飞船从画面左下飞入，斜向右上方飞向眼球星球
+       · 0~12s：从画面外左侧飞入，朝右上方（星球方向）飞行
+       · 飞行轨迹：左下 → 左中 → 中下 → 右下接近星球
+       · 飞行中带轻微旋转和上下浮动，模拟太空飞行
+       · 12s 后悬停在星球左侧 */
     body.page-adventure .adv3-craft {
         position: absolute; z-index: 7;
-        left: -20%; top: 55%;
-        width: 180px; height: 180px;
-        transform: translate3d(0, 0, 0) scale(0.3);
+        left: -20%; top: 68%;
+        width: 200px; height: 200px;
+        transform: translate3d(0, 0, 0) scale(0.25);
         opacity: 0;
         animation: adv3-craft-flyin 12s cubic-bezier(0.22, 0.61, 0.36, 1) forwards,
                    adv3-craft-hover 5s ease-in-out 12s infinite;
-        will-change: transform, opacity;
+        will-change: transform, opacity, left, top;
     }
     @keyframes adv3-craft-flyin {
-        0%   { left: -20%; top: 55%; transform: translate3d(0,0,0) scale(0.3) rotate(8deg); opacity: 0; }
-        35%  { opacity: 0.6; }
-        45%  { left: 5%; top: 50%; transform: translate3d(0,0,0) scale(0.6) rotate(5deg); opacity: 0.85; }
-        65%  { left: 25%; top: 48%; transform: translate3d(0,0,0) scale(0.85) rotate(2deg); opacity: 1; }
-        85%  { left: 38%; top: 50%; transform: translate3d(0,0,0) scale(1) rotate(0deg); opacity: 1; }
-        100% { left: 42%; top: 52%; transform: translate3d(0,0,0) scale(1) rotate(-1deg); opacity: 1; }
+        0%   { left: -20%; top: 68%; transform: translate3d(0,0,0) scale(0.25) rotate(12deg); opacity: 0; }
+        18%  { left: -8%; top: 64%; transform: translate3d(0,0,0) scale(0.4) rotate(10deg); opacity: 0.7; }
+        40%  { left: 8%; top: 60%; transform: translate3d(0,0,0) scale(0.6) rotate(7deg); opacity: 0.95; }
+        62%  { left: 22%; top: 56%; transform: translate3d(0,0,0) scale(0.8) rotate(4deg); opacity: 1; }
+        82%  { left: 32%; top: 52%; transform: translate3d(0,0,0) scale(0.95) rotate(1deg); opacity: 1; }
+        100% { left: 36%; top: 50%; transform: translate3d(0,0,0) scale(1) rotate(-1deg); opacity: 1; }
     }
     @keyframes adv3-craft-hover {
         0%, 100% { transform: translate3d(0,0,0) scale(1) rotate(-1deg); }
-        50%      { transform: translate3d(0,-10px,0) scale(1) rotate(1deg); }
+        50%      { transform: translate3d(0,-12px,0) scale(1) rotate(1deg); }
     }
-    /* 探索舱光晕 */
+    /* 探索舱光晕（绿色调，呼应"绿色飞船"） */
     body.page-adventure .adv3-craft-glow {
-        position: absolute; inset: -15%; border-radius: 50%;
-        background: radial-gradient(circle, rgba(120,200,255,0.30) 0%, rgba(165,232,90,0.15) 35%, transparent 68%);
-        filter: blur(12px);
+        position: absolute; inset: -18%; border-radius: 50%;
+        background: radial-gradient(circle, rgba(120,200,255,0.32) 0%, rgba(165,232,90,0.18) 35%, transparent 68%);
+        filter: blur(14px);
         animation: adv3-craft-glow 3s ease-in-out infinite;
     }
     @keyframes adv3-craft-glow {
-        0%, 100% { opacity: 0.6; transform: scale(1); }
-        50%      { opacity: 0.9; transform: scale(1.06); }
+        0%, 100% { opacity: 0.65; transform: scale(1); }
+        50%      { opacity: 0.95; transform: scale(1.08); }
     }
     /* 探索舱主体 */
     body.page-adventure .adv3-craft-ship {
         position: absolute; left: 5%; top: 5%; width: 90%; height: 90%;
         object-fit: contain; z-index: 2;
         filter:
-            drop-shadow(0 8px 20px rgba(0,0,0,0.4))
-            drop-shadow(0 0 12px rgba(120,200,255,0.3));
+            drop-shadow(0 10px 22px rgba(0,0,0,0.45))
+            drop-shadow(0 0 14px rgba(120,200,255,0.35));
     }
     /* 小光仔坐在舱内 */
     body.page-adventure .adv3-craft-pilot {
@@ -518,59 +528,59 @@
         object-fit: contain; z-index: 3;
         filter:
             drop-shadow(0 6px 12px rgba(0,0,0,0.4))
-            drop-shadow(0 0 8px rgba(165,232,90,0.25));
+            drop-shadow(0 0 10px rgba(165,232,90,0.3));
         animation: adv3-pilot-bob 3.5s ease-in-out infinite;
     }
     @keyframes adv3-pilot-bob {
         0%, 100% { transform: translateY(0); }
         50%      { transform: translateY(-4px); }
     }
-    /* 蓝绿色尾焰 */
+    /* 蓝绿色尾焰（飞行轨迹拖尾，强化飞行感） */
     body.page-adventure .adv3-craft-trail {
-        position: absolute; right: -25%; top: 35%; width: 60%; height: 30%; z-index: 1;
+        position: absolute; right: -30%; top: 35%; width: 70%; height: 30%; z-index: 1;
     }
     body.page-adventure .adv3-trail-particle {
         position: absolute; border-radius: 50%; pointer-events: none;
     }
     body.page-adventure .adv3-trail-particle.p1 {
-        right: 80%; top: 30%; width: 12px; height: 12px;
-        background: radial-gradient(circle, rgba(120,200,255,0.9), rgba(120,200,255,0) 70%);
+        right: 80%; top: 30%; width: 14px; height: 14px;
+        background: radial-gradient(circle, rgba(120,200,255,0.92), rgba(120,200,255,0) 70%);
         filter: blur(2px);
         animation: adv3-trail-pulse 1.2s ease-in-out infinite;
     }
     body.page-adventure .adv3-trail-particle.p2 {
-        right: 60%; top: 40%; width: 10px; height: 10px;
-        background: radial-gradient(circle, rgba(165,232,90,0.85), rgba(165,232,90,0) 70%);
+        right: 60%; top: 40%; width: 12px; height: 12px;
+        background: radial-gradient(circle, rgba(165,232,90,0.88), rgba(165,232,90,0) 70%);
         filter: blur(2px);
         animation: adv3-trail-pulse 1.5s ease-in-out 0.2s infinite;
     }
     body.page-adventure .adv3-trail-particle.p3 {
-        right: 45%; top: 50%; width: 8px; height: 8px;
-        background: radial-gradient(circle, rgba(255,255,255,0.8), rgba(120,200,255,0) 70%);
+        right: 45%; top: 50%; width: 9px; height: 9px;
+        background: radial-gradient(circle, rgba(255,255,255,0.85), rgba(120,200,255,0) 70%);
         filter: blur(1.5px);
         animation: adv3-trail-pulse 1s ease-in-out 0.4s infinite;
     }
     body.page-adventure .adv3-trail-particle.p4 {
-        right: 30%; top: 35%; width: 6px; height: 6px;
-        background: radial-gradient(circle, rgba(120,200,255,0.7), transparent 70%);
+        right: 30%; top: 35%; width: 7px; height: 7px;
+        background: radial-gradient(circle, rgba(120,200,255,0.75), transparent 70%);
         filter: blur(1px);
         animation: adv3-trail-pulse 1.3s ease-in-out 0.6s infinite;
     }
     body.page-adventure .adv3-trail-particle.p5 {
-        right: 15%; top: 45%; width: 5px; height: 5px;
-        background: radial-gradient(circle, rgba(165,232,90,0.6), transparent 70%);
+        right: 15%; top: 45%; width: 6px; height: 6px;
+        background: radial-gradient(circle, rgba(165,232,90,0.65), transparent 70%);
         filter: blur(1px);
         animation: adv3-trail-pulse 0.8s ease-in-out 0.8s infinite;
     }
     body.page-adventure .adv3-trail-particle.p6 {
-        right: 0%; top: 38%; width: 4px; height: 4px;
-        background: radial-gradient(circle, rgba(255,255,255,0.6), transparent 70%);
+        right: 0%; top: 38%; width: 5px; height: 5px;
+        background: radial-gradient(circle, rgba(255,255,255,0.65), transparent 70%);
         filter: blur(1px);
         animation: adv3-trail-pulse 1.1s ease-in-out 1s infinite;
     }
     @keyframes adv3-trail-pulse {
         0%, 100% { opacity: 0.4; transform: scale(0.7); }
-        50%      { opacity: 1; transform: scale(1.2); }
+        50%      { opacity: 1; transform: scale(1.25); }
     }
 
     /* ---------- L7 标题文字层（独立于镜头，避免缩放模糊） ---------- */
@@ -662,14 +672,14 @@
             height: 100vh; min-height: 480px;
         }
         body.page-adventure .adv3-planet {
-            width: 200px; height: 200px;
+            width: 220px; height: 220px;
             right: 8%;
         }
         body.page-adventure .adv3-craft {
-            width: 130px; height: 130px;
+            width: 140px; height: 140px;
         }
         body.page-adventure .adv3-hero-text {
-            left: 5%; top: 40%;
+            left: 5%; top: 38%;
         }
         body.page-adventure .adv3-hero-title .l1 { font-size: clamp(28px, 6vw, 40px); }
         body.page-adventure .adv3-hero-title .l2 { font-size: clamp(40px, 9vw, 56px); }
@@ -694,7 +704,7 @@
             animation-iteration-count: 1 !important;
         }
         body.page-adventure .adv3-planet { transform: translate3d(0,-50%,0) scale(1); opacity: 1; }
-        body.page-adventure .adv3-craft { left: 42%; top: 52%; transform: scale(1); opacity: 1; }
+        body.page-adventure .adv3-craft { left: 36%; top: 50%; transform: scale(1) rotate(-1deg); opacity: 1; }
         body.page-adventure .adv3-hero-text { opacity: 1; }
     }
 
@@ -783,8 +793,32 @@
     body.page-adventure .adv3-card.capsule .adv3-eye-title { color:#fff; }
     body.page-adventure .adv3-card.capsule .adv3-eye-sub { color:#9FB6E0; }
 
-    /* 左：小光仔任务日志卡 */
-    body.page-adventure .adv3-task-card { padding:18px 16px; display:flex; flex-direction:column; gap:12px; }
+    /* 左：小光仔任务日志卡（sticky 跟随滚动 · 宇宙冒险浮窗） */
+    body.page-adventure .adv3-task-card {
+        padding:18px 16px; display:flex; flex-direction:column; gap:12px;
+        position: sticky; top: 100px;
+        align-self: start;
+        background: linear-gradient(160deg, rgba(20,40,90,0.55) 0%, rgba(8,24,61,0.45) 50%, rgba(12,32,75,0.50) 100%);
+        border: 1px solid rgba(120,200,255,0.30);
+        box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.18),
+            inset 0 -1px 0 rgba(0,0,0,0.22),
+            0 22px 50px rgba(0,0,0,0.35),
+            0 0 0 1px rgba(255,255,255,0.05) inset,
+            0 0 36px rgba(101,200,255,0.18),
+            0 0 60px rgba(120,201,67,0.08);
+        animation: adv3-task-float 6s ease-in-out infinite;
+    }
+    @keyframes adv3-task-float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50%      { transform: translateY(-4px) rotate(0.3deg); }
+    }
+    /* 顶部星际航线装饰条 */
+    body.page-adventure .adv3-task-card::after {
+        content:""; position:absolute; left: 14px; right:14px; top:8px; height:1px;
+        background: linear-gradient(90deg, transparent, rgba(120,200,255,0.6) 30%, rgba(255,213,90,0.6) 70%, transparent);
+        opacity: 0.7; pointer-events:none;
+    }
     body.page-adventure .adv3-task-head {
         display:flex; align-items:center; gap:12px; text-align:left;
     }
@@ -792,12 +826,12 @@
     @property --adv3-ty { syntax: '<length>'; inherits: false; initial-value: 0px; }
     @property --adv3-sy { syntax: '<number>'; inherits: false; initial-value: 1; }
     body.page-adventure .adv3-task-img {
-        width: 64px; height:64px; flex-shrink:0;
+        width: 72px; height:72px; flex-shrink:0;
         object-fit: contain; display:block;
         filter:
-            drop-shadow(0 8px 16px rgba(0,0,0,0.45))
-            drop-shadow(0 0 12px rgba(165,232,90,0.30))
-            drop-shadow(0 0 22px rgba(101,200,255,0.12));
+            drop-shadow(0 10px 18px rgba(0,0,0,0.5))
+            drop-shadow(0 0 14px rgba(165,232,90,0.40))
+            drop-shadow(0 0 26px rgba(101,200,255,0.18));
         border-radius: 0; background: transparent;
         transform: translateY(var(--adv3-ty)) scaleY(var(--adv3-sy));
         animation:
@@ -807,7 +841,7 @@
     }
     @keyframes adv3-float-small {
         0%, 100% { --adv3-ty: 0px; }
-        50%      { --adv3-ty: -6px; }
+        50%      { --adv3-ty: -8px; }
     }
     /* 眨眼：快速 scaleY 压缩，模拟闭眼 */
     @keyframes adv3-blink {
@@ -815,15 +849,16 @@
         91%, 97%      { --adv3-sy: 0.78; }
     }
     body.page-adventure .adv3-task-badge {
-        display:inline-block; padding: 3px 10px; border-radius: 999px;
-        background: linear-gradient(180deg, rgba(120,201,67,0.25), rgba(80,140,40,0.15));
-        border: 1px solid rgba(165,232,90,0.45);
-        color:#C5F197; font-size:11.5px; font-weight:800; letter-spacing:0.5px;
+        display:inline-block; padding: 4px 12px; border-radius: 999px;
+        background: linear-gradient(180deg, rgba(120,201,67,0.30), rgba(80,140,40,0.18));
+        border: 1px solid rgba(165,232,90,0.55);
+        color:#C5F197; font-size:11.5px; font-weight:800; letter-spacing:0.8px;
         margin-bottom:4px;
+        box-shadow: 0 0 12px rgba(120,201,67,0.25), inset 0 1px 0 rgba(255,255,255,0.15);
     }
     body.page-adventure .adv3-task-title {
-        font-size:17px; font-weight:900; color:#FFE79B; letter-spacing:0.6px;
-        text-shadow: 0 0 16px rgba(255,213,90,0.22);
+        font-size:18px; font-weight:900; color:#FFE79B; letter-spacing:0.6px;
+        text-shadow: 0 0 18px rgba(255,213,90,0.30), 0 0 28px rgba(255,183,46,0.15);
         line-height:1.2;
     }
     body.page-adventure .adv3-task-desc {
@@ -831,40 +866,97 @@
     }
     body.page-adventure .adv3-task-desc b {
         color:#FFE79B; font-weight:900;
-        text-shadow: 0 0 10px rgba(255,213,90,0.20);
+        text-shadow: 0 0 10px rgba(255,213,90,0.25);
     }
-    /* 任务清单 */
+    /* 任务清单（星际任务列表） */
     body.page-adventure .adv3-task-mission {
-        padding: 12px 14px; border-radius: 16px;
-        background: linear-gradient(135deg, rgba(20,50,110,0.50), rgba(8,24,61,0.40));
-        border: 1px solid rgba(101,200,255,0.22);
+        padding: 14px 16px; border-radius: 18px;
+        background: linear-gradient(135deg, rgba(20,50,110,0.60), rgba(8,24,61,0.50));
+        border: 1px solid rgba(101,200,255,0.30);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 0 18px rgba(101,200,255,0.10);
     }
     body.page-adventure .adv3-mission-title {
-        font-size:13px; font-weight:900; color:#A5E85A; margin-bottom:8px;
-        letter-spacing:0.4px;
+        font-size:13px; font-weight:900; color:#A5E85A; margin-bottom:10px;
+        letter-spacing:0.5px;
+        text-shadow: 0 0 10px rgba(165,232,90,0.25);
     }
-    body.page-adventure .adv3-mission-list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:6px; }
+    body.page-adventure .adv3-mission-list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px; }
     body.page-adventure .adv3-mission-list li {
-        display:flex; align-items:center; gap:8px;
-        font-size:12.5px; font-weight:700; color:#C9DBF7;
-        padding: 4px 0;
+        display:flex; align-items:center; gap:10px;
+        font-size:13px; font-weight:700; color:#C9DBF7;
+        padding: 6px 10px; border-radius: 10px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.06);
+        transition: all .25s ease;
+    }
+    body.page-adventure .adv3-mission-list li:hover {
+        background: rgba(120,200,255,0.10);
+        border-color: rgba(120,200,255,0.25);
+        transform: translateX(3px);
     }
     body.page-adventure .adv3-mission-list li .check {
         font-size:14px; color:#78C943;
+        filter: drop-shadow(0 0 4px rgba(120,201,67,0.4));
     }
-    body.page-adventure .adv3-mission-list li.done { color:#A5E85A; }
-    body.page-adventure .adv3-mission-list li.done .check { color:#78C943; text-shadow:0 0 8px rgba(120,201,67,0.5); }
+    body.page-adventure .adv3-mission-list li.done {
+        color:#A5E85A;
+        background: rgba(120,201,67,0.12);
+        border-color: rgba(165,232,90,0.35);
+    }
+    body.page-adventure .adv3-mission-list li.done .check {
+        color:#78C943;
+        text-shadow:0 0 10px rgba(120,201,67,0.65);
+    }
+    /* 星际进度可视化 */
+    body.page-adventure .adv3-mission-progress {
+        margin-top: 12px; padding-top: 10px;
+        border-top: 1px dashed rgba(101,200,255,0.20);
+    }
+    body.page-adventure .adv3-progress-label {
+        display:flex; justify-content:space-between; align-items:center;
+        font-size: 11.5px; font-weight:800; color:#9FB6E0;
+        margin-bottom: 6px; letter-spacing: 0.3px;
+    }
+    body.page-adventure .adv3-progress-num {
+        color:#FFE79B; font-weight:900;
+        text-shadow: 0 0 8px rgba(255,213,90,0.30);
+    }
+    body.page-adventure .adv3-progress-bar {
+        height: 8px; border-radius: 999px;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.10);
+        overflow: hidden; position: relative;
+    }
+    body.page-adventure .adv3-progress-fill {
+        height: 100%; border-radius: 999px;
+        background: linear-gradient(90deg, #78C943 0%, #A5E85A 50%, #FFE79B 100%);
+        box-shadow: 0 0 10px rgba(165,232,90,0.55), 0 0 18px rgba(120,201,67,0.30);
+        position: relative;
+        animation: adv3-progress-glow 2.5s ease-in-out infinite;
+    }
+    body.page-adventure .adv3-progress-fill::after {
+        content:""; position:absolute; right:-2px; top:50%; transform:translateY(-50%);
+        width:6px; height:6px; border-radius:50%;
+        background:#fff;
+        box-shadow: 0 0 8px rgba(255,255,255,0.9), 0 0 14px rgba(255,213,90,0.6);
+    }
+    @keyframes adv3-progress-glow {
+        0%, 100% { box-shadow: 0 0 10px rgba(165,232,90,0.55), 0 0 18px rgba(120,201,67,0.30); }
+        50%      { box-shadow: 0 0 14px rgba(165,232,90,0.75), 0 0 24px rgba(120,201,67,0.45); }
+    }
     /* 任务卡底部小提示：✨ 完成探索可以获得护眼积分！ */
     body.page-adventure .adv3-task-tip {
-        padding: 10px 12px;
-        border-radius: 14px;
-        background: linear-gradient(135deg, rgba(50,90,30,0.55), rgba(30,60,20,0.45));
-        border: 1px solid rgba(165,232,90,0.42);
+        padding: 12px 14px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, rgba(50,90,30,0.65), rgba(30,60,20,0.55));
+        border: 1px solid rgba(165,232,90,0.50);
         box-shadow:
-            inset 0 1px 0 rgba(255,255,255,0.06),
-            0 0 14px rgba(120,201,67,0.22);
+            inset 0 1px 0 rgba(255,255,255,0.10),
+            0 0 18px rgba(120,201,67,0.28),
+            0 0 32px rgba(165,232,90,0.12);
         color:#E9FFCE; font-size: 12.5px; font-weight: 800; line-height: 1.55;
         letter-spacing: 0.3px;
+        text-shadow: 0 0 8px rgba(165,232,90,0.20);
     }
 
     /* 中：眼球结构探索区（cream 卡片） */
@@ -2426,6 +2518,7 @@
         body.page-adventure .adv3-hero-planet { width:140px; right: 46%; }
         body.page-adventure .adv3-hero-ship { width: 82px; right: 36%; }
         body.page-adventure .adv3-map { grid-template-columns: 1fr; }
+        body.page-adventure .adv3-task-card { position: relative; top: 0; }
         body.page-adventure .adv3-eye-board { aspect-ratio: 5 / 4; }
         body.page-adventure .eye-planet { width: 80%; height: 78%; }
         body.page-adventure .adv3-games-grid { grid-template-columns: 1fr; }
@@ -2734,6 +2827,16 @@
                         <li><span class="check">☐</span> 探索晶状体</li>
                         <li><span class="check">☐</span> 解锁视网膜</li>
                     </ul>
+                    <!-- 星际进度可视化 -->
+                    <div class="adv3-mission-progress">
+                        <div class="adv3-progress-label">
+                            <span>🚀 星际进度</span>
+                            <span class="adv3-progress-num">1 / 3</span>
+                        </div>
+                        <div class="adv3-progress-bar">
+                            <div class="adv3-progress-fill" style="width: 33.3%"></div>
+                        </div>
+                    </div>
                 </div>
                 <div class="adv3-task-tip">✨ 完成探索可以获得护眼积分！</div>
             </aside>

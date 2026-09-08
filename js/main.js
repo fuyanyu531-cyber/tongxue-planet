@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // 真实文件缺失时按别名落到已有页面（保留查询参数和 hash）
         var rest = window.location.search + window.location.hash;
         if (file === 'eyeball-adventure.html') {
-            window.location.replace('adventure.html' + rest);
+            window.location.replace('adventure-intro.html' + rest);
             return;
         }
         if (file === 'vision-exploration.html') {
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var page = (link.getAttribute('data-page') || '').toLowerCase();
             if (
                 (page === 'index'               && (filename === 'index.html' || filename === '')) ||
-                (page === 'eyeball-adventure'   && (filename === 'eyeball-adventure.html'  || filename === 'adventure.html')) ||
+                (page === 'eyeball-adventure'   && (filename === 'eyeball-adventure.html'  || filename === 'adventure.html' || filename === 'adventure-intro.html')) ||
                 (page === 'vision-exploration'  && (filename === 'vision-exploration.html' || filename === 'selftest.html')) ||
                 (page === 'decoder'             && filename === 'decoder.html') ||
                 (page === 'hero'                && filename === 'hero.html') ||

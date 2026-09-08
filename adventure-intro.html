@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>眼球大冒险 · 开幕动画 | 瞳学星球</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+    /* ============================================================
+       眼球大冒险 · 沉浸式开幕动画页
+       命名空间 body.eye-intro .ei-*  — 不影响其他页面
+       ============================================================ */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body.eye-intro {
+        background: #050B1F;
+        overflow: hidden;
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+        font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    /* ---- 宇宙星空背景层（视频加载前/周围填充） ---- */
+    .ei-cosmos {
+        position: fixed; inset: 0; z-index: 0;
+        background:
+            radial-gradient(ellipse 70% 50% at 15% 20%, rgba(118, 86, 214, 0.28) 0%, transparent 60%),
+            radial-gradient(ellipse 65% 45% at 85% 55%, rgba(60, 110, 220, 0.24) 0%, transparent 65%),
+            linear-gradient(180deg, #050B1F 0%, #0A1A3A 35%, #0D2452 55%, #0A1A3A 75%, #050B1F 100%);
+    }
+    .ei-cosmos::before {
+        content: ""; position: absolute; inset: 0;
+        background-image:
+            radial-gradient(1.5px 1.5px at 9% 18%, #fff, transparent 51%),
+            radial-gradient(1.2px 1.2px at 17% 64%, #E6F0FF, transparent 51%),
+            radial-gradient(1.3px 1.3px at 22% 34%, #fff, transparent 51%),
+            radial-gradient(1.6px 1.6px at 31% 82%, #CFE6FF, transparent 51%),
+            radial-gradient(1.4px 1.4px at 41% 10%, #D4E4FF, transparent 51%),
+            radial-gradient(1.2px 1.2px at 48% 48%, #fff, transparent 51%),
+            radial-gradient(1.4px 1.4px at 58% 28%, #fff, transparent 51%),
+            radial-gradient(1.6px 1.6px at 68% 32%, #FFE58A, transparent 51%),
+            radial-gradient(1.5px 1.5px at 78% 68%, #fff, transparent 51%),
+            radial-gradient(1.3px 1.3px at 88% 42%, #DCE7FF, transparent 51%),
+            radial-gradient(1.8px 1.8px at 92% 82%, #fff, transparent 51%),
+            radial-gradient(1.2px 1.2px at 6% 90%, #E6F0FF, transparent 51%);
+        animation: ei-twinkle 5s ease-in-out infinite alternate;
+    }
+    @keyframes ei-twinkle { from { opacity: .4; } to { opacity: .85; } }
+
+    /* ---- 视频舞台：居中 16:9 铺满 ---- */
+    .ei-stage {
+        position: fixed; inset: 0; z-index: 1;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .ei-video-wrap {
+        position: relative;
+        width: 100%; height: 100%;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .ei-video {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        display: block;
+        outline: none;
+    }
+    /* 隐藏浏览器默认控件、右键菜单提示 */
+    .ei-video::-webkit-media-controls-panel,
+    .ei-video::-webkit-media-controls-play-button,
+    .ei-video::-webkit-media-controls-timeline,
+    .ei-video::-webkit-media-controls-current-time-display,
+    .ei-video::-webkit-media-controls-time-remaining-display,
+    .ei-video::-webkit-media-controls-mute-button,
+    .ei-video::-webkit-media-controls-volume-slider,
+    .ei-video::-webkit-media-controls-fullscreen-button,
+    .ei-video::-webkit-media-controls-rewind-button,
+    .ei-video::-webkit-media-controls-return-to-realtime-button,
+    .ei-video::-internal-media-controls-download-button {
+        display: none !important;
+        -webkit-appearance: none !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
+
+    /* ---- autoplay fallback「开始冒险」按钮 ---- */
+    .ei-start-btn {
+        position: fixed; top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+        display: none; /* JS 在 autoplay 失败时显示 */
+        flex-direction: column;
+        align-items: center; gap: 20px;
+        animation: ei-fade-in 0.8s ease-out;
+    }
+    .ei-start-btn.is-show { display: flex; }
+    .ei-start-btn .btn {
+        position: relative;
+        padding: 20px 52px;
+        border: none; border-radius: 999px;
+        cursor: pointer;
+        font-size: 24px; font-weight: 900;
+        letter-spacing: 2px;
+        color: #fff;
+        background: linear-gradient(135deg, #0B3670 0%, #1E5FB0 40%, #7656D6 100%);
+        box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.35),
+            0 10px 30px rgba(6,24,61,0.6),
+            0 0 30px rgba(101,200,255,0.35),
+            0 0 60px rgba(118,86,214,0.25);
+        backdrop-filter: blur(10px);
+        transition: transform .25s ease, box-shadow .25s ease;
+    }
+    .ei-start-btn .btn::before {
+        content: ""; position: absolute;
+        left: 20px; right: 20px; top: 3px; height: 2px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+    }
+    .ei-start-btn .btn:hover {
+        transform: translateY(-3px) scale(1.03);
+        box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.45),
+            0 16px 40px rgba(6,24,61,0.7),
+            0 0 45px rgba(101,200,255,0.55),
+            0 0 80px rgba(118,86,214,0.35);
+    }
+    .ei-start-btn .btn:active { transform: translateY(0) scale(0.98); }
+    .ei-start-btn .hint {
+        font-size: 14px; color: #9FB6E0; font-weight: 700;
+        letter-spacing: 1px;
+        text-shadow: 0 2px 8px rgba(5,11,31,0.6);
+    }
+
+    /* ---- 顶部微小标题（不影响沉浸感，仅标识页面） ---- */
+    .ei-badge {
+        position: fixed; top: 24px; left: 50%;
+        transform: translateX(-50%);
+        z-index: 5;
+        display: flex; align-items: center; gap: 8px;
+        padding: 8px 18px; border-radius: 999px;
+        background: rgba(7,27,73,0.55);
+        border: 1px solid rgba(120,200,255,0.35);
+        backdrop-filter: blur(8px);
+        color: #FFE79B; font-size: 13px; font-weight: 800;
+        letter-spacing: 1px;
+        box-shadow: 0 0 18px rgba(120,200,255,0.15);
+        opacity: 0;
+        animation: ei-fade-in 1.5s ease-out 0.5s forwards;
+        pointer-events: none;
+    }
+    .ei-badge .dot {
+        width: 8px; height: 8px; border-radius: 50%;
+        background: radial-gradient(circle, #FFD45A, #FFB72E);
+        box-shadow: 0 0 8px rgba(255,213,90,0.7);
+    }
+
+    /* ---- 视频结束后过渡层 ---- */
+    .ei-outro {
+        position: fixed; inset: 0; z-index: 8;
+        display: none;
+        flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: 0;
+        text-align: center;
+        opacity: 0;
+        transition: opacity 1.2s ease;
+    }
+    .ei-outro.is-show {
+        display: flex;
+    }
+    .ei-outro.is-fade {
+        opacity: 1;
+    }
+    .ei-outro-bg {
+        position: absolute; inset: 0; z-index: -1;
+        background:
+            radial-gradient(ellipse 50% 40% at 50% 45%, rgba(60,110,220,0.18), transparent 70%),
+            radial-gradient(ellipse 40% 30% at 30% 70%, rgba(118,86,214,0.14), transparent 70%),
+            linear-gradient(180deg, #050B1F 0%, #0A1A3A 50%, #050B1F 100%);
+    }
+    .ei-outro-bg::before {
+        content: ""; position: absolute; inset: 0;
+        background-image:
+            radial-gradient(2px 2px at 12% 22%, #FFE58A, transparent 51%),
+            radial-gradient(1.5px 1.5px at 30% 78%, #fff, transparent 51%),
+            radial-gradient(2.2px 2.2px at 70% 30%, #FFE58A, transparent 51%),
+            radial-gradient(1.8px 1.8px at 88% 70%, #fff, transparent 51%),
+            radial-gradient(1.5px 1.5px at 50% 14%, #FFF1B3, transparent 51%),
+            radial-gradient(1.2px 1.2px at 42% 54%, #FFE58A, transparent 51%);
+        animation: ei-twinkle 4s ease-in-out infinite alternate;
+    }
+
+    .ei-outro-title {
+        font-size: clamp(32px, 5vw, 48px);
+        font-weight: 900;
+        letter-spacing: 3px;
+        background: linear-gradient(180deg, #FFFFFF 0%, #DDF3FF 60%, #9FC8F0 100%);
+        -webkit-background-clip: text; background-clip: text; color: transparent;
+        filter: drop-shadow(0 6px 20px rgba(120,200,255,0.3));
+        margin-bottom: 16px;
+    }
+    .ei-outro-sub {
+        font-size: clamp(16px, 2vw, 22px);
+        font-weight: 700;
+        color: #C9DBF7;
+        letter-spacing: 1px;
+        line-height: 1.6;
+        margin-bottom: 44px;
+        max-width: 600px;
+    }
+    .ei-outro-sub b {
+        color: #FFE79B;
+        text-shadow: 0 0 10px rgba(255,213,90,0.3);
+    }
+    .ei-outro-dots {
+        display: flex; gap: 10px; margin-bottom: 36px;
+    }
+    .ei-outro-dots .dot {
+        width: 10px; height: 10px; border-radius: 50%;
+        background: rgba(255,255,255,0.2);
+        animation: ei-dot-pulse 1.5s ease-in-out infinite;
+    }
+    .ei-outro-dots .dot:nth-child(2) { animation-delay: .3s; }
+    .ei-outro-dots .dot:nth-child(3) { animation-delay: .6s; }
+    @keyframes ei-dot-pulse {
+        0%, 100% { background: rgba(255,255,255,0.2); transform: scale(0.9); }
+        50% { background: rgba(255,213,90,0.8); transform: scale(1.2); }
+    }
+    .ei-outro-status {
+        font-size: 18px; font-weight: 800;
+        color: #FFE79B;
+        letter-spacing: 2px;
+        text-shadow: 0 0 14px rgba(255,213,90,0.3);
+    }
+    .ei-outro-status .sparkle {
+        display: inline-block;
+        animation: ei-sparkle 2s ease-in-out infinite;
+    }
+    @keyframes ei-sparkle {
+        0%, 100% { opacity: 0.7; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    @keyframes ei-fade-in {
+        from { opacity: 0; transform: translate(-50%, -48%) scale(0.96); }
+        to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    /* ---- 返回首页小按钮（左上角，不抢视觉） ---- */
+    .ei-back {
+        position: fixed; top: 24px; left: 24px; z-index: 6;
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 8px 16px; border-radius: 999px;
+        background: rgba(7,27,73,0.5);
+        border: 1px solid rgba(120,200,255,0.25);
+        backdrop-filter: blur(8px);
+        color: #CDE4FF; font-size: 13px; font-weight: 700;
+        text-decoration: none;
+        opacity: 0;
+        animation: ei-fade-in-simple 1s ease-out 1s forwards;
+        transition: border-color .2s ease, color .2s ease;
+    }
+    .ei-back:hover { border-color: rgba(165,232,90,0.5); color: #A5E85A; }
+    @keyframes ei-fade-in-simple {
+        from { opacity: 0; }
+        to   { opacity: 0.7; }
+    }
+
+    /* ---- 开启声音按钮 ---- */
+    .ei-sound-btn {
+        position: fixed; bottom: 32px; right: 32px; z-index: 7;
+        display: none;
+        align-items: center; gap: 8px;
+        padding: 12px 24px; border-radius: 999px;
+        border: none; cursor: pointer;
+        background: linear-gradient(135deg, rgba(11,54,112,0.85), rgba(30,95,176,0.85));
+        box-shadow:
+            0 4px 20px rgba(6,24,61,0.5),
+            0 0 20px rgba(101,200,255,0.2),
+            inset 0 1px 0 rgba(255,255,255,0.25);
+        backdrop-filter: blur(10px);
+        color: #E8F2FF; font-size: 14px; font-weight: 800;
+        letter-spacing: 1px;
+        transition: transform .2s ease, box-shadow .2s ease;
+        animation: ei-sound-in 1s ease-out 1.5s both;
+    }
+    .ei-sound-btn.is-show { display: flex; }
+    .ei-sound-btn:hover {
+        transform: translateY(-2px);
+        box-shadow:
+            0 8px 28px rgba(6,24,61,0.6),
+            0 0 30px rgba(101,200,255,0.35),
+            inset 0 1px 0 rgba(255,255,255,0.35);
+    }
+    .ei-sound-btn .icon { font-size: 18px; }
+    .ei-sound-btn.is-on {
+        background: linear-gradient(135deg, rgba(79,174,69,0.85), rgba(123,198,126,0.85));
+        color: #fff;
+    }
+    @keyframes ei-sound-in {
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ---- 移动端适配 ---- */
+    @media (max-width: 768px) {
+        .ei-start-btn .btn { font-size: 20px; padding: 16px 40px; }
+        .ei-badge { font-size: 11px; padding: 6px 14px; }
+        .ei-outro-title { font-size: 28px; }
+        .ei-outro-sub { font-size: 16px; }
+        .ei-sound-btn { bottom: 20px; right: 20px; font-size: 12px; padding: 10px 18px; }
+    }
+    </style>
+</head>
+<body class="eye-intro">
+
+    <!-- 宇宙星空填充背景 -->
+    <div class="ei-cosmos" aria-hidden="true"></div>
+
+    <!-- 左上角返回首页 -->
+    <a href="index.html" class="ei-back">← 瞳学星球</a>
+
+    <!-- 顶部页面标识 -->
+    <div class="ei-badge">
+        <span class="dot"></span>
+        01 · 眼球大冒险
+    </div>
+
+    <!-- 视频舞台 -->
+    <div class="ei-stage">
+        <div class="ei-video-wrap">
+            <video
+                class="ei-video"
+                id="introVideo"
+                src="assets/eye-adventure/intro.mp4?v=2"
+                muted
+                playsinline
+                webkit-playsinline="true"
+                preload="auto"
+                x5-playsinline="true"
+            >
+                <track kind="subtitles" src="assets/eye-adventure/intro.vtt" srclang="zh" label="中文" mode="disabled">
+            </video>
+        </div>
+    </div>
+
+    <!-- autoplay fallback 按钮 -->
+    <div class="ei-start-btn" id="startBtn">
+        <button class="btn" id="startBtnInner">🚀 开始冒险</button>
+        <div class="hint">点击按钮，开启眼睛王国之旅</div>
+    </div>
+
+    <!-- 开启声音按钮 -->
+    <button class="ei-sound-btn" id="soundBtn">
+        <span class="icon">🔇</span>
+        <span class="label">开启声音</span>
+    </button>
+
+    <!-- 视频结束后的过渡层 -->
+    <div class="ei-outro" id="outro">
+        <div class="ei-outro-bg" aria-hidden="true"></div>
+        <div class="ei-outro-title">✨ 冒险即将开始</div>
+        <div class="ei-outro-sub">小光仔正在准备下一站旅程<br><b>请稍候…</b></div>
+        <div class="ei-outro-dots">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+        <div class="ei-outro-status"><span class="sparkle">✦</span> 等待下一段动画 <span class="sparkle">✦</span></div>
+    </div>
+
+    <script>
+    (function() {
+        'use strict';
+
+        var STATE = {
+            phase: 'loading',   // loading → playing → ended
+            videoStarted: false,
+            videoEnded: false,
+            soundEnabled: false
+        };
+
+        // 字幕数据（新整合视频无硬字幕，保留空数组供后续使用）
+        var SUBTITLES = [];
+
+        var video    = document.getElementById('introVideo');
+        var startBtn = document.getElementById('startBtn');
+        var btnInner = document.getElementById('startBtnInner');
+        var outro    = document.getElementById('outro');
+        var soundBtn = document.getElementById('soundBtn');
+        var soundIcon = soundBtn.querySelector('.icon');
+        var soundLabel = soundBtn.querySelector('.label');
+
+        // ---- 隐藏视频右键菜单 ----
+        video.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+
+        // ---- 尝试自动播放 ----
+        var playPromise = video.play();
+
+        if (playPromise && typeof playPromise.then === 'function') {
+            playPromise.then(function() {
+                STATE.phase = 'playing';
+                STATE.videoStarted = true;
+                soundBtn.classList.add('is-show');
+            }).catch(function() {
+                STATE.phase = 'waiting';
+                startBtn.classList.add('is-show');
+            });
+        } else {
+            setTimeout(function() {
+                if (video.paused && !STATE.videoStarted) {
+                    STATE.phase = 'waiting';
+                    startBtn.classList.add('is-show');
+                } else {
+                    STATE.phase = 'playing';
+                    STATE.videoStarted = true;
+                    soundBtn.classList.add('is-show');
+                }
+            }, 300);
+        }
+
+        // ---- 用户点击「开始冒险」 ----
+        function startPlay() {
+            startBtn.classList.remove('is-show');
+            video.muted = true;
+            video.play().then(function() {
+                STATE.phase = 'playing';
+                STATE.videoStarted = true;
+                soundBtn.classList.add('is-show');
+            }).catch(function() {
+                setTimeout(showOutro, 3000);
+            });
+        }
+        btnInner.addEventListener('click', startPlay);
+
+        // ---- 开启/关闭声音 ----
+        function toggleSound() {
+            if (!STATE.soundEnabled) {
+                // 开启声音：从头播放带声音的视频
+                STATE.soundEnabled = true;
+                video.muted = false;
+                video.currentTime = 0;
+                video.play().then(function() {
+                    soundBtn.classList.add('is-on');
+                    soundIcon.textContent = '🔊';
+                    soundLabel.textContent = '声音已开';
+                }).catch(function() {
+                    // 取消静音后自动播放可能被阻止，保持静音继续播放
+                    STATE.soundEnabled = false;
+                    video.muted = true;
+                });
+            } else {
+                // 关闭声音
+                STATE.soundEnabled = false;
+                video.muted = true;
+                soundBtn.classList.remove('is-on');
+                soundIcon.textContent = '🔇';
+                soundLabel.textContent = '开启声音';
+            }
+        }
+        soundBtn.addEventListener('click', toggleSound);
+
+        // ---- 视频开始播放时隐藏按钮 ----
+        video.addEventListener('playing', function() {
+            if (startBtn.classList.contains('is-show')) {
+                startBtn.classList.remove('is-show');
+            }
+            STATE.phase = 'playing';
+            STATE.videoStarted = true;
+        });
+
+        // ---- 字幕数据可用于未来扩展（当前新视频无硬字幕） ----
+        // SUBTITLES 数组保留在代码中，供后续添加字幕时使用
+
+        // ---- 视频结束 ----
+        video.addEventListener('ended', function() {
+            STATE.phase = 'ended';
+            STATE.videoEnded = true;
+            soundBtn.classList.remove('is-show');
+            showOutro();
+        });
+
+        // ---- 显示过渡层 ----
+        function showOutro() {
+            outro.classList.add('is-show');
+            void outro.offsetWidth;
+            outro.classList.add('is-fade');
+        }
+
+        // ---- 安全兜底（新视频约40秒，兜底设为60秒） ----
+        var safetyTimer = setTimeout(function() {
+            if (!STATE.videoEnded) {
+                if (STATE.videoStarted) {
+                    showOutro();
+                } else {
+                    if (!startBtn.classList.contains('is-show')) {
+                        startBtn.classList.add('is-show');
+                    }
+                }
+            }
+        }, 60000);
+
+        video.addEventListener('loadeddata', function() {
+            clearTimeout(safetyTimer);
+            setTimeout(function() {
+                if (!STATE.videoEnded && STATE.videoStarted) {
+                    showOutro();
+                }
+            }, 60000);
+        });
+
+    })();
+    </script>
+</body>
+</html>

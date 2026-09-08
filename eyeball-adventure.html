@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>眼球大冒险 · 正在跳转…</title>
     <!-- 0 秒立即跳转，兼容禁用 JS 的浏览器 -->
-    <meta http-equiv="refresh" content="0; url=adventure.html">
+    <meta http-equiv="refresh" content="0; url=adventure-intro.html">
     <style>
         html, body { margin: 0; padding: 0; height: 100%; }
         body {
@@ -40,12 +40,12 @@
         <div class="logo"><img src="assets/images/logo-tongxue.jpg" alt="瞳学星球"></div>
         <p class="title">正在进入眼球大冒险…</p>
         <p class="sub">小光仔马上带我们出发！🚀</p>
-        <p class="link">如果没有自动跳转，<a href="adventure.html">点这里</a></p>
+        <p class="link">如果没有自动跳转，<a href="adventure-intro.html">点这里</a></p>
     </div>
     <script>
         // 立即跳转（保留查询参数和 hash）
         var rest = window.location.search + window.location.hash;
-        window.location.replace('adventure.html' + rest);
+        window.location.replace('adventure-intro.html' + rest);
     </script>
 </body>
 </html>
