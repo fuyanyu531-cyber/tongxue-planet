@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>眼球大冒险 · 开幕动画 | 瞳学星球</title>
+    <title>眼球大冒险 · 追光挑战 | 瞳学星球</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
     /* ============================================================
@@ -310,6 +310,336 @@
         .ei-outro-sub { font-size: 16px; }
         .ei-sound-btn { bottom: 20px; right: 20px; font-size: 12px; padding: 10px 18px; }
     }
+
+    /* ============================================================
+       游戏阶段样式
+       ============================================================ */
+
+    /* ---- GAME_READY 游戏开始界面 ---- */
+    .ei-game-ready {
+        position: fixed; inset: 0; z-index: 9;
+        display: none;
+        flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: 0;
+        text-align: center;
+        overflow: hidden;
+    }
+    .ei-game-ready.is-show { display: flex; }
+    .ei-game-ready .gr-bg {
+        position: absolute; inset: 0; z-index: -1;
+        background: url('assets/eye-adventure/game-bg.jpg') center/cover no-repeat;
+        opacity: 0.55;
+        animation: gr-bg-float 30s ease-in-out infinite;
+    }
+    @keyframes gr-bg-float {
+        0%, 100% { transform: scale(1.05) translateX(0); }
+        50% { transform: scale(1.08) translateX(-15px); }
+    }
+    .ei-game-ready .gr-bg::after {
+        content: ''; position: absolute; inset: 0;
+        background: radial-gradient(ellipse at center, transparent 0%, rgba(5,11,31,0.5) 70%, rgba(5,11,31,0.8) 100%);
+    }
+
+    /* 浮动装饰星星 */
+    .ei-game-ready .gr-star {
+        position: absolute;
+        color: #FFD93D;
+        opacity: 0.6;
+        animation: gr-star-float 4s ease-in-out infinite;
+        text-shadow: 0 0 10px rgba(255,217,61,0.5);
+        pointer-events: none;
+    }
+    @keyframes gr-star-float {
+        0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.4; }
+        50% { transform: translateY(-12px) rotate(20deg); opacity: 0.8; }
+    }
+
+    /* 小光仔浮动角色 */
+    .ei-game-ready .gr-mascot {
+        font-size: 56px;
+        animation: gr-mascot-float 3s ease-in-out infinite;
+        filter: drop-shadow(0 4px 20px rgba(78,205,196,0.4));
+        margin-bottom: 8px;
+    }
+    @keyframes gr-mascot-float {
+        0%, 100% { transform: translateY(0) rotate(-3deg); }
+        50% { transform: translateY(-10px) rotate(3deg); }
+    }
+
+    .ei-game-ready .gr-title {
+        font-size: clamp(36px, 6vw, 56px);
+        font-weight: 900;
+        letter-spacing: 4px;
+        background: linear-gradient(90deg, #FF6B9D, #FFD93D, #6BCB77, #4ECDC4, #5B8DEF);
+        background-size: 200% 200%;
+        -webkit-background-clip: text; background-clip: text; color: transparent;
+        filter: drop-shadow(0 4px 20px rgba(255,200,100,0.4));
+        animation: gr-rainbow 3s ease infinite, gr-breathe 3s ease-in-out infinite;
+    }
+    @keyframes gr-breathe {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.04); }
+    }
+
+    .ei-game-ready .gr-sub {
+        font-size: clamp(15px, 2vw, 20px);
+        font-weight: 700;
+        color: #C9DBF7;
+        letter-spacing: 1px;
+        margin-top: 12px;
+        margin-bottom: 36px;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+
+    /* 操作提示胶囊 */
+    .ei-game-ready .gr-ctrl-hint {
+        display: flex; gap: 16px; margin-bottom: 32px;
+        flex-wrap: wrap; justify-content: center;
+    }
+    .ei-game-ready .gr-ctrl-hint .chip {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 8px 18px; border-radius: 999px;
+        background: rgba(7,27,73,0.6);
+        border: 1px solid rgba(120,200,255,0.3);
+        backdrop-filter: blur(8px);
+        color: #C9DBF7; font-size: 13px; font-weight: 700;
+    }
+    .ei-game-ready .gr-ctrl-hint .chip .icon { font-size: 16px; }
+
+    .ei-game-ready .gr-btn {
+        position: relative;
+        padding: 22px 60px;
+        border: none; border-radius: 999px;
+        cursor: pointer;
+        font-size: clamp(22px, 3vw, 28px);
+        font-weight: 900;
+        letter-spacing: 3px;
+        color: #fff;
+        background: linear-gradient(135deg, #FF6B9D 0%, #FFD93D 25%, #6BCB77 50%, #4ECDC4 75%, #5B8DEF 100%);
+        background-size: 200% 200%;
+        animation: gr-rainbow 3s ease infinite, gr-btn-glow 2.5s ease-in-out infinite;
+        box-shadow:
+            inset 0 2px 0 rgba(255,255,255,0.4),
+            0 12px 36px rgba(0,0,0,0.4),
+            0 0 40px rgba(255,200,100,0.3);
+        transition: transform .25s ease;
+    }
+    @keyframes gr-rainbow {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    @keyframes gr-btn-glow {
+        0%, 100% { box-shadow: inset 0 2px 0 rgba(255,255,255,0.4), 0 12px 36px rgba(0,0,0,0.4), 0 0 40px rgba(255,200,100,0.3); }
+        50% { box-shadow: inset 0 2px 0 rgba(255,255,255,0.5), 0 16px 44px rgba(0,0,0,0.45), 0 0 60px rgba(255,200,100,0.5); }
+    }
+    .ei-game-ready .gr-btn:hover { transform: translateY(-5px) scale(1.06); }
+    .ei-game-ready .gr-btn:active { transform: scale(0.97); }
+    .ei-game-ready .gr-btn::after {
+        content: ''; position: absolute;
+        left: 24px; right: 24px; top: 4px; height: 2px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+    }
+
+    /* 关卡进度指示器 */
+    .ei-game-ready .gr-level-dots {
+        display: flex; gap: 10px; margin-top: 24px;
+        align-items: center;
+    }
+    .ei-game-ready .gr-level-dots .ldot {
+        width: 10px; height: 10px; border-radius: 50%;
+        background: rgba(255,255,255,0.2);
+        border: 1px solid rgba(120,200,255,0.3);
+    }
+    .ei-game-ready .gr-level-dots .ldot.active {
+        background: #FFD93D;
+        box-shadow: 0 0 10px rgba(255,217,61,0.6);
+        transform: scale(1.2);
+    }
+    .ei-game-ready .gr-level-dots .ldot-sep {
+        width: 24px; height: 2px;
+        background: rgba(120,200,255,0.2);
+        border-radius: 1px;
+    }
+
+    /* ---- COUNTDOWN 倒计时 ---- */
+    .ei-countdown {
+        position: fixed; inset: 0; z-index: 10;
+        display: none;
+        align-items: center; justify-content: center;
+    }
+    .ei-countdown.is-show { display: flex; }
+    .ei-countdown .cd-num {
+        font-size: clamp(80px, 15vw, 140px);
+        font-weight: 900;
+        color: #fff;
+        text-shadow: 0 0 30px rgba(120,200,255,0.6), 0 0 60px rgba(118,86,214,0.4);
+        animation: cd-pop 0.8s ease-out;
+    }
+    @keyframes cd-pop {
+        0% { transform: scale(0.3); opacity: 0; }
+        40% { transform: scale(1.15); opacity: 1; }
+        70% { transform: scale(1); }
+        100% { transform: scale(0.95); opacity: 0; }
+    }
+
+    /* ---- 游戏画布容器 ---- */
+    .ei-game {
+        position: fixed; inset: 0; z-index: 5;
+        display: none;
+        flex-direction: column;
+    }
+    .ei-game.is-show { display: flex; }
+
+    /* HUD */
+    .ei-hud {
+        position: absolute; top: 0; left: 0; right: 0;
+        z-index: 7;
+        display: flex; align-items: flex-start; justify-content: space-between;
+        padding: 12px 20px;
+        pointer-events: none;
+    }
+    .ei-hud-left {
+        display: flex; flex-direction: column; gap: 4px;
+    }
+    .ei-hud-title {
+        font-size: 14px; font-weight: 900; color: #FFE79B;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+    .ei-hud-stage {
+        font-size: 12px; font-weight: 700; color: #C9DBF7;
+        text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+    }
+    .ei-hud-progress {
+        margin-top: 6px;
+        display: flex; align-items: center; gap: 6px;
+    }
+    .ei-hud-bar {
+        width: 160px; height: 8px;
+        background: rgba(255,255,255,0.15);
+        border-radius: 999px;
+        overflow: hidden;
+        position: relative;
+    }
+    .ei-hud-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #6BCB77, #FFD93D, #FF6B9D);
+        border-radius: 999px;
+        transition: width .3s ease;
+        width: 0%;
+    }
+    .ei-hud-bar-icon { font-size: 12px; }
+    .ei-hud-right {
+        display: flex; align-items: center; gap: 12px;
+    }
+    .ei-hud-hearts { font-size: 18px; letter-spacing: 2px; }
+    .ei-hud-stars { font-size: 14px; color: #FFE79B; font-weight: 800; }
+    .ei-hud-pause {
+        pointer-events: auto;
+        width: 36px; height: 36px;
+        border: none; border-radius: 50%;
+        background: rgba(7,27,73,0.6);
+        border: 1px solid rgba(120,200,255,0.3);
+        color: #fff; font-size: 16px;
+        cursor: pointer;
+        display: grid; place-items: center;
+        backdrop-filter: blur(6px);
+        transition: transform .2s;
+    }
+    .ei-hud-pause:hover { transform: scale(1.1); }
+
+    /* 提示文字 */
+    .ei-hint-text {
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 6;
+        font-size: clamp(20px, 3vw, 28px);
+        font-weight: 900;
+        color: #fff;
+        text-shadow: 0 2px 12px rgba(0,0,0,0.5), 0 0 20px rgba(120,200,255,0.4);
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity .5s ease;
+    }
+    .ei-hint-text.is-show { opacity: 1; }
+
+    /* ---- 暂停面板 ---- */
+    .ei-pause {
+        position: fixed; inset: 0; z-index: 15;
+        display: none;
+        flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: 24px;
+        background: rgba(5,11,31,0.85);
+        backdrop-filter: blur(10px);
+    }
+    .ei-pause.is-show { display: flex; }
+    .ei-pause-title { font-size: clamp(28px, 4vw, 36px); font-weight: 900; color: #FFE79B; }
+    .ei-pause-btn {
+        padding: 14px 40px; border: none; border-radius: 999px;
+        cursor: pointer; font-size: 18px; font-weight: 800;
+        color: #fff;
+        background: linear-gradient(135deg, #1E5FB0, #7656D6);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.4), 0 0 20px rgba(120,200,255,0.2);
+        transition: transform .2s;
+    }
+    .ei-pause-btn:hover { transform: translateY(-2px) scale(1.03); }
+
+    /* ---- 成功动画 ---- */
+    .ei-success {
+        position: fixed; inset: 0; z-index: 9;
+        display: none;
+        align-items: center; justify-content: center;
+    }
+    .ei-success.is-show { display: flex; }
+    .ei-success-title {
+        font-size: clamp(32px, 5vw, 48px);
+        font-weight: 900;
+        background: linear-gradient(90deg, #FFD93D, #6BCB77, #4ECDC4);
+        -webkit-background-clip: text; background-clip: text; color: transparent;
+        filter: drop-shadow(0 4px 20px rgba(255,200,100,0.4));
+        opacity: 0;
+        animation: ei-fade-in-simple 1.5s ease-out 0.5s forwards;
+    }
+
+    /* ---- 结算视频 ---- */
+    .ei-result-video {
+        position: fixed; inset: 0; z-index: 20;
+        display: none;
+        width: 100%; height: 100%;
+        object-fit: cover;
+    }
+    .ei-result-video.is-show { display: block; }
+    .ei-result-video::-webkit-media-controls-panel,
+    .ei-result-video::-webkit-media-controls-play-button,
+    .ei-result-video::-webkit-media-controls-timeline,
+    .ei-result-video::-webkit-media-controls-current-time-display,
+    .ei-result-video::-webkit-media-controls-time-remaining-display,
+    .ei-result-video::-webkit-media-controls-mute-button,
+    .ei-result-video::-webkit-media-controls-volume-slider,
+    .ei-result-video::-webkit-media-controls-fullscreen-button {
+        display: none !important;
+    }
+
+    /* ---- 手机竖屏提示 ---- */
+    .ei-rotate-hint {
+        position: fixed; inset: 0; z-index: 30;
+        display: none;
+        flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: 16px;
+        background: rgba(5,11,31,0.95);
+        text-align: center;
+    }
+    .ei-rotate-hint.is-show { display: flex; }
+    .ei-rotate-hint .icon { font-size: 48px; animation: gr-breathe 2s ease-in-out infinite; }
+    .ei-rotate-hint .text {
+        font-size: 18px; font-weight: 800; color: #C9DBF7;
+        max-width: 280px; line-height: 1.6;
+    }
     </style>
 </head>
 <body class="eye-intro">
@@ -332,7 +662,7 @@
             <video
                 class="ei-video"
                 id="introVideo"
-                src="assets/eye-adventure/intro.mp4?v=2"
+                src="assets/eye-adventure/intro.mp4?v=3"
                 muted
                 playsinline
                 webkit-playsinline="true"
@@ -356,158 +686,1081 @@
         <span class="label">开启声音</span>
     </button>
 
-    <!-- 视频结束后的过渡层 -->
-    <div class="ei-outro" id="outro">
-        <div class="ei-outro-bg" aria-hidden="true"></div>
-        <div class="ei-outro-title">✨ 冒险即将开始</div>
-        <div class="ei-outro-sub">小光仔正在准备下一站旅程<br><b>请稍候…</b></div>
-        <div class="ei-outro-dots">
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
+    <!-- 游戏开始界面（视频结束后显示） -->
+    <div class="ei-game-ready" id="gameReady">
+        <!-- 游戏背景图 -->
+        <div class="gr-bg" aria-hidden="true"></div>
+        <!-- 浮动装饰星星 -->
+        <div class="gr-star" style="top:12%;left:15%;font-size:20px;animation-delay:0s">✦</div>
+        <div class="gr-star" style="top:20%;right:18%;font-size:16px;animation-delay:.8s">✧</div>
+        <div class="gr-star" style="top:70%;left:10%;font-size:14px;animation-delay:1.5s">✦</div>
+        <div class="gr-star" style="top:75%;right:12%;font-size:22px;animation-delay:.3s">✧</div>
+        <div class="gr-star" style="top:35%;left:8%;font-size:12px;animation-delay:2s">✦</div>
+        <div class="gr-star" style="top:55%;right:8%;font-size:18px;animation-delay:1.2s">✧</div>
+        <!-- 小光仔角色 -->
+        <div class="gr-mascot">🚀</div>
+        <!-- 标题 -->
+        <div class="gr-title">🌈 追光出发！</div>
+        <div class="gr-sub">跟着彩虹光线，躲开障碍，飞向角膜星球！</div>
+        <!-- 操作提示胶囊 -->
+        <div class="gr-ctrl-hint">
+            <div class="chip"><span class="icon">⌨️</span> 键盘 ↑↓ 或 W/S</div>
+            <div class="chip"><span class="icon">🖱️</span> 鼠标上下移动</div>
+            <div class="chip"><span class="icon">📱</span> 手指上下滑动</div>
         </div>
-        <div class="ei-outro-status"><span class="sparkle">✦</span> 等待下一段动画 <span class="sparkle">✦</span></div>
+        <!-- 出发按钮 -->
+        <button class="gr-btn" id="startGameBtn">🌈 追光出发！</button>
+        <!-- 关卡进度指示器 -->
+        <div class="gr-level-dots">
+            <div class="ldot active"></div>
+            <div class="ldot-sep"></div>
+            <div class="ldot"></div>
+            <div class="ldot-sep"></div>
+            <div class="ldot"></div>
+            <div class="ldot-sep"></div>
+            <div class="ldot"></div>
+            <div class="ldot-sep"></div>
+            <div class="ldot"></div>
+        </div>
+    </div>
+
+    <!-- 倒计时 -->
+    <div class="ei-countdown" id="countdown">
+        <div class="cd-num" id="cdNum"></div>
+    </div>
+
+    <!-- 游戏画布 -->
+    <div class="ei-game" id="gameContainer">
+        <canvas id="gameCanvas"></canvas>
+        <!-- HUD -->
+        <div class="ei-hud">
+            <div class="ei-hud-left">
+                <div class="ei-hud-title">⭐ 追光挑战 · 第一关 角膜</div>
+                <div class="ei-hud-stage" id="hudStage">第一阶段 1/3</div>
+                <div class="ei-hud-progress">
+                    <span class="ei-hud-bar-icon">🎯</span>
+                    <div class="ei-hud-bar"><div class="ei-hud-bar-fill" id="hudBarFill"></div></div>
+                    <span class="ei-hud-bar-icon">👁️</span>
+                </div>
+            </div>
+            <div class="ei-hud-right">
+                <span class="ei-hud-stars" id="hudStars">⭐ 0/3</span>
+                <span class="ei-hud-hearts" id="hudHearts">❤️ ❤️ ❤️</span>
+                <button class="ei-hud-pause" id="pauseBtn" title="暂停">⏸</button>
+            </div>
+        </div>
+        <!-- 提示文字 -->
+        <div class="ei-hint-text" id="hintText"></div>
+    </div>
+
+    <!-- 暂停面板 -->
+    <div class="ei-pause" id="pausePanel">
+        <div class="ei-pause-title">🌙 冒险暂停啦</div>
+        <button class="ei-pause-btn" id="resumeBtn">▶ 继续冒险</button>
+        <button class="ei-pause-btn" id="restartBtn">↻ 重新开始</button>
+    </div>
+
+    <!-- 成功动画 -->
+    <div class="ei-success" id="successAnim">
+        <div class="ei-success-title">太棒啦！追光成功！✨</div>
+    </div>
+
+    <!-- 结算视频 -->
+    <video class="ei-result-video" id="resultVideo" src="assets/eye-adventure/result.mp4" muted playsinline preload="auto"></video>
+
+    <!-- 手机竖屏提示 -->
+    <div class="ei-rotate-hint" id="rotateHint">
+        <div class="icon">📱</div>
+        <div class="text">请横过手机，和小光仔一起追光吧！🚀</div>
     </div>
 
     <script>
     (function() {
         'use strict';
 
+        /* ============================================================
+           状态机：INTRO → GAME_READY → COUNTDOWN → PLAYING → SUCCESS → RESULT_VIDEO → COMPLETE
+           ============================================================ */
         var STATE = {
-            phase: 'loading',   // loading → playing → ended
+            phase: 'intro',
             videoStarted: false,
             videoEnded: false,
-            soundEnabled: false
+            soundEnabled: false,
+            // game state
+            gamePhase: 0,
+            gameStartTime: 0,
+            phaseStartTime: 0,
+            hearts: 3,
+            starsCollected: 0,
+            progress: 0,
+            paused: false,
+            ship: { x: 0, y: 0, targetY: 0, vx: 0, vy: 0, radius: 22 },
+            lightTrail: [],
+            obstacles: [],
+            collectStars: [],
+            particles: [],
+            keys: { up: false, down: false },
+            pointerY: null,
+            lastFrameTime: 0,
+            canvasWidth: 0,
+            canvasHeight: 0,
+            dpr: 1,
+            autoAssist: true,
+            noInputTime: 0,
+            invincible: 0,
+            rafId: null,
+            successPhase: 0,
+            successStartTime: 0,
+            bgImg: null,
+            bgLoaded: false
         };
 
-        // 字幕数据（新整合视频无硬字幕，保留空数组供后续使用）
-        var SUBTITLES = [];
-
-        var video    = document.getElementById('introVideo');
-        var startBtn = document.getElementById('startBtn');
-        var btnInner = document.getElementById('startBtnInner');
-        var outro    = document.getElementById('outro');
+        // ---- DOM 引用 ----
+        var video     = document.getElementById('introVideo');
+        var startBtn  = document.getElementById('startBtn');
+        var btnInner  = document.getElementById('startBtnInner');
         var soundBtn = document.getElementById('soundBtn');
         var soundIcon = soundBtn.querySelector('.icon');
         var soundLabel = soundBtn.querySelector('.label');
+        var gameReadyEl = document.getElementById('gameReady');
+        var startGameBtn = document.getElementById('startGameBtn');
+        var countdownEl = document.getElementById('countdown');
+        var cdNum = document.getElementById('cdNum');
+        var gameContainer = document.getElementById('gameContainer');
+        var canvas = document.getElementById('gameCanvas');
+        var ctx = canvas.getContext('2d');
+        var hudStage = document.getElementById('hudStage');
+        var hudBarFill = document.getElementById('hudBarFill');
+        var hudStars = document.getElementById('hudStars');
+        var hudHearts = document.getElementById('hudHearts');
+        var pauseBtn = document.getElementById('pauseBtn');
+        var pausePanel = document.getElementById('pausePanel');
+        var resumeBtn = document.getElementById('resumeBtn');
+        var restartBtn = document.getElementById('restartBtn');
+        var hintText = document.getElementById('hintText');
+        var successAnim = document.getElementById('successAnim');
+        var resultVideo = document.getElementById('resultVideo');
+        var rotateHint = document.getElementById('rotateHint');
 
-        // ---- 隐藏视频右键菜单 ----
+        /* ============================================================
+           音效系统（Web Audio API，无外部文件）
+           ============================================================ */
+        var audioCtx = null;
+        var bgmGain = null;
+        var bgmStarted = false;
+
+        function initAudio() {
+            if (audioCtx) return;
+            try {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                bgmGain = audioCtx.createGain();
+                bgmGain.gain.value = 0;
+                bgmGain.connect(audioCtx.destination);
+            } catch(e) { audioCtx = null; }
+        }
+
+        var bgmNodes = [];
+        var bgmTimer = null;
+
+        function startBGM() {
+            if (!audioCtx || bgmStarted) return;
+            bgmStarted = true;
+            try {
+                // C大调欢快旋律 — 儿童冒险风格
+                var melody = [
+                    { n: 523.25, d: 0.25 }, { n: 587.33, d: 0.25 }, { n: 659.25, d: 0.25 }, { n: 698.46, d: 0.25 },
+                    { n: 659.25, d: 0.25 }, { n: 587.33, d: 0.25 }, { n: 523.25, d: 0.5 },
+                    { n: 440.00, d: 0.25 }, { n: 523.25, d: 0.25 }, { n: 587.33, d: 0.5 },
+                    { n: 659.25, d: 0.25 }, { n: 587.33, d: 0.25 }, { n: 523.25, d: 0.5 },
+                    { n: 659.25, d: 0.25 }, { n: 698.46, d: 0.25 }, { n: 783.99, d: 0.25 }, { n: 698.46, d: 0.25 },
+                    { n: 659.25, d: 0.25 }, { n: 587.33, d: 0.25 }, { n: 523.25, d: 0.5 },
+                    { n: 587.33, d: 0.25 }, { n: 659.25, d: 0.25 }, { n: 523.25, d: 0.5 }
+                ];
+                // 低音和弦伴奏
+                var bass = [
+                    { n: 130.81, d: 1.0 }, { n: 146.83, d: 1.0 },
+                    { n: 130.81, d: 1.0 }, { n: 174.61, d: 1.0 }
+                ];
+
+                bgmGain.gain.linearRampToValueAtTime(0.07, audioCtx.currentTime + 1.5);
+
+                var melodyIdx = 0, bassIdx = 0;
+                var melodyTime = audioCtx.currentTime + 0.1;
+
+                function playMelodyNote() {
+                    if (!bgmStarted || !audioCtx) return;
+                    var note = melody[melodyIdx % melody.length];
+                    // 主旋律
+                    var osc = audioCtx.createOscillator();
+                    var g = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.value = note.n;
+                    g.gain.setValueAtTime(0, melodyTime);
+                    g.gain.linearRampToValueAtTime(0.12, melodyTime + 0.02);
+                    g.gain.exponentialRampToValueAtTime(0.001, melodyTime + note.d * 0.9);
+                    osc.connect(g); g.connect(bgmGain);
+                    osc.start(melodyTime); osc.stop(melodyTime + note.d);
+                    bgmNodes.push(osc);
+
+                    // 高八度泛音（更明亮）
+                    var osc2 = audioCtx.createOscillator();
+                    var g2 = audioCtx.createGain();
+                    osc2.type = 'sine';
+                    osc2.frequency.value = note.n * 2;
+                    g2.gain.setValueAtTime(0, melodyTime);
+                    g2.gain.linearRampToValueAtTime(0.04, melodyTime + 0.02);
+                    g2.gain.exponentialRampToValueAtTime(0.001, melodyTime + note.d * 0.7);
+                    osc2.connect(g2); g2.connect(bgmGain);
+                    osc2.start(melodyTime); osc2.stop(melodyTime + note.d);
+                    bgmNodes.push(osc2);
+
+                    melodyTime += note.d;
+                    melodyIdx++;
+
+                    if (melodyTime < audioCtx.currentTime + 3) {
+                        bgmTimer = setTimeout(playMelodyNote, 0);
+                    } else {
+                        bgmTimer = setTimeout(playMelodyNote, (melodyTime - audioCtx.currentTime - 1) * 1000);
+                    }
+                }
+
+                var bassTime = audioCtx.currentTime + 0.1;
+                function playBassNote() {
+                    if (!bgmStarted || !audioCtx) return;
+                    var note = bass[bassIdx % bass.length];
+                    var osc = audioCtx.createOscillator();
+                    var g = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.value = note.n;
+                    g.gain.setValueAtTime(0, bassTime);
+                    g.gain.linearRampToValueAtTime(0.08, bassTime + 0.05);
+                    g.gain.linearRampToValueAtTime(0.04, bassTime + note.d * 0.5);
+                    g.gain.exponentialRampToValueAtTime(0.001, bassTime + note.d * 0.9);
+                    osc.connect(g); g.connect(bgmGain);
+                    osc.start(bassTime); osc.stop(bassTime + note.d);
+                    bgmNodes.push(osc);
+                    bassTime += note.d;
+                    bassIdx++;
+                    bgmTimer = setTimeout(playBassNote, (bassTime - audioCtx.currentTime - 0.5) * 1000);
+                }
+
+                playMelodyNote();
+                playBassNote();
+            } catch(e) {}
+        }
+
+        function stopBGM() {
+            if (!audioCtx || !bgmGain) return;
+            try {
+                if (bgmTimer) { clearTimeout(bgmTimer); bgmTimer = null; }
+                bgmGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1);
+                setTimeout(function() {
+                    bgmNodes.forEach(function(n) { try { n.stop(); } catch(e){} });
+                    bgmNodes = [];
+                    bgmStarted = false;
+                }, 1200);
+            } catch(e) {}
+        }
+
+        function playSfx(type) {
+            if (!audioCtx) return;
+            try {
+                var osc = audioCtx.createOscillator();
+                var gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                var t = audioCtx.currentTime;
+                switch(type) {
+                    case 'tick':
+                        osc.type = 'sine'; osc.frequency.setValueAtTime(880, t);
+                        gain.gain.setValueAtTime(0.15, t);
+                        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+                        osc.start(t); osc.stop(t + 0.15); break;
+                    case 'tick2':
+                        osc.type = 'sine'; osc.frequency.setValueAtTime(660, t);
+                        gain.gain.setValueAtTime(0.15, t);
+                        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+                        osc.start(t); osc.stop(t + 0.15); break;
+                    case 'tick3':
+                        osc.type = 'sine'; osc.frequency.setValueAtTime(440, t);
+                        gain.gain.setValueAtTime(0.15, t);
+                        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+                        osc.start(t); osc.stop(t + 0.15); break;
+                    case 'launch':
+                        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(220, t);
+                        osc.frequency.exponentialRampToValueAtTime(880, t + 0.4);
+                        gain.gain.setValueAtTime(0.2, t);
+                        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+                        osc.start(t); osc.stop(t + 0.5); break;
+                    case 'star':
+                        osc.type = 'sine'; osc.frequency.setValueAtTime(1318, t);
+                        osc.frequency.exponentialRampToValueAtTime(2093, t + 0.2);
+                        gain.gain.setValueAtTime(0.2, t);
+                        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+                        osc.start(t); osc.stop(t + 0.3); break;
+                    case 'hit':
+                        osc.type = 'square'; osc.frequency.setValueAtTime(150, t);
+                        osc.frequency.exponentialRampToValueAtTime(80, t + 0.2);
+                        gain.gain.setValueAtTime(0.15, t);
+                        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+                        osc.start(t); osc.stop(t + 0.25); break;
+                    case 'phase':
+                        osc.type = 'triangle'; osc.frequency.setValueAtTime(523, t);
+                        osc.frequency.exponentialRampToValueAtTime(1047, t + 0.3);
+                        gain.gain.setValueAtTime(0.18, t);
+                        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+                        osc.start(t); osc.stop(t + 0.4); break;
+                }
+            } catch(e) {}
+        }
+
+        /* ============================================================
+           开幕视频逻辑（保持不变）
+           ============================================================ */
         video.addEventListener('contextmenu', function(e) { e.preventDefault(); });
 
-        // ---- 尝试自动播放 ----
         var playPromise = video.play();
-
         if (playPromise && typeof playPromise.then === 'function') {
             playPromise.then(function() {
-                STATE.phase = 'playing';
-                STATE.videoStarted = true;
+                STATE.phase = 'playing'; STATE.videoStarted = true;
                 soundBtn.classList.add('is-show');
             }).catch(function() {
-                STATE.phase = 'waiting';
-                startBtn.classList.add('is-show');
+                STATE.phase = 'waiting'; startBtn.classList.add('is-show');
             });
         } else {
             setTimeout(function() {
                 if (video.paused && !STATE.videoStarted) {
-                    STATE.phase = 'waiting';
-                    startBtn.classList.add('is-show');
+                    STATE.phase = 'waiting'; startBtn.classList.add('is-show');
                 } else {
-                    STATE.phase = 'playing';
-                    STATE.videoStarted = true;
+                    STATE.phase = 'playing'; STATE.videoStarted = true;
                     soundBtn.classList.add('is-show');
                 }
             }, 300);
         }
 
-        // ---- 用户点击「开始冒险」 ----
         function startPlay() {
             startBtn.classList.remove('is-show');
             video.muted = true;
             video.play().then(function() {
-                STATE.phase = 'playing';
-                STATE.videoStarted = true;
+                STATE.phase = 'playing'; STATE.videoStarted = true;
                 soundBtn.classList.add('is-show');
-            }).catch(function() {
-                setTimeout(showOutro, 3000);
-            });
+            }).catch(function() { setTimeout(enterGameReady, 3000); });
         }
         btnInner.addEventListener('click', startPlay);
 
-        // ---- 开启/关闭声音 ----
         function toggleSound() {
             if (!STATE.soundEnabled) {
-                // 开启声音：从头播放带声音的视频
-                STATE.soundEnabled = true;
-                video.muted = false;
-                video.currentTime = 0;
-                video.play().then(function() {
-                    soundBtn.classList.add('is-on');
-                    soundIcon.textContent = '🔊';
-                    soundLabel.textContent = '声音已开';
+                STATE.soundEnabled = true; video.muted = false;
+                video.currentTime = 0; video.play().then(function() {
+                    soundBtn.classList.add('is-on'); soundIcon.textContent = '🔊'; soundLabel.textContent = '声音已开';
                 }).catch(function() {
-                    // 取消静音后自动播放可能被阻止，保持静音继续播放
-                    STATE.soundEnabled = false;
-                    video.muted = true;
+                    STATE.soundEnabled = false; video.muted = true;
                 });
             } else {
-                // 关闭声音
-                STATE.soundEnabled = false;
-                video.muted = true;
-                soundBtn.classList.remove('is-on');
-                soundIcon.textContent = '🔇';
-                soundLabel.textContent = '开启声音';
+                STATE.soundEnabled = false; video.muted = true;
+                soundBtn.classList.remove('is-on'); soundIcon.textContent = '🔇'; soundLabel.textContent = '开启声音';
             }
         }
         soundBtn.addEventListener('click', toggleSound);
 
-        // ---- 视频开始播放时隐藏按钮 ----
         video.addEventListener('playing', function() {
-            if (startBtn.classList.contains('is-show')) {
-                startBtn.classList.remove('is-show');
-            }
-            STATE.phase = 'playing';
-            STATE.videoStarted = true;
+            if (startBtn.classList.contains('is-show')) startBtn.classList.remove('is-show');
+            STATE.phase = 'playing'; STATE.videoStarted = true;
         });
 
-        // ---- 字幕数据可用于未来扩展（当前新视频无硬字幕） ----
-        // SUBTITLES 数组保留在代码中，供后续添加字幕时使用
-
-        // ---- 视频结束 ----
         video.addEventListener('ended', function() {
-            STATE.phase = 'ended';
-            STATE.videoEnded = true;
+            STATE.phase = 'ended'; STATE.videoEnded = true;
             soundBtn.classList.remove('is-show');
-            showOutro();
+            enterGameReady();
         });
 
-        // ---- 显示过渡层 ----
-        function showOutro() {
-            outro.classList.add('is-show');
-            void outro.offsetWidth;
-            outro.classList.add('is-fade');
+        function enterGameReady() {
+            STATE.phase = 'gameReady';
+            // 隐藏视频舞台
+            var stage = document.querySelector('.ei-stage');
+            if (stage) stage.style.display = 'none';
+            // 显示游戏开始界面
+            gameReadyEl.classList.add('is-show');
+            // 加载背景图
+            if (!STATE.bgLoaded) {
+                STATE.bgImg = new Image();
+                STATE.bgImg.onload = function() { STATE.bgLoaded = true; };
+                STATE.bgImg.src = 'assets/eye-adventure/game-bg.jpg';
+            }
         }
 
-        // ---- 安全兜底（新视频约40秒，兜底设为60秒） ----
+        // 安全兜底
         var safetyTimer = setTimeout(function() {
             if (!STATE.videoEnded) {
-                if (STATE.videoStarted) {
-                    showOutro();
-                } else {
-                    if (!startBtn.classList.contains('is-show')) {
-                        startBtn.classList.add('is-show');
-                    }
-                }
+                if (STATE.videoStarted) enterGameReady();
+                else if (!startBtn.classList.contains('is-show')) startBtn.classList.add('is-show');
             }
-        }, 60000);
+        }, 120000);
 
         video.addEventListener('loadeddata', function() {
             clearTimeout(safetyTimer);
+            var duration = video.duration || 53;
             setTimeout(function() {
-                if (!STATE.videoEnded && STATE.videoStarted) {
-                    showOutro();
-                }
-            }, 60000);
+                if (!STATE.videoEnded && STATE.videoStarted) enterGameReady();
+            }, (duration + 30) * 1000);
         });
+
+        /* ============================================================
+           游戏：开始按钮 → 倒计时 → 游戏
+           ============================================================ */
+        startGameBtn.addEventListener('click', function() {
+            initAudio();
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+            startBGM();
+            gameReadyEl.classList.remove('is-show');
+            startCountdown();
+        });
+
+        function startCountdown() {
+            STATE.phase = 'countdown';
+            countdownEl.classList.add('is-show');
+            var steps = [
+                { text: '3', sfx: 'tick' },
+                { text: '2', sfx: 'tick2' },
+                { text: '1', sfx: 'tick3' },
+                { text: '出发！🚀', sfx: 'launch' }
+            ];
+            var idx = 0;
+            function next() {
+                if (idx >= steps.length) {
+                    countdownEl.classList.remove('is-show');
+                    startGame();
+                    return;
+                }
+                cdNum.textContent = steps[idx].text;
+                cdNum.style.animation = 'none';
+                void cdNum.offsetWidth;
+                cdNum.style.animation = 'cd-pop 0.8s ease-out';
+                playSfx(steps[idx].sfx);
+                idx++;
+                setTimeout(next, 800);
+            }
+            next();
+        }
+
+        /* ============================================================
+           Canvas 初始化
+           ============================================================ */
+        function resizeCanvas() {
+            var w = window.innerWidth;
+            var h = window.innerHeight;
+            STATE.dpr = window.devicePixelRatio || 1;
+            canvas.width = w * STATE.dpr;
+            canvas.height = h * STATE.dpr;
+            canvas.style.width = w + 'px';
+            canvas.style.height = h + 'px';
+            ctx.setTransform(STATE.dpr, 0, 0, STATE.dpr, 0, 0);
+            STATE.canvasWidth = w;
+            STATE.canvasHeight = h;
+        }
+
+        /* ============================================================
+           彩虹光线轨迹（三阶段路径）
+           ============================================================ */
+        function getLightPath(t, phase) {
+            // t: 0-1 progress within the trail
+            // returns {x, y} in canvas coords
+            var W = STATE.canvasWidth, H = STATE.canvasHeight;
+            var startX = W * 0.08, endX = W * 0.92;
+            var x = startX + (endX - startX) * t;
+            var y;
+            if (phase === 1) {
+                // ↗ 右上
+                y = H * 0.6 - H * 0.3 * t;
+            } else if (phase === 2) {
+                // ↘ 突然向下弯
+                y = H * 0.3 + H * 0.35 * t;
+            } else {
+                // ～～ 波浪
+                y = H * 0.5 + Math.sin(t * Math.PI * 3) * H * 0.15;
+            }
+            return { x: x, y: y };
+        }
+
+        /* ============================================================
+           障碍物生成
+           ============================================================ */
+        var OBSTACLE_TYPES = [
+            { color: '#B689FF', radius: 20, emoji: '🟣' },
+            { color: '#FFD93D', radius: 22, emoji: '🟡' },
+            { color: '#4ECDC4', radius: 18, emoji: '🔵' },
+            { color: '#6BCB77', radius: 20, emoji: '🟢' },
+            { color: '#FFD93D', radius: 16, emoji: '⭐' }
+        ];
+
+        function spawnObstacle(phase) {
+            var W = STATE.canvasWidth, H = STATE.canvasHeight;
+            var type = OBSTACLE_TYPES[Math.floor(Math.random() * OBSTACLE_TYPES.length)];
+            // Spawn at right edge, move left
+            var y;
+            if (phase === 1) {
+                y = H * (0.25 + Math.random() * 0.4);
+            } else if (phase === 2) {
+                y = H * (0.2 + Math.random() * 0.6);
+            } else {
+                y = H * (0.15 + Math.random() * 0.7);
+            }
+            STATE.obstacles.push({
+                x: W + 40,
+                y: y,
+                vx: -1.5 - phase * 0.3,
+                vy: (Math.random() - 0.5) * 0.5,
+                radius: type.radius,
+                color: type.color,
+                emoji: type.emoji,
+                rotation: 0,
+                bob: Math.random() * Math.PI * 2
+            });
+        }
+
+        function spawnCollectStar(phase) {
+            var W = STATE.canvasWidth, H = STATE.canvasHeight;
+            var trailPoint = getLightPath(0.3 + Math.random() * 0.4, phase);
+            STATE.collectStars.push({
+                x: trailPoint.x + (Math.random() - 0.5) * 80,
+                y: trailPoint.y + (Math.random() - 0.5) * 80,
+                radius: 16,
+                rotation: 0,
+                collected: false
+            });
+        }
+
+        /* ============================================================
+           游戏启动
+           ============================================================ */
+        function startGame() {
+            STATE.phase = 'playing';
+            STATE.gamePhase = 1;
+            STATE.gameStartTime = performance.now();
+            STATE.phaseStartTime = STATE.gameStartTime;
+            STATE.hearts = 3;
+            STATE.starsCollected = 0;
+            STATE.progress = 0;
+            STATE.paused = false;
+            STATE.obstacles = [];
+            STATE.collectStars = [];
+            STATE.particles = [];
+            STATE.lightTrail = [];
+            STATE.invincible = 0;
+            STATE.noInputTime = 0;
+            STATE.ship.x = STATE.canvasWidth * 0.12;
+            STATE.ship.y = STATE.canvasHeight * 0.55;
+            STATE.ship.targetY = STATE.ship.y;
+            STATE.ship.vy = 0;
+
+            resizeCanvas();
+            // 生成收集星星
+            spawnCollectStar(1);
+            setTimeout(function() { if(STATE.gamePhase===1) spawnCollectStar(1); }, 3000);
+            setTimeout(function() { if(STATE.gamePhase===1) spawnCollectStar(1); }, 6000);
+
+            gameContainer.classList.add('is-show');
+            updateHUD();
+            showHint('追光挑战！跟着彩虹光线飞吧！', 2000);
+
+            STATE.lastFrameTime = performance.now();
+            STATE.rafId = requestAnimationFrame(gameLoop);
+        }
+
+        /* ============================================================
+           游戏主循环
+           ============================================================ */
+        function gameLoop(now) {
+            if (STATE.phase !== 'playing' && STATE.phase !== 'success') {
+                STATE.rafId = requestAnimationFrame(gameLoop);
+                return;
+            }
+            var dt = Math.min((now - STATE.lastFrameTime) / 16.67, 2);
+            STATE.lastFrameTime = now;
+
+            if (!STATE.paused) {
+                if (STATE.phase === 'playing') {
+                    updateGame(dt, now);
+                } else if (STATE.phase === 'success') {
+                    updateSuccess(dt, now);
+                }
+            }
+            render();
+            STATE.rafId = requestAnimationFrame(gameLoop);
+        }
+
+        function updateGame(dt, now) {
+            var W = STATE.canvasWidth, H = STATE.canvasHeight;
+            var elapsed = (now - STATE.phaseStartTime) / 1000;
+
+            // 阶段切换
+            var phaseDuration = [0, 9, 9, 11]; // seconds per phase
+            if (STATE.gamePhase === 1 && elapsed >= phaseDuration[1]) {
+                STATE.gamePhase = 2;
+                STATE.phaseStartTime = now;
+                playSfx('phase');
+                showHint('跟紧光线哦！', 2000);
+                spawnCollectStar(2);
+                setTimeout(function() { if(STATE.gamePhase===2) spawnCollectStar(2); }, 3000);
+                setTimeout(function() { if(STATE.gamePhase===2) spawnCollectStar(2); }, 6000);
+            } else if (STATE.gamePhase === 2 && elapsed >= phaseDuration[2]) {
+                STATE.gamePhase = 3;
+                STATE.phaseStartTime = now;
+                playSfx('phase');
+                showHint('最后冲刺！追上彩虹！', 2000);
+                spawnCollectStar(3);
+                setTimeout(function() { if(STATE.gamePhase===3) spawnCollectStar(3); }, 3000);
+                setTimeout(function() { if(STATE.gamePhase===3) spawnCollectStar(3); }, 6000);
+            } else if (STATE.gamePhase === 3 && elapsed >= phaseDuration[3]) {
+                // 成功！
+                enterSuccess();
+                return;
+            }
+
+            // 更新进度
+            var totalProgress = (now - STATE.gameStartTime) / 1000 / (phaseDuration[1]+phaseDuration[2]+phaseDuration[3]);
+            STATE.progress = Math.min(totalProgress, 1);
+            updateHUD();
+
+            // 生成障碍物
+            var spawnRate = STATE.gamePhase === 1 ? 0.015 : STATE.gamePhase === 2 ? 0.022 : 0.03;
+            if (Math.random() < spawnRate * dt) {
+                spawnObstacle(STATE.gamePhase);
+            }
+
+            // 更新彩虹光线轨迹
+            var trailLen = 60;
+            STATE.lightTrail = [];
+            for (var i = 0; i < trailLen; i++) {
+                var t = i / (trailLen - 1);
+                var pt = getLightPath(t, STATE.gamePhase);
+                STATE.lightTrail.push(pt);
+            }
+            // 光线端点（当前进度对应的点）
+            var headT = Math.min((now - STATE.gameStartTime) / 1000 / (phaseDuration[1]+phaseDuration[2]+phaseDuration[3]), 1);
+            var lightHead = getLightPath(headT, STATE.gamePhase);
+
+            // ---- 飞船控制 ----
+            // 键盘控制
+            if (STATE.keys.up) { STATE.ship.targetY -= 5 * dt; STATE.noInputTime = 0; }
+            if (STATE.keys.down) { STATE.ship.targetY += 5 * dt; STATE.noInputTime = 0; }
+            // 指针控制
+            if (STATE.pointerY !== null) {
+                STATE.ship.targetY = STATE.pointerY;
+                STATE.noInputTime = 0;
+            } else {
+                STATE.noInputTime += dt * 16.67;
+            }
+
+            // 自动辅助：如果没操作，缓慢向光线靠近
+            if (STATE.noInputTime > 800 && STATE.autoAssist) {
+                var assistT = Math.min((now - STATE.gameStartTime) / 1000 / (phaseDuration[1]+phaseDuration[2]+phaseDuration[3]), 1);
+                var assistPoint = getLightPath(assistT, STATE.gamePhase);
+                var diff = assistPoint.y - STATE.ship.targetY;
+                STATE.ship.targetY += diff * 0.03 * dt;
+            }
+
+            // 限制范围
+            STATE.ship.targetY = Math.max(30, Math.min(H - 30, STATE.ship.targetY));
+            // 平滑移动
+            STATE.ship.vy += (STATE.ship.targetY - STATE.ship.y) * 0.15;
+            STATE.ship.vy *= 0.7;
+            STATE.ship.y += STATE.ship.vy * dt;
+
+            // 无敌时间递减
+            if (STATE.invincible > 0) STATE.invincible -= dt * 16.67;
+
+            // ---- 障碍物更新 ----
+            for (var i = STATE.obstacles.length - 1; i >= 0; i--) {
+                var obs = STATE.obstacles[i];
+                obs.x += obs.vx * dt;
+                obs.y += obs.vy * dt;
+                obs.bob += 0.05 * dt;
+                obs.rotation += 0.02 * dt;
+                if (obs.x < -50) { STATE.obstacles.splice(i, 1); continue; }
+
+                // 碰撞检测
+                if (STATE.invincible <= 0) {
+                    var dx = obs.x - STATE.ship.x;
+                    var dy = obs.y - STATE.ship.y;
+                    var dist = Math.sqrt(dx*dx + dy*dy);
+                    if (dist < obs.radius + STATE.ship.radius - 8) {
+                        // 碰撞！
+                        STATE.hearts = Math.max(0, STATE.hearts - 1);
+                        STATE.invincible = 1500;
+                        playSfx('hit');
+                        // 弹开
+                        STATE.ship.vy += (dy < 0 ? 8 : -8);
+                        // 粒子效果
+                        for (var p = 0; p < 8; p++) {
+                            STATE.particles.push({
+                                x: STATE.ship.x, y: STATE.ship.y,
+                                vx: (Math.random()-0.5)*6, vy: (Math.random()-0.5)*6,
+                                life: 30, color: '#FF6B6B', size: 4
+                            });
+                        }
+                        // 如果心全没了，恢复一颗心
+                        if (STATE.hearts === 0) {
+                            STATE.hearts = 1;
+                            STATE.invincible = 2000;
+                            showHint('小光仔：没关系！护盾恢复啦！', 2000);
+                        }
+                        updateHUD();
+                    }
+                }
+            }
+
+            // ---- 收集星星更新 ----
+            for (var i = STATE.collectStars.length - 1; i >= 0; i--) {
+                var star = STATE.collectStars[i];
+                if (star.collected) continue;
+                star.rotation += 0.05 * dt;
+                var dx = star.x - STATE.ship.x;
+                var dy = star.y - STATE.ship.y;
+                var dist = Math.sqrt(dx*dx + dy*dy);
+                if (dist < star.radius + STATE.ship.radius) {
+                    star.collected = true;
+                    STATE.starsCollected++;
+                    playSfx('star');
+                    updateHUD();
+                    // 粒子效果
+                    for (var p = 0; p < 6; p++) {
+                        STATE.particles.push({
+                            x: star.x, y: star.y,
+                            vx: (Math.random()-0.5)*5, vy: (Math.random()-0.5)*5,
+                            life: 25, color: '#FFD93D', size: 3
+                        });
+                    }
+                }
+                // 移出屏幕
+                if (star.x < -50) STATE.collectStars.splice(i, 1);
+            }
+
+            // ---- 粒子更新 ----
+            for (var i = STATE.particles.length - 1; i >= 0; i--) {
+                var p = STATE.particles[i];
+                p.x += p.vx * dt;
+                p.y += p.vy * dt;
+                p.life -= dt;
+                if (p.life <= 0) STATE.particles.splice(i, 1);
+            }
+        }
+
+        /* ============================================================
+           渲染
+           ============================================================ */
+        function render() {
+            var W = STATE.canvasWidth, H = STATE.canvasHeight;
+            ctx.clearRect(0, 0, W, H);
+
+            // 背景图
+            if (STATE.bgLoaded && STATE.bgImg) {
+                ctx.globalAlpha = 0.85;
+                ctx.drawImage(STATE.bgImg, 0, 0, W, H);
+                ctx.globalAlpha = 1;
+            } else {
+                // 深空渐变背景
+                var grad = ctx.createLinearGradient(0, 0, 0, H);
+                grad.addColorStop(0, '#050B1F');
+                grad.addColorStop(0.5, '#0A1A3A');
+                grad.addColorStop(1, '#050B1F');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, W, H);
+                // 星星
+                for (var s = 0; s < 30; s++) {
+                    var sx = (s * 37 + STATE.gameStartTime * 0.01) % W;
+                    var sy = (s * 53) % H;
+                    ctx.fillStyle = 'rgba(255,255,255,' + (0.3 + Math.sin(s + STATE.gameStartTime*0.001) * 0.2) + ')';
+                    ctx.fillRect(sx, sy, 2, 2);
+                }
+            }
+
+            // 彩虹光线轨迹
+            if (STATE.lightTrail.length > 1) {
+                var rainbowColors = ['#FF6B9D', '#FFA94D', '#FFD93D', '#6BCB77', '#4ECDC4', '#5B8DEF', '#B689FF'];
+                for (var i = 0; i < STATE.lightTrail.length - 1; i++) {
+                    var p1 = STATE.lightTrail[i];
+                    var p2 = STATE.lightTrail[i+1];
+                    var colorIdx = Math.floor((i / STATE.lightTrail.length) * rainbowColors.length) % rainbowColors.length;
+                    ctx.strokeStyle = rainbowColors[colorIdx];
+                    ctx.lineWidth = 6;
+                    ctx.shadowBlur = 15;
+                    ctx.shadowColor = rainbowColors[colorIdx];
+                    ctx.globalAlpha = 0.5 + (i / STATE.lightTrail.length) * 0.5;
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                }
+                ctx.shadowBlur = 0;
+                ctx.globalAlpha = 1;
+
+                // 光线头部光点
+                var head = STATE.lightTrail[STATE.lightTrail.length - 1];
+                if (head) {
+                    ctx.shadowBlur = 25;
+                    ctx.shadowColor = '#fff';
+                    ctx.fillStyle = '#fff';
+                    ctx.beginPath();
+                    ctx.arc(head.x, head.y, 8, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                }
+            }
+
+            // 收集星星
+            STATE.collectStars.forEach(function(s) {
+                if (s.collected) return;
+                ctx.save();
+                ctx.translate(s.x, s.y);
+                ctx.rotate(s.rotation);
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = '#FFD93D';
+                ctx.font = '28px serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('⭐', 0, 0);
+                ctx.restore();
+            });
+
+            // 障碍物
+            STATE.obstacles.forEach(function(o) {
+                ctx.save();
+                ctx.translate(o.x, o.y + Math.sin(o.bob) * 5);
+                ctx.rotate(o.rotation);
+                // 圆形本体
+                ctx.shadowBlur = 12;
+                ctx.shadowColor = o.color;
+                ctx.fillStyle = o.color;
+                ctx.globalAlpha = 0.9;
+                ctx.beginPath();
+                ctx.arc(0, 0, o.radius, 0, Math.PI * 2);
+                ctx.fill();
+                // emoji
+                ctx.shadowBlur = 0;
+                ctx.font = '20px serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(o.emoji, 0, 0);
+                ctx.restore();
+            });
+            ctx.globalAlpha = 1;
+            ctx.shadowBlur = 0;
+
+            // 飞船（小光仔探索舱）
+            ctx.save();
+            var blink = STATE.invincible > 0 ? (Math.sin(STATE.invincible * 0.3) > 0 ? 0.5 : 1) : 1;
+            ctx.globalAlpha = blink;
+            ctx.translate(STATE.ship.x, STATE.ship.y);
+            // 光晕
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = '#4ECDC4';
+            // 飞船圆形本体
+            var shipGrad = ctx.createRadialGradient(0, 0, 5, 0, 0, 25);
+            shipGrad.addColorStop(0, '#E8F8FF');
+            shipGrad.addColorStop(0.5, '#4ECDC4');
+            shipGrad.addColorStop(1, '#1E5FB0');
+            ctx.fillStyle = shipGrad;
+            ctx.beginPath();
+            ctx.arc(0, 0, 22, 0, Math.PI * 2);
+            ctx.fill();
+            // 飞船图标
+            ctx.shadowBlur = 0;
+            ctx.font = '20px serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🚀', 0, 0);
+            ctx.restore();
+
+            // 粒子
+            STATE.particles.forEach(function(p) {
+                ctx.globalAlpha = Math.min(p.life / 25, 1);
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.globalAlpha = 1;
+        }
+
+        /* ============================================================
+           成功动画
+           ============================================================ */
+        function enterSuccess() {
+            STATE.phase = 'success';
+            STATE.successPhase = 0;
+            STATE.successStartTime = performance.now();
+            playSfx('phase');
+            showHint('🌈 彩虹光线汇聚中…', 2000);
+            // 增强BGM
+            if (bgmGain && audioCtx) {
+                bgmGain.gain.linearRampToValueAtTime(0.1, audioCtx.currentTime + 1);
+            }
+        }
+
+        function updateSuccess(dt, now) {
+            var elapsed = (now - STATE.successStartTime) / 1000;
+
+            if (STATE.successPhase === 0 && elapsed > 2) {
+                STATE.successPhase = 1;
+                showHint('🚀 小光仔冲向角膜！', 2000);
+            }
+            if (STATE.successPhase === 1 && elapsed > 4) {
+                STATE.successPhase = 2;
+                successAnim.classList.add('is-show');
+            }
+            if (STATE.successPhase === 2 && elapsed > 6) {
+                // 进入结算视频
+                playResultVideo();
+                STATE.successPhase = 3;
+                return;
+            }
+
+            // 飞船向右移动
+            STATE.ship.x += 3 * dt;
+            STATE.ship.targetY = STATE.canvasHeight * 0.5;
+            STATE.ship.y += (STATE.ship.targetY - STATE.ship.y) * 0.08 * dt;
+
+            // 粒子效果
+            if (Math.random() < 0.3) {
+                STATE.particles.push({
+                    x: STATE.ship.x + (Math.random()-0.5)*30,
+                    y: STATE.ship.y + (Math.random()-0.5)*30,
+                    vx: (Math.random()-0.5)*2, vy: (Math.random()-0.5)*2,
+                    life: 25, color: ['#FFD93D','#FF6B9D','#4ECDC4','#fff'][Math.floor(Math.random()*4)], size: 3
+                });
+            }
+            // 更新粒子
+            for (var i = STATE.particles.length - 1; i >= 0; i--) {
+                var p = STATE.particles[i];
+                p.x += p.vx * dt; p.y += p.vy * dt;
+                p.life -= dt;
+                if (p.life <= 0) STATE.particles.splice(i, 1);
+            }
+        }
+
+        function playResultVideo() {
+            stopBGM();
+            // 隐藏游戏
+            gameContainer.classList.remove('is-show');
+            successAnim.classList.remove('is-show');
+            // 显示结算视频
+            resultVideo.classList.add('is-show');
+            resultVideo.muted = true;
+            resultVideo.play().then(function() {
+                // 尝试取消静音
+                resultVideo.muted = false;
+                resultVideo.play().catch(function() { resultVideo.muted = true; });
+            }).catch(function() {
+                resultVideo.muted = true;
+                resultVideo.play().catch(function(){});
+            });
+
+            resultVideo.addEventListener('ended', function() {
+                STATE.phase = 'complete';
+                resultVideo.classList.remove('is-show');
+                // 显示完成画面
+                successAnim.querySelector('.ei-success-title').textContent = '🎉 第一关完成！';
+                successAnim.querySelector('.ei-success-title').style.animation = 'none';
+                successAnim.classList.add('is-show');
+            }, { once: true });
+        }
+
+        /* ============================================================
+           HUD 更新
+           ============================================================ */
+        function updateHUD() {
+            hudStage.textContent = '第' + ['一','二','三'][STATE.gamePhase-1] + '阶段 ' + STATE.gamePhase + '/3';
+            hudBarFill.style.width = (STATE.progress * 100) + '%';
+            hudStars.textContent = '⭐ ' + STATE.starsCollected + '/3';
+            var hearts = '';
+            for (var i = 0; i < 3; i++) {
+                hearts += i < STATE.hearts ? '❤️ ' : '🖤 ';
+            }
+            hudHearts.textContent = hearts.trim();
+        }
+
+        function showHint(text, duration) {
+            hintText.textContent = text;
+            hintText.classList.add('is-show');
+            setTimeout(function() { hintText.classList.remove('is-show'); }, duration || 2000);
+        }
+
+        /* ============================================================
+           控制：键盘 + 指针
+           ============================================================ */
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') { STATE.keys.up = true; e.preventDefault(); }
+            if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') { STATE.keys.down = true; e.preventDefault(); }
+            if (e.key === 'Escape' && STATE.phase === 'playing') { togglePause(); }
+        });
+        window.addEventListener('keyup', function(e) {
+            if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') STATE.keys.up = false;
+            if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') STATE.keys.down = false;
+        });
+
+        // Pointer Events 统一鼠标/触摸
+        canvas.addEventListener('pointerdown', function(e) {
+            STATE.pointerY = e.offsetY;
+        });
+        canvas.addEventListener('pointermove', function(e) {
+            if (e.pressure > 0 || e.buttons > 0 || e.pointerType === 'touch') {
+                STATE.pointerY = e.offsetY;
+            } else if (e.pointerType === 'mouse') {
+                STATE.pointerY = e.offsetY;
+            }
+        });
+        canvas.addEventListener('pointerup', function() { STATE.pointerY = null; });
+        canvas.addEventListener('pointerleave', function() { STATE.pointerY = null; });
+
+        /* ============================================================
+           暂停
+           ============================================================ */
+        function togglePause() {
+            if (STATE.phase !== 'playing') return;
+            STATE.paused = !STATE.paused;
+            if (STATE.paused) {
+                pausePanel.classList.add('is-show');
+            } else {
+                pausePanel.classList.remove('is-show');
+                STATE.lastFrameTime = performance.now();
+            }
+        }
+        pauseBtn.addEventListener('click', togglePause);
+        resumeBtn.addEventListener('click', togglePause);
+        restartBtn.addEventListener('click', function() {
+            pausePanel.classList.remove('is-show');
+            STATE.paused = false;
+            // 重新开始
+            if (STATE.rafId) cancelAnimationFrame(STATE.rafId);
+            successAnim.classList.remove('is-show');
+            gameContainer.classList.remove('is-show');
+            startGame();
+        });
+
+        /* ============================================================
+           手机竖屏检测
+           ============================================================ */
+        function checkOrientation() {
+            if (STATE.phase === 'playing' || STATE.phase === 'countdown' || STATE.phase === 'gameReady') {
+                if (window.innerHeight > window.innerWidth && window.innerWidth < 768) {
+                    rotateHint.classList.add('is-show');
+                } else {
+                    rotateHint.classList.remove('is-show');
+                }
+            } else {
+                rotateHint.classList.remove('is-show');
+            }
+        }
+        window.addEventListener('resize', function() {
+            resizeCanvas();
+            checkOrientation();
+        });
+        window.addEventListener('orientationchange', checkOrientation);
+        checkOrientation();
+
+        // Canvas resize on load
+        resizeCanvas();
 
     })();
     </script>

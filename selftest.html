@@ -1088,9 +1088,46 @@
         font-size: 22px; font-weight: 900; color: #243B6B;
         margin: 0 0 12px;
     }
+    .gp-modal-img-wrap {
+        width: 100%;
+        max-width: 260px;
+        margin: 0 auto 14px;
+        border-radius: 18px;
+        overflow: hidden;
+        background: linear-gradient(135deg, rgba(120,201,67,0.1), rgba(91,163,217,0.1));
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12), inset 0 0 0 2px rgba(255,255,255,0.6);
+    }
+    .gp-modal-img {
+        width: 100%;
+        height: auto;
+        display: block;
+        object-fit: contain;
+    }
+    .gp-modal-features {
+        display: flex; flex-wrap: wrap; gap: 8px;
+        justify-content: center;
+        margin: 0 0 14px;
+    }
+    .gp-modal-feat {
+        display: inline-block;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, rgba(120,201,67,0.15), rgba(91,163,217,0.15));
+        border: 1px solid rgba(120,201,67,0.3);
+        font-size: 13px; font-weight: 800; color: #2a7a1a;
+    }
     .gp-modal-text {
         font-size: 16px; font-weight: 600; color: #23456F;
-        line-height: 1.8; margin: 0 0 16px;
+        line-height: 1.8; margin: 0 0 14px;
+    }
+    .gp-modal-suit {
+        padding: 10px 16px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, rgba(255,157,30,0.12), rgba(255,213,79,0.15));
+        border: 1px solid rgba(255,157,30,0.3);
+        font-size: 14px; font-weight: 800; color: #E65100;
+        text-align: center;
+        margin: 0 0 14px;
     }
     .gp-modal-xgz {
         display: flex; align-items: center; justify-content: center; gap: 10px;
@@ -1272,72 +1309,112 @@
 
     /* 镜片星球 */
     .gp-lens-items {
-        display: flex; flex-direction: column; gap: 14px; align-items: center;
+        display: flex; flex-direction: column; gap: 18px; align-items: center;
     }
     .gp-lens-planet {
         position: relative;
-        width: 100%; max-width: 200px;
-        padding: 14px 16px 12px;
+        width: 100%; max-width: 220px;
+        padding: 12px 14px 14px;
         background: rgba(255,255,255,0.08);
         border: 1px solid rgba(165,232,90,0.3);
-        border-radius: 18px;
+        border-radius: 20px;
         cursor: pointer;
         text-align: center;
-        transition: transform .3s, box-shadow .3s, background .3s;
+        transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s, background .35s, border-color .35s;
         animation: gpFloat 4s ease-in-out infinite;
+    }
+    .gp-lp-blue {
+        border-color: rgba(120,180,255,0.35);
+    }
+    .gp-lp-gray {
+        border-color: rgba(200,200,210,0.3);
     }
     .gp-lens-planet:nth-child(2) { animation-delay: .6s; }
     .gp-lens-planet:nth-child(3) { animation-delay: 1.2s; }
     .gp-lens-planet:hover {
-        transform: translateY(-4px) scale(1.04);
-        background: rgba(165,232,90,0.16);
-        box-shadow: 0 0 22px rgba(165,232,90,0.5);
+        transform: translateY(-6px) scale(1.04);
+        background: rgba(255,255,255,0.12);
+        box-shadow: 0 12px 36px rgba(0,0,0,0.35), 0 0 30px rgba(165,232,90,0.45);
+    }
+    .gp-lp-blue:hover {
+        box-shadow: 0 12px 36px rgba(0,0,0,0.35), 0 0 30px rgba(120,180,255,0.5);
+    }
+    .gp-lp-gray:hover {
+        box-shadow: 0 12px 36px rgba(0,0,0,0.35), 0 0 30px rgba(200,200,210,0.4);
     }
     @keyframes gpFloat {
         0%, 100% { transform: translateY(0); }
         50% { transform: translateY(-6px); }
     }
-    .gp-lp-orb {
-        width: 52px; height: 52px; border-radius: 50%;
-        margin: 0 auto 6px;
-        background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.95), rgba(165,232,90,0.5) 55%, rgba(60,140,50,0.85));
-        box-shadow: 0 0 16px rgba(165,232,90,0.6), inset -4px -6px 12px rgba(0,0,0,0.3);
+
+    /* 镜片图片容器 */
+    .gp-lp-img-wrap {
         position: relative;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        border-radius: 16px;
+        overflow: hidden;
+        margin-bottom: 10px;
+        background: rgba(255,255,255,0.06);
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
-    .gp-lp-blue .gp-lp-orb {
-        background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.95), rgba(120,180,255,0.5) 55%, rgba(30,80,170,0.85));
-        box-shadow: 0 0 16px rgba(120,180,255,0.6), inset -4px -6px 12px rgba(0,0,0,0.3);
+    .gp-lp-img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+        transition: transform .5s cubic-bezier(.2,.8,.2,1);
     }
-    .gp-lp-gray .gp-lp-orb {
-        background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.95), rgba(220,220,230,0.5) 55%, rgba(130,130,140,0.85));
-        box-shadow: 0 0 16px rgba(200,200,210,0.5), inset -4px -6px 12px rgba(0,0,0,0.3);
+    .gp-lens-planet:hover .gp-lp-img {
+        transform: scale(1.08);
     }
-    .gp-lp-ring {
-        position: absolute; left: 50%; top: 18px;
-        width: 70px; height: 22px;
-        transform: translateX(-50%) rotate(-18deg);
-        border: 2px solid rgba(165,232,90,0.5);
-        border-radius: 50%;
+    /* 发光光晕 */
+    .gp-lp-glow {
+        position: absolute;
+        inset: -20%;
+        background: radial-gradient(circle, rgba(165,232,90,0.25) 0%, transparent 60%);
+        opacity: 0;
+        transition: opacity .4s;
         pointer-events: none;
     }
-    .gp-lp-ring-blue { border-color: rgba(120,180,255,0.55); }
-    .gp-lp-ring-gray { border-color: rgba(200,200,210,0.5); }
-    .gp-lp-emoji {
-        position: absolute; top: 24px; left: 50%; transform: translateX(-50%);
-        font-size: 22px;
+    .gp-lp-blue .gp-lp-glow {
+        background: radial-gradient(circle, rgba(120,180,255,0.28) 0%, transparent 60%);
+    }
+    .gp-lp-gray .gp-lp-glow {
+        background: radial-gradient(circle, rgba(220,220,230,0.2) 0%, transparent 60%);
+    }
+    .gp-lens-planet:hover .gp-lp-glow {
+        opacity: 1;
+    }
+
+    .gp-lp-icon {
+        display: inline-block;
+        font-size: 20px;
+        margin-bottom: 2px;
+        filter: drop-shadow(0 0 4px rgba(165,232,90,0.6));
+    }
+    .gp-lp-blue .gp-lp-icon {
+        filter: drop-shadow(0 0 4px rgba(120,180,255,0.7));
+    }
+    .gp-lp-gray .gp-lp-icon {
+        filter: drop-shadow(0 0 4px rgba(200,200,210,0.6));
     }
     .gp-lp-name {
-        display: block; font-size: 15px; font-weight: 900; color: #fff; margin-top: 4px;
+        display: block; font-size: 15px; font-weight: 900; color: #fff; margin-top: 2px;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.4);
     }
     .gp-lp-suit {
         display: block; font-size: 11.5px; color: #b8e0ff; font-weight: 600; margin-top: 2px;
     }
     /* PC镜片防护盾动画 */
     .gp-lp-shield {
-        position: absolute; top: 8px; right: 12px;
+        position: absolute; top: 14px; right: 14px;
         font-size: 20px;
         animation: gpShieldPulse 2s ease-in-out infinite;
         filter: drop-shadow(0 0 6px rgba(120,180,255,0.8));
+        z-index: 2;
     }
     @keyframes gpShieldPulse {
         0%, 100% { transform: scale(1); opacity: 1; }
@@ -1564,9 +1641,46 @@
         font-size: 22px; font-weight: 900; color: #23456F;
         margin: 0 0 10px;
     }
+    .gp-modal-img-wrap {
+        width: 100%;
+        max-width: 240px;
+        margin: 0 auto 12px;
+        border-radius: 16px;
+        overflow: hidden;
+        background: linear-gradient(135deg, rgba(120,201,67,0.1), rgba(91,163,217,0.1));
+        box-shadow: 0 6px 20px rgba(0,0,0,0.1), inset 0 0 0 2px rgba(255,255,255,0.5);
+    }
+    .gp-modal-img {
+        width: 100%;
+        height: auto;
+        display: block;
+        object-fit: contain;
+    }
+    .gp-modal-features {
+        display: flex; flex-wrap: wrap; gap: 6px;
+        justify-content: center;
+        margin: 0 0 12px;
+    }
+    .gp-modal-feat {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, rgba(120,201,67,0.15), rgba(91,163,217,0.15));
+        border: 1px solid rgba(120,201,67,0.3);
+        font-size: 12px; font-weight: 800; color: #2a7a1a;
+    }
     .gp-modal-text {
         font-size: 16px; color: #34557a; font-weight: 600;
-        line-height: 1.7; margin: 0 0 16px;
+        line-height: 1.7; margin: 0 0 12px;
+    }
+    .gp-modal-suit {
+        padding: 8px 14px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, rgba(255,157,30,0.12), rgba(255,213,79,0.15));
+        border: 1px solid rgba(255,157,30,0.3);
+        font-size: 13px; font-weight: 800; color: #E65100;
+        text-align: center;
+        margin: 0 0 12px;
     }
     .gp-modal-xgz {
         display: flex; align-items: center; justify-content: center; gap: 10px;
@@ -3008,24 +3122,30 @@
                 <p class="gp-planet-desc">点击镜片星球，解锁材质秘密</p>
                 <div class="gp-lens-items">
                     <div class="gp-lens-planet gp-lp-green" data-lens="resin">
-                        <div class="gp-lp-orb"></div>
-                        <div class="gp-lp-ring"></div>
-                        <span class="gp-lp-emoji">🌱</span>
+                        <div class="gp-lp-img-wrap">
+                            <img src="assets/images/lenses/resin.jpg" alt="树脂镜片" class="gp-lp-img">
+                            <div class="gp-lp-glow"></div>
+                        </div>
+                        <span class="gp-lp-icon">🌱</span>
                         <span class="gp-lp-name">树脂镜片</span>
                         <span class="gp-lp-suit">适合：日常学习</span>
                     </div>
                     <div class="gp-lens-planet gp-lp-blue" data-lens="pc">
-                        <div class="gp-lp-orb"></div>
-                        <div class="gp-lp-ring gp-lp-ring-blue"></div>
-                        <span class="gp-lp-emoji">🚀</span>
+                        <div class="gp-lp-img-wrap">
+                            <img src="assets/images/lenses/pc.jpg" alt="PC太空镜片" class="gp-lp-img">
+                            <div class="gp-lp-glow"></div>
+                        </div>
+                        <span class="gp-lp-icon">🚀</span>
                         <span class="gp-lp-name">PC太空镜片</span>
                         <span class="gp-lp-shield">🛡️</span>
                         <span class="gp-lp-suit">适合：运动玩耍</span>
                     </div>
                     <div class="gp-lens-planet gp-lp-gray" data-lens="glass">
-                        <div class="gp-lp-orb"></div>
-                        <div class="gp-lp-ring gp-lp-ring-gray"></div>
-                        <span class="gp-lp-emoji">💎</span>
+                        <div class="gp-lp-img-wrap">
+                            <img src="assets/images/lenses/glass.jpg" alt="玻璃镜片" class="gp-lp-img">
+                            <div class="gp-lp-glow"></div>
+                        </div>
+                        <span class="gp-lp-icon">💎</span>
                         <span class="gp-lp-name">玻璃镜片</span>
                         <span class="gp-lp-suit">耐磨但较重</span>
                     </div>
@@ -3141,7 +3261,12 @@
             <button class="gp-modal-close" id="gpModalClose" type="button">×</button>
             <div class="gp-modal-icon" id="gpModalIcon">🔬</div>
             <h3 class="gp-modal-title" id="gpModalTitle">标题</h3>
+            <div class="gp-modal-img-wrap" id="gpModalImgWrap" hidden="">
+                <img class="gp-modal-img" id="gpModalImg" alt="">
+            </div>
+            <div class="gp-modal-features" id="gpModalFeatures" hidden=""></div>
             <p class="gp-modal-text" id="gpModalText">内容</p>
+            <div class="gp-modal-suit" id="gpModalSuit" hidden=""></div>
             <div class="gp-modal-xgz">
                 <img src="assets/images/xiaoguangzi-new.png" alt="小光仔">
                 <span class="gp-modal-tip" id="gpModalTip">小光仔陪你一起探索～</span>
@@ -3787,9 +3912,33 @@
        ============================================================ */
     (function(){
         var LENS_DATA = {
-            resin: { icon:'🌱', title:'树脂镜片星球', tip:'日常学习首选', text:'轻便透光，防紫外线，是日常佩戴最常见的选择。' },
-            pc:    { icon:'🚀', title:'PC太空镜片星球', tip:'运动抗冲击', text:'抗冲击能力强，不容易碎，适合运动和活泼的小朋友。' },
-            glass: { icon:'💎', title:'玻璃镜片星球', tip:'耐磨但较重', text:'硬度高、耐磨，但重量较大，现在较少使用。' }
+            resin: {
+                icon:'🌱',
+                title:'树脂镜片星球',
+                tip:'日常学习首选',
+                img:'assets/images/lenses/resin.jpg',
+                features: ['轻便不压鼻', '透光率高', '防紫外线', '不容易碎'],
+                text:'树脂镜片是用特殊树脂材料做的，就像透明的果冻一样有弹性。它很轻很轻，戴一整天鼻子也不会累。而且它还能挡住有害的紫外线，保护我们的眼睛。现在大多数小朋友戴的眼镜都是树脂镜片哦！',
+                suit:'适合：上学、看书、日常佩戴'
+            },
+            pc: {
+                icon:'🚀',
+                title:'PC太空镜片星球',
+                tip:'运动抗冲击',
+                img:'assets/images/lenses/pc.jpg',
+                features: ['超级抗冲击', '轻如羽毛', '安全不易碎', '运动好伙伴'],
+                text:'PC镜片又叫"太空镜片"，它是用和宇航员头盔一样的材料做的！它超级耐摔，就算掉在地上也不容易碎，特别安全。而且它比树脂镜片还要轻，喜欢运动的小朋友选它就对啦！',
+                suit:'适合：打球、跑步、运动玩耍'
+            },
+            glass: {
+                icon:'💎',
+                title:'玻璃镜片星球',
+                tip:'耐磨但较重',
+                img:'assets/images/lenses/glass.jpg',
+                features: ['超级耐磨', '清晰度高', '不容易刮花', '重量较大'],
+                text:'玻璃镜片就像玻璃窗户一样，是用真正的玻璃做的。它的优点是非常耐磨，不容易被刮花，看东西也特别清晰。但是它比较重，戴久了鼻子会有点酸，而且摔碎了会很危险。所以现在很少用啦！',
+                suit:'适合：特殊需求人群'
+            }
         };
         var FRAME_DATA = {
             rim:    { icon:'⭕', title:'镜圈', tip:'决定外观', text:'决定眼镜外观，也影响镜片厚度。' },
@@ -3831,12 +3980,46 @@
         var $mTitle = document.getElementById('gpModalTitle');
         var $mText = document.getElementById('gpModalText');
         var $mTip = document.getElementById('gpModalTip');
+        var $mImgWrap = document.getElementById('gpModalImgWrap');
+        var $mImg = document.getElementById('gpModalImg');
+        var $mFeatures = document.getElementById('gpModalFeatures');
+        var $mSuit = document.getElementById('gpModalSuit');
 
         function openModal(data){
             $mIcon.textContent = data.icon;
             $mTitle.textContent = data.title;
             $mText.textContent = data.text;
             $mTip.textContent = data.tip;
+
+            // 图片
+            if(data.img){
+                $mImg.src = data.img;
+                $mImg.alt = data.title;
+                $mImgWrap.hidden = false;
+            } else {
+                $mImgWrap.hidden = true;
+            }
+
+            // 特点标签
+            if(data.features && data.features.length){
+                var html = '';
+                data.features.forEach(function(f){
+                    html += '<span class="gp-modal-feat">✨ ' + f + '</span>';
+                });
+                $mFeatures.innerHTML = html;
+                $mFeatures.hidden = false;
+            } else {
+                $mFeatures.hidden = true;
+            }
+
+            // 适用场景
+            if(data.suit){
+                $mSuit.textContent = data.suit;
+                $mSuit.hidden = false;
+            } else {
+                $mSuit.hidden = true;
+            }
+
             $modal.hidden = false;
             createSparkle(window.innerWidth/2, window.innerHeight/2);
         }
@@ -4179,9 +4362,11 @@
         }
 
         /* 星球点击 */
-        document.querySelectorAll('.mz-planet').forEach(function(p){
+        document.querySelectorAll('.mz-planet[data-step]').forEach(function(p){
             p.addEventListener('click', function(){
-                openStep(parseInt(p.dataset.step));
+                var stepNum = parseInt(p.dataset.step);
+                if(isNaN(stepNum) || stepNum < 1 || stepNum > STEPS.length) return;
+                openStep(stepNum);
             });
         });
 
