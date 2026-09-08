@@ -666,7 +666,7 @@
                 muted
                 playsinline
                 webkit-playsinline="true"
-                preload="auto"
+                preload="none"
                 x5-playsinline="true"
             >
                 <track kind="subtitles" src="assets/eye-adventure/intro.vtt" srclang="zh" label="中文" mode="disabled">
@@ -766,7 +766,7 @@
     </div>
 
     <!-- 结算视频 -->
-    <video class="ei-result-video" id="resultVideo" src="assets/eye-adventure/result.mp4" muted playsinline preload="auto"></video>
+    <video class="ei-result-video" id="resultVideo" src="assets/eye-adventure/result.mp4" muted playsinline preload="none"></video>
 
     <!-- 手机竖屏提示 -->
     <div class="ei-rotate-hint" id="rotateHint">
@@ -1072,6 +1072,15 @@
             STATE.phase = 'ended'; STATE.videoEnded = true;
             soundBtn.classList.remove('is-show');
             enterGameReady();
+        });
+
+        // timeupdate 兜底：接近结尾时自动进入（部分平板 ended 不触发）
+        video.addEventListener('timeupdate', function() {
+            if (video.duration && video.currentTime >= video.duration - 0.3 && !STATE.videoEnded) {
+                STATE.videoEnded = true;
+                soundBtn.classList.remove('is-show');
+                enterGameReady();
+            }
         });
 
         function enterGameReady() {
@@ -1639,6 +1648,19 @@
             }
         }
 
+        var resultVideoHandled = false;
+        function finishResultVideo() {
+            if (resultVideoHandled) return;
+            resultVideoHandled = true;
+            STATE.phase = 'complete';
+            resultVideo.classList.remove('is-show');
+            resultVideo.pause();
+            // 显示完成画面
+            successAnim.querySelector('.ei-success-title').textContent = '🎉 第一关完成！';
+            successAnim.querySelector('.ei-success-title').style.animation = 'none';
+            successAnim.classList.add('is-show');
+        }
+
         function playResultVideo() {
             stopBGM();
             // 隐藏游戏
@@ -1647,23 +1669,46 @@
             // 显示结算视频
             resultVideo.classList.add('is-show');
             resultVideo.muted = true;
+            resultVideoHandled = false;
+
+            // 安全兜底计时器：视频时长+10秒后强制结束
+            var resultSafety = setTimeout(function() {
+                if (!resultVideoHandled) finishResultVideo();
+            }, 30000);
+
+            // ended 事件
+            resultVideo.addEventListener('ended', function() {
+                clearTimeout(resultSafety);
+                finishResultVideo();
+            }, { once: true });
+
+            // timeupdate 兜底：接近结尾时自动结束
+            resultVideo.addEventListener('timeupdate', function() {
+                if (resultVideo.duration && resultVideo.currentTime >= resultVideo.duration - 0.3) {
+                    clearTimeout(resultSafety);
+                    finishResultVideo();
+                }
+            });
+
             resultVideo.play().then(function() {
                 // 尝试取消静音
                 resultVideo.muted = false;
                 resultVideo.play().catch(function() { resultVideo.muted = true; });
+                // 根据实际时长调整兜底计时器
+                if (resultVideo.duration) {
+                    clearTimeout(resultSafety);
+                    resultSafety = setTimeout(function() {
+                        if (!resultVideoHandled) finishResultVideo();
+                    }, (resultVideo.duration + 10) * 1000);
+                }
             }).catch(function() {
                 resultVideo.muted = true;
-                resultVideo.play().catch(function(){});
+                resultVideo.play().catch(function(){
+                    // 如果视频完全无法播放，5秒后直接显示完成
+                    clearTimeout(resultSafety);
+                    resultSafety = setTimeout(finishResultVideo, 5000);
+                });
             });
-
-            resultVideo.addEventListener('ended', function() {
-                STATE.phase = 'complete';
-                resultVideo.classList.remove('is-show');
-                // 显示完成画面
-                successAnim.querySelector('.ei-success-title').textContent = '🎉 第一关完成！';
-                successAnim.querySelector('.ei-success-title').style.animation = 'none';
-                successAnim.classList.add('is-show');
-            }, { once: true });
         }
 
         /* ============================================================

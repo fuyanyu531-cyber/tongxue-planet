@@ -1803,13 +1803,154 @@
         to { transform: scale(1); }
     }
 
+    /* 配镜视频区域 */
+    .mz-video-section {
+        position: relative; z-index: 2;
+        text-align: center;
+        margin-bottom: 28px;
+    }
+    .mz-video-title {
+        font-size: 20px; font-weight: 800; color: #fff;
+        margin: 0 0 4px;
+        text-shadow: 0 0 10px rgba(120,201,67,0.4);
+    }
+    .mz-video-desc {
+        font-size: 14px; color: #b8e0ff; font-weight: 600; margin: 0 0 16px;
+    }
+    .mz-video-wrap {
+        position: relative;
+        max-width: 1000px;
+        margin: 0 auto;
+        border-radius: 18px;
+        overflow: hidden;
+        border: 2px solid rgba(120,200,255,0.25);
+        box-shadow: 0 0 30px rgba(80,160,255,0.15), 0 12px 40px rgba(0,0,0,0.35);
+        background: #0a1a3a;
+    }
+    .mz-video {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        object-fit: contain;
+        background: #0a1a3a;
+    }
+    .mz-video-overlay {
+        position: absolute; inset: 0;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer;
+        transition: opacity .4s;
+    }
+    .mz-video-overlay.is-hidden {
+        opacity: 0; pointer-events: none;
+    }
+    .mz-video-poster {
+        position: absolute; inset: 0;
+        background:
+            radial-gradient(circle at 30% 25%, rgba(100,180,255,0.25), transparent 45%),
+            radial-gradient(circle at 75% 60%, rgba(120,201,67,0.12), transparent 40%),
+            radial-gradient(circle at 50% 80%, rgba(130,100,255,0.15), transparent 50%),
+            linear-gradient(160deg, #061535 0%, #0d2552 40%, #1a2f6a 100%);
+    }
+    .mz-video-poster::before {
+        content: "";
+        position: absolute; inset: 0;
+        background-image:
+            radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,0.8), transparent),
+            radial-gradient(1px 1px at 35% 50%, rgba(255,255,255,0.6), transparent),
+            radial-gradient(1.5px 1.5px at 60% 15%, rgba(255,230,150,0.7), transparent),
+            radial-gradient(1px 1px at 80% 35%, rgba(255,255,255,0.5), transparent),
+            radial-gradient(1px 1px at 25% 70%, rgba(180,220,255,0.6), transparent),
+            radial-gradient(1.5px 1.5px at 55% 85%, rgba(255,255,255,0.7), transparent),
+            radial-gradient(1px 1px at 90% 75%, rgba(255,230,150,0.5), transparent),
+            radial-gradient(1px 1px at 70% 55%, rgba(255,255,255,0.4), transparent),
+            radial-gradient(1px 1px at 10% 85%, rgba(180,220,255,0.5), transparent),
+            radial-gradient(1.5px 1.5px at 45% 30%, rgba(255,255,255,0.6), transparent);
+        animation: mzTwinkle 4s ease-in-out infinite alternate;
+    }
+    .mz-video-poster::after {
+        content: "";
+        position: absolute; left: 10%; right: 10%; top: 45%; height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(120,200,255,0.3), transparent);
+        border-radius: 999px;
+        filter: blur(1px);
+    }
+    @keyframes mzTwinkle {
+        0% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+    .mz-poster-emoji {
+        position: absolute; z-index: 1;
+        font-size: 48px;
+        top: 22%; left: 50%;
+        transform: translateX(-50%);
+        filter: drop-shadow(0 4px 12px rgba(80,160,255,0.4));
+        animation: mzEmojiFloat 3s ease-in-out infinite;
+    }
+    @keyframes mzEmojiFloat {
+        0%, 100% { transform: translateX(-50%) translateY(0); }
+        50% { transform: translateX(-50%) translateY(-8px); }
+    }
+    .mz-play-btn {
+        position: relative; z-index: 2;
+        display: flex; flex-direction: column; align-items: center; gap: 10px;
+        padding: 22px 44px;
+        background: linear-gradient(135deg, rgba(80,160,255,0.18), rgba(130,100,255,0.12));
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(120,200,255,0.5);
+        border-radius: 24px;
+        cursor: pointer;
+        transition: all .35s cubic-bezier(.34,1.56,.64,1);
+        animation: mzPlayPulse 2.5s ease-in-out infinite;
+    }
+    .mz-play-btn:hover {
+        transform: scale(1.1) translateY(-2px);
+        background: linear-gradient(135deg, rgba(80,160,255,0.28), rgba(130,100,255,0.2));
+        border-color: rgba(140,220,255,0.85);
+        box-shadow: 0 8px 30px rgba(80,160,255,0.35), 0 0 25px rgba(140,220,255,0.3);
+    }
+    .mz-play-btn:active { transform: scale(0.95); }
+    @keyframes mzPlayPulse {
+        0%, 100% { box-shadow: 0 0 15px rgba(120,200,255,0.25); }
+        50% { box-shadow: 0 0 35px rgba(120,200,255,0.55); }
+    }
+    .mz-play-icon {
+        font-size: 36px; color: #fff;
+        text-shadow: 0 0 12px rgba(120,200,255,0.7), 0 0 24px rgba(140,220,255,0.4);
+        animation: mzPlayIconBounce 1.5s ease-in-out infinite;
+    }
+    @keyframes mzPlayIconBounce {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.12); }
+    }
+    .mz-play-text {
+        font-size: 16px; color: #d8ecff; font-weight: 800;
+        letter-spacing: 0.5px;
+        text-shadow: 0 0 6px rgba(120,200,255,0.3);
+    }
+    .mz-video-hint {
+        font-size: 14px; color: #ffd45a; font-weight: 700;
+        margin: 16px 0 0;
+        text-shadow: 0 0 8px rgba(255,212,90,0.3);
+    }
+
+    /* 步骤卡片缩小为次要视觉 */
+    .mission-zone .mz-track {
+        gap: 8px;
+    }
+    .mission-zone .mz-planet {
+        transform: scale(0.92);
+    }
+    .mission-zone .mz-guide {
+        transform: scale(0.88);
+    }
+
     /* 星空地图 */
     .mission-zone .mz-map {
         position: relative; z-index: 2;
         background: radial-gradient(ellipse at center, rgba(20,50,110,0.5), rgba(5,15,40,0.3));
         border: 1px solid rgba(120,200,255,0.15);
         border-radius: 22px;
-        padding: 28px 18px;
+        padding: 20px 16px;
         overflow: visible;
     }
     /* 横向发光轨道 */
@@ -3316,6 +3457,26 @@
             </div>
         </div>
 
+        <!-- 配镜动画视频 -->
+        <div class="mz-video-section">
+            <h3 class="mz-video-title">🎬 小光仔的配镜冒险</h3>
+            <p class="mz-video-desc">看看一副眼镜是怎样"诞生"的！</p>
+            <div class="mz-video-wrap" id="mzVideoWrap">
+                <video class="mz-video" id="glassesFlowVideo" preload="metadata" playsinline>
+                    <source src="assets/videos/glasses-flow.mp4" type="video/mp4">
+                </video>
+                <div class="mz-video-overlay" id="mzVideoOverlay">
+                    <div class="mz-video-poster"></div>
+                    <div class="mz-poster-emoji">👓</div>
+                    <button class="mz-play-btn" id="mzPlayBtn" type="button">
+                        <span class="mz-play-icon">▶</span>
+                        <span class="mz-play-text">开始配镜冒险</span>
+                    </button>
+                </div>
+            </div>
+            <p class="mz-video-hint">✨ 看完动画，一起来了解配镜流程！</p>
+        </div>
+
         <!-- 星空地图 -->
         <div class="mz-map">
             <!-- 发光轨道（横向连接） -->
@@ -4249,6 +4410,22 @@
 
         var currentStep = 0;
         var doneSteps = {};
+
+        /* 配镜视频播放控制 */
+        (function() {
+            var v = document.getElementById('glassesFlowVideo');
+            var overlay = document.getElementById('mzVideoOverlay');
+            var playBtn = document.getElementById('mzPlayBtn');
+            if (!v || !overlay || !playBtn) return;
+            v.controls = false;
+            function startPlay() {
+                overlay.classList.add('is-hidden');
+                v.controls = true;
+                v.play().catch(function() {});
+            }
+            playBtn.addEventListener('click', function(e) { e.stopPropagation(); startPlay(); });
+            overlay.addEventListener('click', startPlay);
+        })();
 
         var $modal = document.getElementById('mzModal');
         var $mIcon = document.getElementById('mzModalIcon');
