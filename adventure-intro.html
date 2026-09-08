@@ -1105,6 +1105,28 @@
         <button class="gr-btn" id="lensPalaceBtn" type="button">🚀 开始探索</button>
     </div>
 
+    <!-- 看远处科普视频 -->
+    <video class="ei-result-video" id="lensFarVideo" src="assets/eye-adventure/lens-far.mp4" muted playsinline preload="none"></video>
+
+    <!-- 看远处视频声音备用按钮 -->
+    <button class="ei-sound-btn" id="lensFarSoundBtn" type="button">
+        <span class="icon">🔊</span>
+        <span class="label">点击播放</span>
+    </button>
+
+    <!-- 看远处完成占位 -->
+    <div class="ei-game-ready" id="lensFarReady">
+        <div class="gr-bg" aria-hidden="true"></div>
+        <div class="gr-star" style="top:12%;left:15%;font-size:20px">✦</div>
+        <div class="gr-star" style="top:20%;right:18%;font-size:16px">✧</div>
+        <div class="gr-star" style="top:70%;left:10%;font-size:14px">✦</div>
+        <div class="gr-star" style="top:75%;right:12%;font-size:22px">✧</div>
+        <div class="gr-mascot">💎</div>
+        <div class="gr-title" style="font-size:42px;">晶状体探索完成！</div>
+        <div class="gr-sub">准备自己试试看吧！</div>
+        <button class="gr-btn" id="lensFarBtn" type="button">🚀 开始互动</button>
+    </div>
+
     <!-- 下一阶段入口占位 -->
     <div class="ei-game-ready" id="nextStageReady">
         <div class="gr-bg" aria-hidden="true"></div>
@@ -1271,6 +1293,10 @@
         var lensSoundBtn = document.getElementById('lensSoundBtn');
         var lensPalaceReady = document.getElementById('lensPalaceReady');
         var lensPalaceBtn = document.getElementById('lensPalaceBtn');
+        var lensFarVideo = document.getElementById('lensFarVideo');
+        var lensFarSoundBtn = document.getElementById('lensFarSoundBtn');
+        var lensFarReady = document.getElementById('lensFarReady');
+        var lensFarBtn = document.getElementById('lensFarBtn');
         var nextStageReady = document.getElementById('nextStageReady');
         var rotateHint = document.getElementById('rotateHint');
 
@@ -2297,11 +2323,14 @@
             lensHandled = true;
             markChapterComplete(3);
             refreshChapterLists();
-            STATE.phase = 'lensPalaceReady';
+            STATE.phase = 'lensFarVideo';
             lensPalaceVideo.classList.remove('is-show');
             lensPalaceVideo.pause();
             lensSoundBtn.classList.remove('is-show');
-            lensPalaceReady.classList.add('is-show');
+            // 淡入看远处视频
+            setTimeout(function() {
+                playLensFarVideo();
+            }, 300);
         }
 
         function playLensPalaceVideo() {
@@ -2366,9 +2395,90 @@
             });
         });
 
-        // 晶状体水晶宫入口按钮（暂时占位）
+        // 晶状体水晶宫入口按钮 → 播放看远处视频
         lensPalaceBtn.addEventListener('click', function() {
-            // 预留：后续接入晶状体小游戏
+            lensPalaceReady.classList.remove('is-show');
+            playLensFarVideo();
+        });
+
+        /* ============================================================
+           看远处科普视频
+           ============================================================ */
+        var lensFarHandled = false;
+        function finishLensFarVideo() {
+            if (lensFarHandled) return;
+            lensFarHandled = true;
+            STATE.phase = 'lensFarReady';
+            lensFarVideo.classList.remove('is-show');
+            lensFarVideo.pause();
+            lensFarSoundBtn.classList.remove('is-show');
+            lensFarReady.classList.add('is-show');
+        }
+
+        function playLensFarVideo() {
+            lensFarHandled = false;
+            STATE.phase = 'lensFar';
+            lensFarVideo.classList.add('is-show');
+            lensFarVideo.muted = true;
+            lensFarSoundBtn.classList.remove('is-show');
+
+            var farSafety = setTimeout(function() {
+                if (!lensFarHandled) finishLensFarVideo();
+            }, 30000);
+
+            lensFarVideo.addEventListener('ended', function() {
+                clearTimeout(farSafety);
+                lensFarSoundBtn.classList.remove('is-show');
+                finishLensFarVideo();
+            }, { once: true });
+
+            lensFarVideo.addEventListener('timeupdate', function() {
+                if (lensFarVideo.duration && lensFarVideo.currentTime >= lensFarVideo.duration - 0.3) {
+                    clearTimeout(farSafety);
+                    lensFarSoundBtn.classList.remove('is-show');
+                    finishLensFarVideo();
+                }
+            });
+
+            lensFarVideo.play().then(function() {
+                // 尝试取消静音播放声音
+                lensFarVideo.muted = false;
+                lensFarVideo.play().then(function() {
+                    lensFarSoundBtn.classList.remove('is-show');
+                }).catch(function() {
+                    // 浏览器阻止带声音播放，显示备用按钮
+                    lensFarVideo.muted = true;
+                    lensFarVideo.play().catch(function(){});
+                    lensFarSoundBtn.classList.add('is-show');
+                });
+                if (lensFarVideo.duration) {
+                    clearTimeout(farSafety);
+                    farSafety = setTimeout(function() {
+                        if (!lensFarHandled) finishLensFarVideo();
+                    }, (lensFarVideo.duration + 10) * 1000);
+                }
+            }).catch(function() {
+                // autoplay 被完全阻止，显示备用按钮
+                lensFarVideo.muted = true;
+                lensFarVideo.play().catch(function(){});
+                lensFarSoundBtn.classList.add('is-show');
+            });
+        }
+
+        // 看远处视频声音备用按钮
+        lensFarSoundBtn.addEventListener('click', function() {
+            lensFarSoundBtn.classList.remove('is-show');
+            lensFarVideo.muted = false;
+            lensFarVideo.currentTime = 0;
+            lensFarVideo.play().catch(function() {
+                lensFarVideo.muted = true;
+                lensFarVideo.play().catch(function(){});
+            });
+        });
+
+        // 看远处完成入口按钮（暂时占位）
+        lensFarBtn.addEventListener('click', function() {
+            // 预留：后续接入晶状体互动游戏
         });
 
         /* ============================================================
@@ -2548,6 +2658,7 @@
             transitionVideo.pause();
             pupilLessonVideo.pause();
             lensPalaceVideo.pause();
+            lensFarVideo.pause();
 
             // 隐藏所有视频
             video.classList.remove('is-show');
@@ -2555,11 +2666,13 @@
             transitionVideo.classList.remove('is-show');
             pupilLessonVideo.classList.remove('is-show');
             lensPalaceVideo.classList.remove('is-show');
+            lensFarVideo.classList.remove('is-show');
 
             // 隐藏声音按钮
             soundBtn.classList.remove('is-show');
             pupilSoundBtn.classList.remove('is-show');
             lensSoundBtn.classList.remove('is-show');
+            lensFarSoundBtn.classList.remove('is-show');
 
             // 隐藏所有覆盖层
             startBtn.classList.remove('is-show');
@@ -2570,6 +2683,7 @@
             successAnim.classList.remove('is-show');
             level02Ready.classList.remove('is-show');
             lensPalaceReady.classList.remove('is-show');
+            lensFarReady.classList.remove('is-show');
             nextStageReady.classList.remove('is-show');
         }
 
