@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>护眼问答机 · 瞳学星球 | 同龄人最关心的10问</title>
+    <link rel="stylesheet" href="../../公共资源/代码/公共样式.css">
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="护眼问答样式.css">
+</head>
+<body data-original-page="qa.html" class="page-qa">
+
+    <!-- 星空装饰层 -->
+    <div class="qa-stars" aria-hidden="true">
+        <div class="qa-star s1" style="top:8%;left:12%"></div>
+        <div class="qa-star s2" style="top:15%;left:65%"></div>
+        <div class="qa-star s1" style="top:25%;left:88%"></div>
+        <div class="qa-star s3" style="top:35%;left:30%"></div>
+        <div class="qa-star s2" style="top:45%;left:75%"></div>
+        <div class="qa-star s1" style="top:55%;left:8%"></div>
+        <div class="qa-star s3" style="top:65%;left:50%"></div>
+        <div class="qa-star s1" style="top:75%;left:90%"></div>
+        <div class="qa-star s2" style="top:85%;left:25%"></div>
+        <div class="qa-star s1" style="top:92%;left:70%"></div>
+        <div class="qa-star s3" style="top:20%;left:45%"></div>
+        <div class="qa-star s1" style="top:60%;left:40%"></div>
+    </div>
+
+    <!-- ============================================
+         1. 顶部导航栏
+         ============================================ -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="../../公共资源/配图/瞳学星球标志.jpg" alt="瞳学星球 Logo" class="logo-img">
+                <div class="logo-text">
+                    <h1 class="logo-title">瞳学星球</h1>
+                    <p class="logo-subtitle">近视防控科普与矫正指南</p>
+                </div>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="../../01-首页/代码/首页.html" class="nav-link" data-page="index">首页</a></li>
+                    <li><a href="../../02-眼球大冒险/代码/眼球大冒险.html" class="nav-link" data-page="eyeball-adventure">眼球大冒险</a></li>
+                    <li><a href="../../03-视界探索站/代码/视界探索站.html" class="nav-link" data-page="vision-exploration">视界探索站</a></li>
+                    <li><a href="../../04-天书解码器/代码/天书解码器.html" class="nav-link" data-page="decoder">天书解码器</a></li>
+                    <li><a href="护眼打卡.html" class="nav-link" data-page="hero">护眼小英雄</a></li>
+                    <li><a href="护眼问答.html" class="nav-link active" data-page="qa">护眼问答机</a></li>
+                </ul>
+            </nav>
+            <div class="nav-right">
+                <button class="btn-voice">
+                    <span class="voice-icon">🔊</span>
+                    语音朗读
+                </button>
+                <div class="user-avatar" title="用户头像">
+                    <span class="avatar-emoji">👧</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================
+         2. 页面标题区域（居中）
+         ============================================ -->
+    <section class="qa-hero">
+        <div class="qa-hero-inner">
+            <h1 class="qa-hero-title">🛡️ 护眼问答机</h1>
+            <p class="qa-hero-subtitle">遇到护眼问题？来问问小光仔吧！</p>
+        </div>
+    </section>
+
+    <!-- ============================================
+         2.5 小光仔 AI 助手（主互动区）
+         ============================================ -->
+    <section class="qa-ai-section" id="qaAiSection">
+        <div class="chat-container">
+
+            <!-- 左侧：知识分类菜单（20%） -->
+            <div class="left-menu">
+                <button class="menu-btn" data-q="为什么会近视？">🔍 近视原因</button>
+                <button class="menu-btn" data-q="戴眼镜会越来越深吗？">👓 眼镜知识</button>
+                <button class="menu-btn" data-q="怎样保护眼睛？">🌙 护眼习惯</button>
+                <button class="menu-btn" data-q="什么是假性近视？">📝 配镜流程</button>
+                <button class="menu-btn" data-q="眼睛累了怎么办？">❓ 常见疑问</button>
+            </div>
+
+            <!-- 中间：聊天主区域（80%） -->
+            <div class="chat-main" id="qaAiChat">
+                <div class="chat-header">
+                    <img src="../../公共资源/配图/小光仔全身.png" alt="小光仔" class="chat-header-avatar">
+                    <div>
+                        <div class="chat-name">小光仔AI助手</div>
+                        <div class="chat-status" id="qaChatStatus">AI模式 · 自由对话已开启</div>
+                    </div>
+                </div>
+
+                <div class="chat-list" id="qaChatMessages">
+                    <div class="msg msg-bot">
+                        <img src="../../公共资源/配图/小光仔全身.png" alt="小光仔" class="msg-avatar">
+                        <div class="bubble bubble-bot">
+                            你好呀！我是小光仔～<br>
+                            有什么护眼问题都可以问我哦！
+                        </div>
+                        <button class="msg-speak-btn" title="朗读这条消息" onclick="window.speakText &amp;&amp; window.speakText(this.parentElement.querySelector('.bubble').innerText)">🔊</button>
+                    </div>
+                </div>
+
+                <div class="chat-input-bar">
+                    <input type="text" class="chat-input" id="qaChatInput" placeholder="小光仔，我想问关于眼睛的问题..." maxlength="500">
+                    <button class="chat-voice" id="qaVoiceBtn" title="语音输入" aria-label="语音输入">语音</button>
+                    <button class="chat-send" id="qaSendBtn" title="发送" aria-label="发送">发送</button>
+                </div>
+
+                <div class="chat-quick" id="qaQuick">
+                    <button class="quick-btn" data-q="为什么会近视？">为什么会近视？</button>
+                    <button class="quick-btn" data-q="戴眼镜会越来越深吗？">戴眼镜会越来越深吗？</button>
+                    <button class="quick-btn" data-q="如何保护眼睛？">如何保护眼睛？</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         3. 10 张 3D 翻转问答卡片
+         ============================================ -->
+    <main class="qa-container" id="qaContainer">
+        <div class="qa-grid">
+
+            <!-- 01 -->
+            <div class="qa-flip" tabindex="0" role="button" aria-label="问题1：戴眼镜会让眼睛变凸吗？">
+                <div class="qa-inner">
+                    <div class="qa-front">
+                        <div class="qa-num">01</div>
+                        <div class="qa-q">戴眼镜会让眼睛变凸吗？</div>
+                        <div class="qa-prompt">点击查看答案 →</div>
+                    </div>
+                    <div class="qa-back">
+                        <div class="qa-answer">
+                            不会。戴眼镜本身不会让眼睛变凸。部分高度近视的人因为眼轴变长，眼睛外观看起来可能更突出。戴眼镜不是造成眼睛变凸的原因。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 02 -->
+            <div class="qa-flip" tabindex="0" role="button" aria-label="问题2：OK镜是塑形的，会疼吗？">
+                <div class="qa-inner">
+                    <div class="qa-front">
+                        <div class="qa-num">02</div>
+                        <div class="qa-q">OK镜是塑形的，会疼吗？</div>
+                        <div class="qa-prompt">点击查看答案 →</div>
+                    </div>
+                    <div class="qa-back">
+                        <div class="qa-answer">
+                            一般不会疼。OK镜是在夜间佩戴的硬性角膜接触镜，需要经过专业验配。刚开始可能有轻微异物感，如果明显疼痛或不适，应及时停止佩戴并咨询医生。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 03 -->
+            <div class="qa-flip" tabindex="0" role="button" aria-label="问题3：近视能治好吗？">
+                <div class="qa-inner">
+                    <div class="qa-front">
+                        <div class="qa-num">03</div>
+                        <div class="qa-q">近视能治好吗？</div>
+                        <div class="qa-prompt">点击查看答案 →</div>
+                    </div>
+                    <div class="qa-back">
+                        <div class="qa-answer">
+                            目前普通近视通常不能靠普通训练或眼保健操"治好"。科学的方法主要是控制近视进一步发展，并定期进行专业视力检查。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 04 -->
+            <div class="qa-flip" tabindex="0" role="button" aria-label="问题4：为什么我看远处模糊，看近处清楚？">
+                <div class="qa-inner">
+                    <div class="qa-front">
+                        <div class="qa-num">04</div>
+                        <div class="qa-q">为什么我看远处模糊，看近处清楚？</div>
+                        <div class="qa-prompt">点击查看答案 →</div>
+                    </div>
+                    <div class="qa-back">
+                        <div class="qa-answer">
+                            因为近视眼看远处物体时，光线聚焦的位置不正确，所以远处物体容易模糊；看近处时通常相对清楚。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 05 -->
+            <div class="qa-flip" tabindex="0" role="button" aria-label="问题5：度数会一直涨上去吗？">
+                <div class="qa-inner">
+                    <div class="qa-front">
+                        <div class="qa-num">05</div>
+                        <div class="qa-q">度数会一直涨上去吗？</div>
+                        <div class="qa-prompt">点击查看答案 →</div>
+                    </div>
+                    <div class="qa-back">
+                        <div class="qa-answer">
+                            不一定。儿童青少年近视可能随着眼球发育而变化。保持良好的用眼习惯、增加户外活动、定期检查，有助于控制近视发展。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 06 -->
+            <div class="qa-flip" tabindex="0" role="button" aria-label="问题6：每天户外活动真的有用吗？">
+                <div class="qa-inner">
+                    <div class="qa-front">
+                        <div class="qa-num">06</div>
+                        <div class="qa-q">每天户外活动真的有用吗？</div>
+                        <div class="qa-prompt">点击查看答案 →</div>
+                    </div>
+                    <div class="qa-back">
+                        <div class="qa-answer">
+                            有帮助。充足的户外活动是儿童青少年近视防控的重要措施之一。每天尽量安排一定时间到户外活动。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 07 -->
+            <div class="qa-flip" tabindex="0" role="button" aria-label="问题7：20-20-20规则是什么？">
+                <div class="qa-inner">
+                    <div class="qa-front">
+                        <div class="qa-num">07</div>
+                        <div class="qa-q">20-20-20规则是什么？</div>
+                        <div class="qa-prompt">点击查看答案 →</div>
+                    </div>
+                    <div class="qa-back">
+                        <div class="qa-answer">
+                            20-20-20规则是一种帮助缓解长时间近距离用眼疲劳的方法：近距离用眼20分钟后，看20英尺（约6米）以外的地方至少20秒。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 08 -->
+            <div class="qa-flip" tabindex="0" role="button" aria-label="问题8：躺着看书真的会近视吗？">
+                <div class="qa-inner">
+                    <div class="qa-front">
+                        <div class="qa-num">08</div>
+                        <div class="qa-q">躺着看书真的会近视吗？</div>
+                        <div class="qa-prompt">点击查看答案 →</div>
+                    </div>
+                    <div class="qa-back">
+                        <div class="qa-answer">
+                            躺着看书容易造成阅读距离和姿势不稳定，也更容易增加眼睛疲劳，因此不建议躺着看书。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 09 -->
+            <div class="qa-flip" tabindex="0" role="button" aria-label="问题9：手机亮度越低越护眼吗？">
+                <div class="qa-inner">
+                    <div class="qa-front">
+                        <div class="qa-num">09</div>
+                        <div class="qa-q">手机亮度越低越护眼吗？</div>
+                        <div class="qa-prompt">点击查看答案 →</div>
+                    </div>
+                    <div class="qa-back">
+                        <div class="qa-answer">
+                            不是。屏幕太亮或太暗都可能让眼睛不舒服。建议根据环境光线适当调整亮度，并避免长时间连续盯着屏幕。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 10 -->
+            <div class="qa-flip" tabindex="0" role="button" aria-label="问题10：做眼保健操能降低近视度数吗？">
+                <div class="qa-inner">
+                    <div class="qa-front">
+                        <div class="qa-num">10</div>
+                        <div class="qa-q">做眼保健操能降低近视度数吗？</div>
+                        <div class="qa-prompt">点击查看答案 →</div>
+                    </div>
+                    <div class="qa-back">
+                        <div class="qa-answer">
+                            眼保健操可以帮助缓解眼部疲劳，但不能直接降低已经形成的近视度数。近视防控应该结合科学用眼、户外活动和定期专业检查。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 返回首页按钮 -->
+        <div class="qa-back-home">
+            <a href="../../01-首页/代码/首页.html" class="btn-back-home">
+                返回首页 →
+            </a>
+        </div>
+    </main>
+
+    <!-- ============================================
+         Footer
+         ============================================ -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <img src="../../公共资源/配图/瞳学星球标志.jpg" alt="瞳学星球" class="footer-logo">
+                <div class="footer-text">
+                    <h4>瞳学星球</h4>
+                    <p>守护每个孩子的明亮视界</p>
+                </div>
+            </div>
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h5>探索内容</h5>
+                    <a href="../../02-眼球大冒险/代码/小游戏中心.html">眼球大冒险</a>
+                    <a href="护眼问答.html">护眼问答机</a>
+                    <a href="../../03-视界探索站/代码/视界探索站.html">视界实验室</a>
+                </div>
+                <div class="footer-col">
+                    <h5>趣味挑战</h5>
+                    <a href="护眼打卡.html">21天打卡</a>
+                    <a href="#">护眼排行榜</a>
+                    <a href="#">成就徽章</a>
+                </div>
+                <div class="footer-col">
+                    <h5>关于我们</h5>
+                    <a href="#">平台介绍</a>
+                    <a href="#">联系我们</a>
+                    <a href="#">隐私政策</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 瞳学星球 · 专为青少年打造</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../公共资源/代码/公共交互.js"></script>
+
+    <!-- ============================================================
+         小光仔 AI 助手 · 交互脚本
+         ============================================================ -->
+    <script src="护眼问答交互.js"></script>
+</body>
+</html>

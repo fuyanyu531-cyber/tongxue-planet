@@ -1,0 +1,43 @@
+body.learn-redesign{background:#12385b!important;color:#eaf7ff}
+.learn-landing,.learn-workspace{box-sizing:border-box;font-family:"Microsoft YaHei","PingFang SC",sans-serif}
+.learn-landing{position:fixed;inset:0;padding:90px 7vw 48px;overflow:auto;background:radial-gradient(ellipse at 75% 10%,#72b9d44a,transparent 65%),linear-gradient(160deg,#123052ee,#246885dc);display:flex;flex-direction:column;justify-content:center;gap:24px}
+.learn-intro{text-align:center}.learn-kicker{font-size:13px;letter-spacing:3px;color:#a6d7ec}.learn-intro h1{font-size:clamp(32px,4vw,56px);margin:12px 0;color:#fff;text-shadow:0 3px 0 #153b65;letter-spacing:4px}.learn-intro>p{font-size:15px;color:#d0e8f4;margin:0;line-height:1.8}
+.learn-topics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px;max-width:1320px;width:100%;margin:8px auto}
+.learn-topic{position:relative;border:1px solid #b8deef6b;border-radius:32px;background:linear-gradient(145deg,#f5fcff,#d9edf6);padding:24px 16px;color:#245571;cursor:pointer;box-shadow:0 16px 30px #061c3d30;transition:transform .2s;min-width:0;text-align:center;font-family:inherit}
+.learn-topic:hover{transform:translateY(-7px)}.learn-topic:focus-visible{outline:4px solid #ffdb79;outline-offset:5px}.learn-number{position:absolute;top:16px;left:20px;font-size:14px;font-weight:700;color:#6b92a8}.learn-topic img{width:100%;height:clamp(110px,15vw,210px);object-fit:contain;margin:18px 0 4px;border-radius:24px;transition:transform .2s}.learn-topic:hover img{transform:scale(1.07)}.learn-topic h2{font-size:23px;margin:12px 0;color:#174f76}.learn-topic p{font-size:13px;line-height:1.8;min-height:46px;margin:8px 0 16px;color:#567c92}.learn-enter{display:inline-block;padding:10px 20px;border-radius:24px;background:#ffde7c;color:#315b79;font-size:14px;font-weight:700}.learn-hint{text-align:center;color:#bedfe9;font-size:13px;margin:0}
+.learn-workspace{position:fixed;inset:78px 6vw 28px;z-index:20;border-radius:30px;background:#12365bed;border:1px solid #9cd3ee66;box-shadow:0 20px 70px #061c3c60;display:grid;grid-template-rows:auto minmax(0,1fr) auto;overflow:hidden}
+.learn-work-head{display:flex;align-items:center;gap:24px;padding:18px 24px;background:#edf8fc;color:#215474}.learn-work-head h2{font:700 24px "Microsoft YaHei";margin:4px 0}.learn-step{color:#6e8da0;font-size:12px}.learn-position{margin-left:auto;font-size:14px;color:#6d8c9e}.learn-workspace button{font-family:inherit}.learn-overview,.learn-work-foot button{border:1px solid #bddaea;border-radius:22px;padding:10px 18px;background:white;color:#245f86;cursor:pointer;min-height:42px}.learn-work-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 24px;background:#eaf6fb;color:#63889e;font-size:12px}.learn-work-foot .learn-next{background:#ffdd79;border-color:#f0d17c}.learn-work-foot button:disabled{opacity:.4;cursor:default}.learn-reading{overflow:auto;padding:24px;overscroll-behavior:contain;scroll-behavior:smooth}
+body.learn-redesign .learn-unit{margin:0 auto!important;width:100%!important;max-width:1180px!important;padding:20px!important;box-sizing:border-box}
+body.learn-redesign .learn-unit[hidden],.learn-redesign [hidden].learn-workspace,.learn-redesign [hidden].learn-landing{display:none!important}
+body.learn-redesign .learn-legacy-content{display:none!important}body.learn-redesign .learn-legacy{height:0!important;padding:0!important;overflow:visible!important}
+.learn-redesign .learn-reading :is(.subpage-back,.mz-assistant,.vs-back-home){display:none!important}
+.learn-redesign .learn-reading :is(.decoder-core-title,.decoder-section-title){color:#edfaff!important}.learn-redesign .learn-reading :is(.decoder-core-subtitle,.decoder-section-sub){color:#c5e0ef!important}
+.learn-redesign .learn-reading .core-input-card input{background:#fff!important;color:#204c6c!important;border:1px solid #aacfe3!important}.learn-redesign .learn-reading input::placeholder{color:#6f8c9e!important}
+@media(max-width:900px){.learn-landing{padding:80px 22px 35px;justify-content:flex-start;gap:14px}.learn-topics{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.learn-topic{padding:14px;border-radius:24px}.learn-topic img{height:110px}.learn-topic h2{font-size:19px}.learn-topic p{min-height:0;margin:6px 0;font-size:12px}.learn-workspace{inset:70px 12px 16px}.learn-reading{padding:10px}.learn-work-head{padding:12px;gap:10px}.learn-work-head h2{font-size:20px}.learn-work-foot{padding:10px}.learn-work-foot>span{display:none}}
+@media(prefers-reduced-motion:reduce){.learn-topic,.learn-topic img{transition:none}}
+/* 入口延续首页的晴空色；任务区保留深色舞台，让原有实验与视频清楚呈现。 */
+.learn-landing{background:radial-gradient(ellipse at 10% 85%,#fff 0,transparent 45%),radial-gradient(ellipse at 88% 10%,#edfbff 0,transparent 50%),linear-gradient(145deg,#83c9f3,#dbf1fa);}
+.learn-intro h1{color:#155c96;text-shadow:0 3px 0 #ffffffaa}.learn-kicker{color:#327798}.learn-intro>p,.learn-hint{color:#396e90}
+.learn-topic{border:2px solid #ffffffc9;box-shadow:0 14px 32px #3c83b326;background:linear-gradient(150deg,#ffffffed,#edf8fce8)}
+.learn-redesign #amapStoryModal{display:none!important}
+.learn-redesign .learn-reading .core-card-input input{background:#fff!important;color:#204c6c!important;border:1px solid #aacfe3!important}
+.learn-work-head h2:focus{outline:none}.learn-work-head h2:focus-visible{outline:2px solid #428dc1;outline-offset:4px}
+.learn-redesign .learn-reading :is(.decoder-core-head,.decoder-section-header){margin-bottom:18px}
+.learn-redesign .learn-reading .decoder-core-sub{color:#c5e0ef}
+.learn-redesign .learn-reading .decoder-core{display:flex;flex-direction:column;gap:16px}
+.learn-redesign .learn-reading .decoder-core-head{display:none}
+.learn-redesign .learn-reading .tx-record-bar{order:2;margin:0!important}
+.learn-redesign .learn-reading .decoder-disclaimer{order:3;margin:0}
+.learn-redesign .learn-reading .decoder-core-grid{gap:20px;margin:0}
+.learn-redesign .learn-reading .decoder-core-card{padding:20px}
+.learn-redesign .learn-reading .core-photo-preview{min-height:150px}
+.learn-redesign #myopiaZone .mz-orbit{padding:12px 0}
+.learn-redesign #myopiaZone .mz-planets{gap:16px}
+.learn-redesign #myopiaZone .mz-planet-head{display:grid;grid-template-columns:38px 1fr;gap:8px 12px;text-align:left;padding:18px}
+.learn-redesign #myopiaZone .mz-planet-num{width:32px;height:32px;font:700 15px inherit;margin:0;grid-column:1;grid-row:1}
+.learn-redesign #myopiaZone .mz-planet-icon{grid-column:1;grid-row:2 / 4;width:38px;height:42px;font-size:25px;margin:0;animation:none}
+.learn-redesign #myopiaZone .mz-planet-title{grid-column:2;grid-row:1 / 3;text-align:left;font-size:17px;align-self:center}
+.learn-redesign #myopiaZone .mz-planet-status{grid-column:2;margin:0}
+.learn-redesign #myopiaZone .mz-orbit-line{display:none}
+.learn-redesign .learn-reading :is(.mz-title,.gp-title){font-family:inherit;font-size:26px}
+@media(max-width:650px){.learn-redesign #myopiaZone .mz-planets{grid-template-columns:1fr}.learn-workspace{bottom:16px}.learn-redesign .learn-reading .decoder-core-grid{grid-template-columns:1fr}.learn-topic p{min-height:43px}.learn-landing{padding-bottom:110px}}

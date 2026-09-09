@@ -1,0 +1,620 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>眼球大冒险 · 瞳学星球 | 星空幻想电影绘本</title>
+    <link rel="stylesheet" href="../../公共资源/代码/公共样式.css">
+    <!-- 星空幻想电影绘本 · 圆润游戏标题字体 ZCOOL KuaiLe（站酷快乐体，免费商用） -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&amp;family=Noto+Sans+SC:wght@500;700;900&amp;display=swap">
+    <!-- ============================================================
+         眼球大冒险 adventure.html · 本页专属样式（命名空间 body.page-adventure .adv3-*）
+         · 彻底清理旧的巨型圆形人物污染，不改 ../../公共资源/代码/公共样式.css / ../../公共资源/代码/公共交互.js
+         · 保留 JS 白名单：#advStepper / .adv-step / .adv-step-num / .adv-step-label
+                           / .adv-step-line / data-step="1..5"
+                           / #advPartModal / #advPartTitle / #advPartDesc / ...
+         ============================================================ -->
+    <link rel="stylesheet" href="小游戏中心样式.css">
+</head>
+<body data-original-page="adventure.html" class="subpage theme-blue page-adventure">
+
+    <!-- ============================================================
+         BOOT-STRAP：main.js 需要的白名单 id 存根（放 body 最顶部，确保 main.js 同步执行时就能读到，
+         避免 style.css / 隐藏容器造成的 false null）。
+         容器用绝对定位放到视口外，不使用 display:none，避免 querySelector 被某些极旧解析影响或子树隐藏。
+         ============================================================ -->
+    <div id="advBootStubs" aria-hidden="true" style="position:absolute;left:-99999px;top:-99999px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;z-index:-100;">
+        <div id="advStepper" class="adv-stepper">
+            <div class="adv-step" data-step="1"><span class="adv-step-num">01</span><div class="adv-step-label">认识眼睛</div></div>
+            <div class="adv-step-line"></div>
+            <div class="adv-step" data-step="2"><span class="adv-step-num">02</span><div class="adv-step-label">为什么近视</div></div>
+            <div class="adv-step-line"></div>
+            <div class="adv-step" data-step="3"><span class="adv-step-num">03</span><div class="adv-step-label">晶状体</div></div>
+            <div class="adv-step-line"></div>
+            <div class="adv-step" data-step="4"><span class="adv-step-num">04</span><div class="adv-step-label">光线旅行</div></div>
+            <div class="adv-step-line"></div>
+            <div class="adv-step" data-step="5"><span class="adv-step-num">05</span><div class="adv-step-label">终极挑战</div></div>
+        </div>
+        <span id="advProgressText">0 / 5</span>
+        <div id="advProgressFill" style="width:0%"></div>
+        <div class="adv-stage stage-1">
+            <button type="button" id="advGoQuizBtn">去挑战本章</button>
+            <div id="advGuideBubble"></div>
+            <div id="advPartsPanel">
+                <button type="button" class="adv-part" data-part-key="cornea"></button>
+                <button type="button" class="adv-part" data-part-key="pupil"></button>
+                <button type="button" class="adv-part" data-part-key="lens"></button>
+                <button type="button" class="adv-part" data-part-key="retina"></button>
+                <button type="button" class="adv-part" data-part-key="nerve"></button>
+            </div>
+        </div>
+        <div class="adv-stage stage-2">
+            <div id="advQuizGuide"></div>
+            <div id="quizIndex">1</div>
+            <div id="quizQuestion"></div>
+            <div id="quizStars"><span class="star"></span><span class="star"></span><span class="star"></span><span class="star"></span></div>
+            <div id="quizOptions"></div>
+            <div id="quizFeedback"><div id="quizFeedbackInner"></div></div>
+            <button type="button" id="quizNextBtn">下一题</button>
+        </div>
+        <div class="adv-stage stage-3">
+            <div id="advStarCount">0</div>
+            <div id="advFinishSub"></div>
+            <button type="button" id="advRestartBtn">再玩一次</button>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         00. 全局背景（真实 PNG + 轻微遮罩 + CSS 星尘）
+         ============================================================ -->
+    <div class="adv3-sky" aria-hidden="true">
+        <div class="adv3-bg-layer"></div>
+        <div class="adv3-bg-overlay"></div>
+        <div class="adv3-stars"></div>
+        <div class="adv3-stars s2"></div>
+        <div class="adv3-stars s3"></div>
+        <div class="adv3-particles">
+            <span class="adv3-particle" style="left:8%;top:30%;animation-duration:7s;animation-delay:0s"></span>
+            <span class="adv3-particle" style="left:22%;top:60%;animation-duration:9s;animation-delay:1.2s;width:3px;height:3px"></span>
+            <span class="adv3-particle" style="left:45%;top:20%;animation-duration:8.5s;animation-delay:.6s"></span>
+            <span class="adv3-particle" style="left:68%;top:45%;animation-duration:10s;animation-delay:2s;width:5px;height:5px"></span>
+            <span class="adv3-particle" style="left:82%;top:25%;animation-duration:7.5s;animation-delay:3.1s"></span>
+            <span class="adv3-particle" style="left:15%;top:78%;animation-duration:9.5s;animation-delay:1.8s;width:3px;height:3px"></span>
+            <span class="adv3-particle" style="left:55%;top:70%;animation-duration:8s;animation-delay:.3s"></span>
+            <span class="adv3-particle" style="left:90%;top:65%;animation-duration:10.5s;animation-delay:2.6s;width:5px;height:5px"></span>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         01. 顶部导航栏
+         ============================================================ -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="../../公共资源/配图/瞳学星球标志.jpg" alt="瞳学星球 Logo" class="logo-img">
+                <div class="logo-text">
+                    <h1 class="logo-title">瞳学星球</h1>
+                    <p class="logo-subtitle">近视防控科普与矫正指南</p>
+                </div>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="../../01-首页/代码/首页.html" class="nav-link" data-page="index">首页</a></li>
+                    <li><a href="小游戏中心.html" class="nav-link active" data-page="eyeball-adventure" aria-current="page">眼球大冒险</a></li>
+                    <li><a href="../../03-视界探索站/代码/视界探索站.html" class="nav-link" data-page="vision-exploration">视界探索站</a></li>
+                    <li><a href="../../04-天书解码器/代码/天书解码器.html" class="nav-link" data-page="decoder">天书解码器</a></li>
+                    <li><a href="../../05-拓展功能/代码/护眼打卡.html" class="nav-link" data-page="hero">护眼小英雄</a></li>
+                    <li><a href="../../05-拓展功能/代码/护眼问答.html" class="nav-link" data-page="qa">护眼问答机</a></li>
+                </ul>
+            </nav>
+            <div class="nav-right">
+                <button class="btn-voice">
+                    <span class="voice-icon">🔊</span>
+                    语音朗读
+                </button>
+                <div class="user-avatar" title="用户头像">
+                    <span class="avatar-emoji">👧</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="adv3-main" aria-label="眼球大冒险 · 第一模块">
+
+        <!-- ============================================================
+             02. Hero 冒险主视觉
+             · 左 45%：标签 + 大标题 + 副标题 + 5圆形节点+连接线 + 积分/等级
+             · 右装饰：眼球星球(island-eye-full) + 飞船(spaceship) + 小光仔右上 absolute
+             ============================================================ -->
+        <!-- ============================================================
+             第一幕 · 宇宙中发现眼睛星球（沉浸式镜头推进动画）
+             · 命名空间 body.page-adventure .adv3-hero / .adv3-stage / .adv3-camera
+             · 0~12s：远景→眼睛星球出现→镜头靠近→飞船飞入→停留
+             ============================================================ -->
+        <section class="adv3-hero" aria-label="第一幕 宇宙发现眼睛星球">
+
+            <!-- 沉浸式动画舞台 -->
+            <div class="adv3-stage" aria-hidden="true">
+
+                <!-- 镜头层：模拟相机推进 -->
+                <div class="adv3-camera" id="adv3Camera">
+
+                    <!-- L2 深空底色 + 星云 -->
+                    <div class="adv3-space-bg"></div>
+                    <div class="adv3-nebula adv3-nebula-purple"></div>
+                    <div class="adv3-nebula adv3-nebula-blue"></div>
+                    <div class="adv3-nebula adv3-nebula-green"></div>
+
+                    <!-- L3 远景星星（小、密、慢闪） -->
+                    <div class="adv3-star-field adv3-star-far" id="adv3StarFar"></div>
+                    <!-- L3 中景星星 -->
+                    <div class="adv3-star-field adv3-star-mid" id="adv3StarMid"></div>
+                    <!-- L3 近景大星 -->
+                    <div class="adv3-star-field adv3-star-near" id="adv3StarNear"></div>
+
+                    <!-- L4 流星 -->
+                    <div class="adv3-meteor adv3-meteor-1"></div>
+                    <div class="adv3-meteor adv3-meteor-2"></div>
+
+                    <!-- L4 漂浮星尘粒子 -->
+                    <div class="adv3-dust-field" id="adv3DustField"></div>
+
+                    <!-- ★ L5 眼睛星球（主视觉，远处逐渐靠近） -->
+                    <div class="adv3-planet" id="adv3Planet">
+                        <div class="adv3-planet-glow"></div>
+                        <div class="adv3-planet-body">
+                            <img class="adv3-planet-img" src="../配图/地图素材/眼球完整小岛.png" alt="眼睛星球">
+                            <div class="adv3-planet-ring adv3-planet-ring-1"></div>
+                            <div class="adv3-planet-ring adv3-planet-ring-2"></div>
+                            <div class="adv3-planet-particles" id="adv3PlanetParticles">
+                                <span class="adv3-pp p1"></span>
+                                <span class="adv3-pp p2"></span>
+                                <span class="adv3-pp p3"></span>
+                                <span class="adv3-pp p4"></span>
+                                <span class="adv3-pp p5"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ★ L6 小光仔探索舱（左侧飞入 → 靠近星球） -->
+                    <div class="adv3-craft" id="adv3Craft">
+                        <!-- 飞船尾焰粒子（蓝绿色） -->
+                        <div class="adv3-craft-trail" aria-hidden="true">
+                            <span class="adv3-trail-particle p1"></span>
+                            <span class="adv3-trail-particle p2"></span>
+                            <span class="adv3-trail-particle p3"></span>
+                            <span class="adv3-trail-particle p4"></span>
+                            <span class="adv3-trail-particle p5"></span>
+                            <span class="adv3-trail-particle p6"></span>
+                        </div>
+                        <!-- 飞船光晕 -->
+                        <div class="adv3-craft-glow"></div>
+                        <!-- 探索舱主体 -->
+                        <img class="adv3-craft-ship" src="../配图/地图素材/飞船.png" alt="探索舱">
+                        <!-- 小光仔坐在舱内 -->
+                        <img class="adv3-craft-pilot" src="../配图/地图素材/小光仔全身.png" alt="小光仔">
+                    </div>
+
+                </div><!-- /.adv3-camera -->
+
+                <!-- L7 标题文字层（独立于镜头，避免缩放模糊） -->
+                <div class="adv3-hero-text" id="adv3HeroText">
+                    <span class="adv3-hero-chip">
+                        <span class="dot" aria-hidden="true"></span>
+                        第一幕 · 星际发现
+                    </span>
+                    <h1 class="adv3-hero-title">
+                        <span class="l1">小光仔的</span>
+                        <span class="l2">眼睛大冒险</span>
+                    </h1>
+                </div>
+
+                <!-- L8 底部滚动提示 -->
+                <div class="adv3-scroll-hint" aria-hidden="true">
+                    <span class="adv3-hint-text">向下滑动 · 开始探索</span>
+                    <span class="adv3-hint-arrow"></span>
+                </div>
+
+                <!-- 保留旧 Hero 数据（隐藏，避免影响下游 JS 查找 #adv3ScoreText） -->
+                <div class="adv3-hero-legacy" aria-hidden="true" style="display:none">
+                    <span id="adv3ScoreText">⭐ 1280 积分</span>
+                </div>
+
+            </div><!-- /.adv3-stage -->
+
+        </section>
+
+
+        <!-- ============================================================
+             03. 三栏探索地图
+             · 左 250：小光仔任务提示卡
+             · 中 1fr：眼球结构探索区 + 5个可点击节点
+             · 右 280：章节奖励卡（sticky）
+             · 注意：仅使用眼球结构作为可点击节点；保留 main.js 的
+               #advStepper / .adv-step[data-step] 容器（display:none 让 main.js 还能遍历到，同时不显示旧版 stepper）
+             ============================================================ -->
+        <section class="adv3-map">
+
+            <!-- 左侧：小光仔任务日志 -->
+            <aside class="adv3-card adv3-task-card" aria-label="小光仔任务日志">
+                <div class="adv3-task-head">
+                    <img class="adv3-task-img" src="../../公共资源/配图/小光仔全身.png" alt="小光仔">
+                    <div>
+                        <div class="adv3-task-badge">📋 任务日志</div>
+                        <div class="adv3-task-title">嗨！我是小光仔！</div>
+                    </div>
+                </div>
+                <p class="adv3-task-desc">
+                    今天我们要探索<b>眼睛宇宙</b>！<br>
+                    完成 5 个区域探索，<br>
+                    解锁护眼徽章吧！
+                </p>
+                <div class="adv3-task-mission">
+                    <div class="adv3-mission-title">🎯 当前任务</div>
+                    <ul class="adv3-mission-list">
+                        <li class="done"><span class="check">☑</span> 找到角膜基地</li>
+                        <li><span class="check">☐</span> 探索晶状体</li>
+                        <li><span class="check">☐</span> 解锁视网膜</li>
+                    </ul>
+                    <!-- 星际进度可视化 -->
+                    <div class="adv3-mission-progress">
+                        <div class="adv3-progress-label">
+                            <span>🚀 星际进度</span>
+                            <span class="adv3-progress-num">1 / 3</span>
+                        </div>
+                        <div class="adv3-progress-bar">
+                            <div class="adv3-progress-fill" style="width: 33.3%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="adv3-task-tip">✨ 完成探索可以获得护眼积分！</div>
+            </aside>
+
+            <!-- 中间：眼球星球探索舱（悬浮透明玻璃舱） -->
+            <div class="adv3-card adv3-eye-stage capsule" aria-label="眼球星球探索舱">
+                <div class="adv3-eye-head">
+                    <h2 class="adv3-eye-title">眼球星球<b>· 探索舱</b></h2>
+                    <div class="adv3-eye-sub">穿越 5 大星际站点，揭开眼睛宇宙的秘密 ✦</div>
+                </div>
+
+                <div class="adv3-eye-board" id="adv3EyeBoard">
+                    <!-- 深空星尘背景 -->
+                    <div class="eye-space"></div>
+
+                    <!-- 星际探险路线（柔和发光虚线 + 流动光粒子） -->
+                    <svg class="adv3-route" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                        <defs>
+                            <linearGradient id="adv3RouteGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%"   stop-color="#7BC6FF" stop-opacity="0.55"/>
+                                <stop offset="35%"  stop-color="#B585FF" stop-opacity="0.65"/>
+                                <stop offset="65%"  stop-color="#FFD45A" stop-opacity="0.65"/>
+                                <stop offset="100%" stop-color="#78FFC8" stop-opacity="0.55"/>
+                            </linearGradient>
+                            <filter id="adv3RouteGlow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="0.8" result="blur"/>
+                                <feMerge>
+                                    <feMergeNode in="blur"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                        </defs>
+                        <!-- 主路线：连接 5 站点的高低错落曲线 -->
+                        <path class="adv3-route-path" d="M 10,58 C 18,32 26,28 30,30 C 38,34 40,72 44,68 C 52,60 60,42 72,22 C 80,12 86,30 90,38"
+                              stroke="url(#adv3RouteGrad)" stroke-width="0.8" fill="none"
+                              stroke-linecap="round" stroke-dasharray="1.4 1.6"
+                              filter="url(#adv3RouteGlow)"/>
+                        <!-- 流动光粒子（沿路径运动） -->
+                        <circle class="adv3-route-particle" r="0.9" fill="#FFFFFF" opacity="0.9">
+                            <animateMotion dur="9s" repeatCount="indefinite">
+                                <mpath href="#adv3RouteMotionPath"/>
+                            </animateMotion>
+                        </circle>
+                        <circle class="adv3-route-particle" r="0.7" fill="#FFE58A" opacity="0.85">
+                            <animateMotion dur="9s" begin="-3s" repeatCount="indefinite">
+                                <mpath href="#adv3RouteMotionPath"/>
+                            </animateMotion>
+                        </circle>
+                        <circle class="adv3-route-particle" r="0.8" fill="#B585FF" opacity="0.85">
+                            <animateMotion dur="9s" begin="-6s" repeatCount="indefinite">
+                                <mpath href="#adv3RouteMotionPath"/>
+                            </animateMotion>
+                        </circle>
+                        <!-- 路径定义（供 animateMotion 引用） -->
+                        <path id="adv3RouteMotionPath" d="M 10,58 C 18,32 26,28 30,30 C 38,34 40,72 44,68 C 52,60 60,42 72,22 C 80,12 86,30 90,38" fill="none" style="display:none"/>
+                    </svg>
+
+                    <!-- 眼球星球主体（纯 CSS 3D 玻璃球） -->
+                    <div class="eye-planet" aria-hidden="true">
+                        <div class="ep-glow"></div>
+                        <div class="ep-nebula"></div>
+                        <div class="ep-sphere"></div>
+                        <div class="ep-cornea"></div>
+                        <div class="ep-pupil"></div>
+                        <div class="ep-lens"></div>
+                        <div class="ep-retina"></div>
+                        <div class="ep-nerve"></div>
+                        <div class="ep-orbit ep-orbit-a"></div>
+                        <div class="ep-orbit ep-orbit-b"></div>
+                        <div class="ep-orbit ep-orbit-c"></div>
+                        <div class="ep-lightpath"></div>
+                    </div>
+
+                    <!-- 小光仔提示气泡 -->
+                    <div class="eye-bubble" id="adv3EyeBubble">
+                        <div class="eye-bubble-avatar">🌟</div>
+                        <div class="eye-bubble-text">点击星球上的站点，开启探索之旅吧！</div>
+                        <div class="eye-bubble-arrow"></div>
+                    </div>
+
+                    <!-- 01 角膜基地（左前 · 透明护盾 · 最近最大） -->
+                    <div class="adv3-eye-node is-active adv3-node-near" style="--nx:10%; --ny:58%;" data-part="cornea" data-num="01" data-title="角膜基地" data-subtitle="保护眼睛的第一道防线" data-desc="角膜是眼睛最外面透明的小护盾，就像星球的透明防护罩，帮助我们把光线安全送进眼睛里！" data-tip="角膜需要保持湿润，平时千万&lt;b&gt;不要用脏手揉眼睛&lt;/b&gt;哦~">
+                        <button type="button" class="adv3-pin" aria-label="01 角膜基地">
+                            <span class="station-icon">🛡️</span>
+                            <span class="station-num">01</span>
+                        </button>
+                        <div class="stars">★★★</div>
+                        <div class="name">角膜基地</div>
+                    </div>
+                    <!-- 02 瞳孔黑洞（中央 · 小黑洞 · 远处稍小） -->
+                    <div class="adv3-eye-node adv3-node-far" style="--nx:30%; --ny:30%;" data-part="pupil" data-num="02" data-title="瞳孔黑洞" data-subtitle="控制光线进入的小黑洞" data-desc="瞳孔是眼睛中间黑黑的小圆洞，就像宇宙中的小黑洞。光线强的时候它会变小，光线暗的时候它会变大！" data-tip="在&lt;b&gt;黑暗的环境&lt;/b&gt;里看手机，瞳孔会努力放大，眼睛很容易累哦。">
+                        <button type="button" class="adv3-pin" aria-label="02 瞳孔黑洞">
+                            <span class="station-icon">🕳️</span>
+                            <span class="station-num">02</span>
+                        </button>
+                        <div class="stars">★★★</div>
+                        <div class="name">瞳孔黑洞</div>
+                    </div>
+                    <!-- 03 晶状体水晶宫（瞳孔后 · 水晶宝石 · 中等距离） -->
+                    <div class="adv3-eye-node adv3-node-mid" style="--nx:44%; --ny:68%;" data-part="lens" data-num="03" data-title="晶状体水晶宫" data-subtitle="帮助我们看清世界的水晶" data-desc="晶状体就像一颗能扁能圆的透明水晶，是自动变焦镜头，帮助我们看清楚近处和远处的东西！" data-tip="如果&lt;b&gt;长时间看近处&lt;/b&gt;，晶状体一直紧绷，就容易近视啦！记得每20分钟看看远处~">
+                        <button type="button" class="adv3-pin" aria-label="03 晶状体水晶宫">
+                            <span class="station-icon">💎</span>
+                            <span class="station-num">03</span>
+                        </button>
+                        <div class="stars">★★★</div>
+                        <div class="name">晶状体水晶宫</div>
+                    </div>
+                    <!-- 04 视网膜星云（后壁 · 星光接收器 · 最远最小） -->
+                    <div class="adv3-eye-node adv3-node-far" style="--nx:72%; --ny:22%;" data-part="retina" data-num="04" data-title="视网膜星云" data-subtitle="捕捉信息的星光接收器" data-desc="视网膜就像一张发光的星云画布，能把光信号变成电信号，让我们'看见'整个宇宙的图像！" data-tip="多吃深绿色蔬菜和富含 &lt;b&gt;DHA&lt;/b&gt; 的食物，可以帮助视网膜更健康哦~">
+                        <button type="button" class="adv3-pin" aria-label="04 视网膜星云">
+                            <span class="station-icon">📡</span>
+                            <span class="station-num">04</span>
+                        </button>
+                        <div class="stars">★★★</div>
+                        <div class="name">视网膜星云</div>
+                    </div>
+                    <!-- 05 视神经传输站（后极 · 能量通道 · 中等距离） -->
+                    <div class="adv3-eye-node adv3-node-mid" style="--nx:90%; --ny:38%;" data-part="nerve" data-num="05" data-title="视神经传输站" data-subtitle="传递画面的能量通道" data-desc="视神经是眼睛连接大脑的能量通道，视网膜捕捉到的画面会通过它光速送到大脑里！" data-tip="运动时注意保护后脑，&lt;b&gt;均衡饮食+充足睡眠&lt;/b&gt;能让视神经工作得更顺畅~">
+                        <button type="button" class="adv3-pin" aria-label="05 视神经传输站">
+                            <span class="station-icon">⚡</span>
+                            <span class="station-num">05</span>
+                        </button>
+                        <div class="stars">★★★</div>
+                        <div class="name">视神经传输站</div>
+                    </div>
+                </div>
+
+                <div class="adv3-eye-desc" id="adv3EyeIntro">
+                    <b>💡 冒险小提示：</b>
+                    沿着光路依次点击 <em>角膜基地→瞳孔黑洞→晶状体水晶宫→视网膜星云→视神经传输站</em>，
+                    每一站都有专属的宇宙科普和护眼小贴士哦！
+                </div>
+            </div>
+
+            <!-- 右侧：星际奖励仓 -->
+            <aside class="adv3-card adv3-reward-card" aria-label="星际奖励仓">
+                <div class="adv3-reward-title">🚀 星际奖励仓</div>
+                <div class="adv3-reward-sub">完成章节可获得：</div>
+                <ul class="adv3-reward-list">
+                    <li><span>💎</span>玻璃精灵</li>
+                    <li><span>⭐</span>光线徽章<b>×1</b></li>
+                    <li><span>🌱</span>护眼积分<b>+50</b></li>
+                </ul>
+                <div class="adv3-progress-label">
+                    <span>探索进度</span>
+                    <span><b>2 / 5</b> 区域</span>
+                </div>
+                <div class="adv3-progress-bar" role="progressbar" aria-label="探索进度" aria-valuenow="2" aria-valuemin="0" aria-valuemax="5"></div>
+                <button type="button" class="adv3-green-btn" id="adv3ChallengeBtn">开始探索本章 →</button>
+            </aside>
+        </section>
+
+        <!-- ============================================================
+             04. 底部趣味小游戏（4 横向卡片；点击按钮可接真实小游戏路由）
+             ============================================================ -->
+        <section class="adv3-games">
+            <div class="adv3-games-head">
+                <div>
+                    <div class="adv3-games-title">🎮 趣味小游戏<span>星球</span></div>
+                    <div style="margin-top:6px; color:#C9DBF7; font-size:14px; font-weight:700; letter-spacing:0.4px; text-shadow: 0 2px 10px rgba(6,24,61,0.45);">边玩边学，收获更多护眼知识！</div>
+                </div>
+                <div class="adv3-games-sub">小光仔的推荐关卡 ✦ 通关获得积分奖励</div>
+            </div>
+            <div class="adv3-games-grid">
+                <div class="adv3-game-card" data-game="light-maze">
+                    <div class="num-wrap">
+                        <div class="num">01</div>
+                    </div>
+                    <div class="game-planet">
+                        <img class="icon" src="../../03-视界探索站/配图/探索素材/火箭.png" alt="光线迷宫">
+                    </div>
+                    <h3>🔦 光线迷宫</h3>
+                    <p>移动镜子，让光线成功到达视网膜！</p>
+                    <button type="button" class="play" data-game="light-maze">开始游戏 →</button>
+                </div>
+                <div class="adv3-game-card" data-game="find-monster">
+                    <div class="num-wrap">
+                        <div class="num">02</div>
+                    </div>
+                    <div class="game-planet">
+                        <img class="icon" src="../../03-视界探索站/配图/探索素材/小光仔飞行.png" alt="找近视怪兽">
+                    </div>
+                    <h3>👾 找近视怪兽</h3>
+                    <p>在场景中找出偷偷伤害眼睛的坏习惯！</p>
+                    <button type="button" class="play" data-game="find-monster">开始游戏 →</button>
+                </div>
+                <div class="adv3-game-card" data-game="eye-puzzle">
+                    <div class="num-wrap">
+                        <div class="num">03</div>
+                    </div>
+                    <div class="game-planet">
+                        <img class="icon" src="../../03-视界探索站/配图/探索素材/实验烧瓶.png" alt="拼拼眼球">
+                    </div>
+                    <h3>🧩 拼拼眼球</h3>
+                    <p>把眼睛结构拖回正确的位置！</p>
+                    <button type="button" class="play" data-game="eye-puzzle">开始游戏 →</button>
+                </div>
+                <div class="adv3-game-card" data-game="eye-travel">
+                    <div class="num-wrap">
+                        <div class="num">04</div>
+                    </div>
+                    <div class="game-planet">
+                        <img class="icon" src="../../03-视界探索站/配图/探索素材/飞船.png" alt="眼球旅行">
+                    </div>
+                    <h3>🚗 眼球旅行</h3>
+                    <p>和小光仔一起进入眼睛内部冒险！</p>
+                    <button type="button" class="play" data-game="eye-travel">开始游戏 →</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ============================================================
+         06. 部位科普弹窗（完全保留 JS 绑定 ID/class，main.js 可直接操作）
+         ============================================================ -->
+    <div class="adv-modal ad-modal" id="advPartModal" hidden="" aria-hidden="true">
+        <div class="adv-modal-mask ad-modal-mask" data-close-modal="1"></div>
+        <div class="adv-modal-box ad-modal-box" role="dialog" aria-modal="true" aria-labelledby="advPartTitle">
+            <button type="button" class="adv-modal-close ad-modal-close" data-close-modal="1" aria-label="关闭">×</button>
+            <div class="adv-modal-head ad-modal-head" id="advPartHead">
+                <img class="ad-icon ad-icon--contain adv-modal-xgz" src="../../公共资源/配图/小光仔全身.png" alt="小光仔">
+                <div>
+                    <div class="adv-modal-tag" id="advPartNum">第 1 站</div>
+                    <h3 class="adv-modal-title" id="advPartTitle">角膜</h3>
+                    <div class="adv-modal-subtitle" id="advPartSubtitle">眼睛的透明小窗口</div>
+                </div>
+            </div>
+            <div class="adv-modal-icon" id="advPartIcon">
+                <img class="ad-icon ad-icon--contain" src="../../03-视界探索站/配图/探索素材/眼球小岛.png" alt="角膜">
+            </div>
+            <p class="adv-modal-desc" id="advPartDesc">
+                角膜是眼睛最外面透明的小窗口，就像相机的镜头一样，帮助我们看清这个世界！
+            </p>
+            <div class="adv-modal-tip ad-modal-tip">
+                <span id="advPartTipText">角膜需要保持健康，平时不要用脏手揉眼睛哦！</span>
+            </div>
+            <div class="adv-actions ad-modal-actions">
+                <button type="button" class="btn-theme btn-blue" id="advPartNextBtn">
+                    我知道啦，下一个 →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         07. 通用页脚（保持网站体系 + 免责声明）
+         ============================================================ -->
+    <footer class="footer ad-footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <div class="footer-text">
+                    <h4>瞳学星球</h4>
+                    <p>守护每个孩子的明亮视界</p>
+                </div>
+            </div>
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h5>探索内容</h5>
+                    <a href="小游戏中心.html">眼球大冒险</a>
+                    <a href="../../05-拓展功能/代码/护眼问答.html">护眼问答机</a>
+                    <a href="../../03-视界探索站/代码/视界探索站.html">视界实验室</a>
+                </div>
+                <div class="footer-col">
+                    <h5>趣味挑战</h5>
+                    <a href="../../05-拓展功能/代码/护眼打卡.html">21 天打卡</a>
+                    <a href="#">护眼排行榜</a>
+                    <a href="#">成就徽章</a>
+                </div>
+                <div class="footer-col">
+                    <h5>关于我们</h5>
+                    <a href="#">平台介绍</a>
+                    <a href="#">联系我们</a>
+                    <a href="#">隐私政策</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 瞳学星球 · 专为青少年打造</p>
+                <p style="margin-top:6px;font-size:12px;opacity:0.7;">验光单需要由专业人员结合实际检查结果进行判断，本工具仅用于科普，不用于诊断或配镜。</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../公共资源/代码/公共交互.js"></script>
+
+    <!-- ============================================================
+         07. 第一幕动画 · 星星/星尘动态生成 + 镜头时序
+         · 仅作用于 .adv3-hero 第一幕动画区
+         · 不影响 main.js / 其他板块
+         ============================================================ -->
+    <script src="小游戏中心交互.js"></script>
+
+    <!-- ============================================================
+         08. 本页内联脚本（仅作用于 adv3-* 结构，不影响 main.js）
+         · 点击眼球节点：打开 #advPartModal 并填充对应科普内容
+         · Hero 节点点击：滚动到眼球结构探索区并高亮对应节点
+         · 小游戏按钮：预留接入；奖励按钮：跳转 stepper 或弹窗
+         ============================================================ -->
+    <script src="小游戏中心交互2.js"></script>
+
+    <!-- ============================================================
+         08. 小游戏系统 JS（统一框架 + 4 个小游戏）
+         统一 gameState + localStorage，复用首页积分胶囊 id="adv3ScoreText"
+         ============================================================ -->
+    <script src="小游戏中心交互3.js"></script>
+
+    <!-- ============================================================
+         07. 统一小游戏 Modal（全屏弹窗 · 4 个游戏共享同一框架）
+         背景 rgba(3,15,45,.88) + blur(12px)
+         面板 min(1100px,92vw) × min(720px,88vh)  border-radius:28px
+         ============================================================ -->
+    <div class="game-modal" id="gameModal" hidden="" aria-hidden="true">
+        <div class="game-modal-mask" data-game-close="1"></div>
+        <div class="game-modal-panel" role="dialog" aria-modal="true" aria-labelledby="gameTitle">
+            <!-- 顶栏：返回小游戏中心 / 标题 / ⭐得分 / ❤️生命 / ×关闭 -->
+            <header class="game-modal-head">
+                <button type="button" class="game-back" id="gameBackBtn" title="返回小游戏中心">← 返回小游戏中心</button>
+                <div class="game-title-area">
+                    <div class="game-title" id="gameTitle">小游戏</div>
+                    <div class="game-subtitle" id="gameSubtitle"></div>
+                </div>
+                <div class="game-stat">
+                    <span class="game-score">⭐ <b id="gameScore">0</b></span>
+                    <span class="game-lives">❤️ <b id="gameLives">3</b></span>
+                </div>
+                <button type="button" class="game-close" id="gameCloseBtn" aria-label="关闭">×</button>
+            </header>
+
+            <!-- 游戏内容区（根据 gameId 切换） -->
+            <div class="game-modal-body" id="gameBody">
+                <div class="game-loading">加载中...</div>
+            </div>
+
+            <!-- 结束遮罩（成功/失败） -->
+            <div class="game-end-overlay" id="gameEndOverlay" hidden="">
+                <div class="game-end-card">
+                    <div class="game-end-icon" id="gameEndIcon">🎉</div>
+                    <div class="game-end-title" id="gameEndTitle">挑战成功！</div>
+                    <div class="game-end-desc" id="gameEndDesc"></div>
+                    <div class="game-end-score">获得：<b id="gameEndScore">+0</b> 护眼积分</div>
+                    <div class="game-end-btns">
+                        <button type="button" class="game-btn game-btn-ghost" id="gameEndBackBtn">返回小游戏</button>
+                        <button type="button" class="game-btn game-btn-primary" id="gameEndRetryBtn">再玩一次</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body></html>

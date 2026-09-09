@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>眼球大冒险 · 瞳学星球</title><link rel="stylesheet" href="眼球大冒险样式.css"></head>
+<body>
+  <link rel="stylesheet" href="../../公共资源/代码/系统外观.css">
+  <script defer src="../../公共资源/代码/系统导航.js"></script>
+  <header><a class="brand" href="../../01-首页/代码/首页.html">瞳学星球<span>探索眼睛的奥秘</span></a><a class="home" href="../../01-首页/代码/首页.html">⌂ 返回首页</a><span class="breadcrumb">眼球大冒险</span></header>
+  <main class="map" id="map">
+    <img id="mapArtwork" class="map-art" alt="眼球五站探索地图" hidden>
+    <div class="intro"><p class="eyebrow">小光仔的眼睛课堂</p><h1>眼球大冒险</h1><p class="ribbon">走进眼睛的奇妙世界</p><p class="welcome">光线进入眼睛后，会去哪里？<br>选一站，和小光仔一起看看。</p></div>
+    <img class="mascot" src="../../03-视界探索站/配图/探索素材/小光仔站立.png" alt="小光仔">
+    <div class="eye-stage"><img src="../配图/地图素材/眼球星球.jpg" alt="眼球探索星球"><span>跟着光线去旅行</span></div>
+    <nav class="stations" id="stations" aria-label="五个科普视频站点"></nav>
+    <button class="start" id="start" type="button">▶ 开始探索<span>从第一站「角膜基地」出发</span></button>
+  </main>
+  <dialog id="playerDialog" aria-labelledby="videoTitle">
+    <div class="player-shell">
+      <div class="player-head"><button id="back" type="button">← 返回地图</button><h2 id="videoTitle"></h2><a href="../../01-首页/代码/首页.html">返回首页</a></div>
+      <div class="video-stage">
+        <video id="video" playsinline preload="none" aria-label="科普视频"></video>
+        <div id="message" class="message" role="status"><h3 id="messageTitle"></h3><p id="messageText"></p><button id="retry" type="button" hidden>播放视频</button></div>
+      </div>
+      <div class="player-controls"><button id="playPause" type="button">暂停</button><button id="mute" type="button" aria-pressed="false">静音</button><button id="next" type="button" hidden>下一站 →</button></div>
+    </div>
+  </dialog>
+  <script src="视频配置.js"></script><script src="眼球大冒险交互.js"></script>
+</body></html>

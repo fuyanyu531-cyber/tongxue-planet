@@ -1,0 +1,832 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视界探索站 · 瞳学星球</title>
+    <link rel="stylesheet" href="../../公共资源/代码/公共样式.css">
+    <link rel="preconnect" href="https://fonts.googleapis.cn">
+    <link href="https://fonts.googleapis.cn/css2?family=ZCOOL+KuaiLe&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="视界探索站样式.css">
+  <link rel="stylesheet" href="../../公共资源/代码/系统外观.css">
+  <script defer src="../../公共资源/代码/系统导航.js"></script>
+  <link rel="stylesheet" href="../../公共资源/代码/学习空间.css">
+  <script defer src="../../公共资源/代码/学习空间.js"></script>
+</head>
+<body data-original-page="selftest.html" class="subpage theme-green page-vision">
+
+    <!-- ============================================
+         0. 星空背景
+         ============================================ -->
+    <div class="vs-sky" aria-hidden="true">
+        <div class="vs-bg-layer"></div>
+        <div class="vs-bg-overlay"></div>
+        <div class="vs-stars"></div>
+        <div class="vs-stars s2"></div>
+        <div class="vs-particles">
+            <span class="vs-particle" style="left:10%;top:20%;animation-duration:8s;animation-delay:0s"></span>
+            <span class="vs-particle" style="left:30%;top:60%;animation-duration:10s;animation-delay:1.5s;width:2px;height:2px"></span>
+            <span class="vs-particle" style="left:55%;top:15%;animation-duration:9s;animation-delay:.8s"></span>
+            <span class="vs-particle" style="left:75%;top:50%;animation-duration:11s;animation-delay:2.2s;width:4px;height:4px"></span>
+            <span class="vs-particle" style="left:88%;top:30%;animation-duration:8.5s;animation-delay:3s"></span>
+            <span class="vs-particle" style="left:18%;top:75%;animation-duration:10.5s;animation-delay:1.8s;width:2px;height:2px"></span>
+        </div>
+    </div>
+
+    <div class="vs-wrapper">
+
+    <!-- ============================================
+         1. 顶部导航栏
+         ============================================ -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="../../公共资源/配图/瞳学星球标志.jpg" alt="瞳学星球 Logo" class="logo-img">
+                <div class="logo-text">
+                    <h1 class="logo-title">瞳学星球</h1>
+                    <p class="logo-subtitle">近视防控科普与矫正指南</p>
+                </div>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="../../01-首页/代码/首页.html" class="nav-link" data-page="index">首页</a></li>
+                    <li><a href="../../02-眼球大冒险/代码/眼球大冒险.html" class="nav-link" data-page="eyeball-adventure">眼球大冒险</a></li>
+                    <li><a href="视界探索站.html" class="nav-link active" data-page="vision-exploration">视界探索站</a></li>
+                    <li><a href="../../04-天书解码器/代码/天书解码器.html" class="nav-link" data-page="decoder">天书解码器</a></li>
+                    <li><a href="../../05-拓展功能/代码/护眼打卡.html" class="nav-link" data-page="hero">护眼小英雄</a></li>
+                    <li><a href="../../05-拓展功能/代码/护眼问答.html" class="nav-link" data-page="qa">护眼问答机</a></li>
+                </ul>
+            </nav>
+            <div class="nav-right">
+                <button class="btn-voice">
+                    <span class="voice-icon">🔊</span>
+                    语音朗读
+                </button>
+                <div class="user-avatar" title="用户头像">
+                    <span class="avatar-emoji">👧</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================
+         2. Hero 区
+         ============================================ -->
+    <section class="amap-scene" id="amapScene">
+
+        <!-- Hero 区：角色装饰 + 标题内容 + 右侧数据 -->
+        <div class="vs-hero">
+            <!-- 小光仔装饰角色：absolute 定位，不参与 flex 布局 -->
+            <img class="vs-xgz" src="../配图/探索素材/小光仔放大镜.png" alt="小光仔拿放大镜探索" aria-hidden="true">
+            <div class="vs-hero-deco" aria-hidden="true">
+                <div class="vs-deco-planet vs-planet-1"></div>
+                <div class="vs-deco-planet vs-planet-2"></div>
+                <div class="vs-deco-asteroid vs-ast-1"></div>
+                <div class="vs-deco-asteroid vs-ast-2"></div>
+                <div class="vs-light-ray vs-ray-1"></div>
+                <div class="vs-light-ray vs-ray-2"></div>
+                <div class="vs-planet-ground"></div>
+            </div>
+            <!-- 标题内容区：独立容器，margin-left 推到角色右侧 -->
+            <div class="vs-hero-content">
+                <div class="vs-chapter-badge">🛸 第二模块 · 探索篇</div>
+                <h1 class="vs-title">视界探索站 🔭</h1>
+                <p class="vs-subtitle">破解近视认知误区，科学了解眼镜知识！</p>
+            </div>
+            <!-- 右侧：护眼探索数据 + 按钮 -->
+            <div class="vs-hero-right">
+                <div class="vs-hero-stats">
+                    <div class="vs-stat-card amap-stat-energy">
+                        <span class="vs-stat-label">护眼能量</span>
+                        <div class="vs-energy-row">
+                            <span class="vs-energy-icon">⭐</span>
+                            <span class="vs-energy-num" id="amapEnergyText">20</span>
+                        </div>
+                    </div>
+                    <div class="vs-stat-card">
+                        <span class="vs-stat-label">星球探索进度</span>
+                        <div class="vs-progress-row">
+                            <div class="vs-progress-track">
+                                <div class="vs-progress-fill" id="amapProgressFill" style="width: 50%;"></div>
+                            </div>
+                            <span class="vs-progress-count" id="amapProgressText">2 / 4</span>
+                        </div>
+                    </div>
+                    <div class="vs-stat-card">
+                        <span class="vs-stat-label">护眼等级</span>
+                        <div class="vs-level-row">
+                            <span class="vs-level-icon">🌳</span>
+                            <span class="vs-level-name" id="amapLevelText">护眼达人</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="vs-panel-btns">
+                    <button class="vs-icon-btn" id="amapResetBtn" title="重置探索进度">🔄</button>
+                    <button class="vs-home-btn" id="amapHomeBtn">🏠 返回顶部</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 本站探索内容：星际探索地图 -->
+        <section class="vs-explore vs-star-map" aria-label="本站探索内容">
+            <!-- 星图标题 -->
+            <div class="vs-map-title">
+                <a href="../../01-首页/代码/首页.html" class="subpage-back vs-back-home">← 返回首页</a>
+                <span class="vs-map-title-icon">🗺️</span>
+                <h2>星际探索地图</h2>
+                <p>点击星球，开启你的护眼冒险</p>
+            </div>
+            <!-- 星星粒子背景 -->
+            <div class="vs-stars-field" aria-hidden="true">
+                <span class="vs-star-particle" style="left:8%;top:15%;animation-delay:0s"></span>
+                <span class="vs-star-particle" style="left:22%;top:70%;animation-delay:.5s"></span>
+                <span class="vs-star-particle" style="left:40%;top:25%;animation-delay:1s"></span>
+                <span class="vs-star-particle" style="left:55%;top:80%;animation-delay:1.5s"></span>
+                <span class="vs-star-particle" style="left:70%;top:18%;animation-delay:.8s"></span>
+                <span class="vs-star-particle" style="left:85%;top:60%;animation-delay:1.2s"></span>
+                <span class="vs-star-particle" style="left:15%;top:45%;animation-delay:2s"></span>
+                <span class="vs-star-particle" style="left:92%;top:30%;animation-delay:.3s"></span>
+                <span class="vs-star-particle vs-star-big" style="left:30%;top:12%;animation-delay:.7s"></span>
+                <span class="vs-star-particle vs-star-big" style="left:65%;top:85%;animation-delay:1.8s"></span>
+                <span class="vs-star-particle vs-star-big" style="left:48%;top:6%;animation-delay:2.2s"></span>
+            </div>
+            <!-- 装饰小星球 -->
+            <div class="vs-deco-mini vs-deco-mini-1" aria-hidden="true"></div>
+            <div class="vs-deco-mini vs-deco-mini-2" aria-hidden="true"></div>
+            <div class="vs-deco-mini vs-deco-mini-3" aria-hidden="true"></div>
+
+            <!-- 发光轨道 SVG -->
+            <svg class="vs-map-orbit" viewBox="0 0 600 420" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <ellipse cx="300" cy="210" rx="245" ry="155" fill="none" stroke="rgba(165,232,90,0.16)" stroke-width="2" stroke-dasharray="6 10"></ellipse>
+                <ellipse cx="300" cy="210" rx="150" ry="90" fill="none" stroke="rgba(120,180,255,0.12)" stroke-width="1.5" stroke-dasharray="3 8"></ellipse>
+                <line x1="300" y1="210" x2="150" y2="110" stroke="rgba(165,232,90,0.22)" stroke-width="2" stroke-dasharray="4 8"></line>
+                <line x1="300" y1="210" x2="450" y2="110" stroke="rgba(180,140,255,0.22)" stroke-width="2" stroke-dasharray="4 8"></line>
+                <line x1="300" y1="210" x2="150" y2="310" stroke="rgba(120,200,255,0.22)" stroke-width="2" stroke-dasharray="4 8"></line>
+                <line x1="300" y1="210" x2="450" y2="310" stroke="rgba(255,180,100,0.22)" stroke-width="2" stroke-dasharray="4 8"></line>
+            </svg>
+
+            <!-- 中心标识：小光仔向导 -->
+            <div class="vs-center-mark">
+                <img class="vs-center-xgz" src="../../公共资源/配图/小光仔全身.png" alt="小光仔" style="width: 83.0532px; height: 134.088px;">
+                
+            </div>
+
+            <!-- 四个探索星球 -->
+            <div class="vs-map-grid">
+            <article class="vs-map-node vs-node-tl" data-zone="myopia">
+                <div class="vs-node-planet">
+                    <img class="vs-node-img" src="../配图/探索素材/近视认知星球.jpg" alt="近视认知区">
+                </div>
+                <h3 class="vs-node-name">近视认知区</h3>
+                <p class="vs-node-desc">破解近视误区，了解近视真相</p>
+                <button class="vs-node-btn" type="button" onclick="document.getElementById('myopiaZone').scrollIntoView({behavior:'smooth'})">进入探索 →</button>
+            </article>
+
+            <article class="vs-map-node vs-node-tr" data-zone="glasses">
+                <div class="vs-node-planet">
+                    <img class="vs-node-img" src="../配图/探索素材/眼镜类型星球.jpg" alt="眼镜类型大揭秘">
+                </div>
+                <h3 class="vs-node-name">眼镜类型大揭秘</h3>
+                <p class="vs-node-desc">认识不同眼镜，找到适合你的选择</p>
+                <button class="vs-node-btn" type="button" onclick="document.getElementById('glassesPlanet').scrollIntoView({behavior:'smooth'})">进入探索 →</button>
+            </article>
+
+            <article class="vs-map-node vs-node-bl" data-zone="mission">
+                <div class="vs-node-planet">
+                    <img class="vs-node-img" src="../配图/探索素材/配镜流程星球.jpg" alt="配镜流程探索站">
+                </div>
+                <h3 class="vs-node-name">配镜流程探索站</h3>
+                <p class="vs-node-desc">了解配镜全过程，科学配镜不迷路</p>
+                <button class="vs-node-btn" type="button" onclick="document.getElementById('missionZone').scrollIntoView({behavior:'smooth'})">进入探索 →</button>
+            </article>
+
+            <article class="vs-map-node vs-node-br" data-zone="assistant" id="lensAssistantCard">
+                <div class="vs-node-planet">
+                    <img class="vs-node-img" src="../配图/探索素材/配镜记录星球.jpg" alt="我的配镜小助手">
+                </div>
+                <h3 class="vs-node-name">我的配镜小助手</h3>
+                <p class="vs-node-desc">记录每次配镜结果，守护视力成长</p>
+                <button class="vs-node-btn" type="button">进入探索 →</button>
+            </article>
+            </div>
+
+            <!-- 小光仔引导（入口） -->
+            <div class="vs-map-guide">
+                
+                <div class="vs-map-guide-bubble">欢迎来到视界探索站！<br>点击星球开启冒险吧～</div>
+            </div>
+        </section>
+    </section>
+
+        <!-- ============================================
+             近视认知区：6个误区星球探索
+             ============================================ -->
+        <section class="myopia-zone" id="myopiaZone" aria-label="近视认知区">
+            <!-- 小光仔知识助手 -->
+            <div class="mz-assistant" id="mzAssistant" aria-hidden="true">
+                <img class="mz-assistant-img" src="../配图/探索素材/小光仔放大镜.png" alt="小光仔知识助手">
+                <div class="mz-assistant-bubble" id="mzBubble">准备好了吗？<br>我们来破解第一个近视误区吧！✨</div>
+            </div>
+
+            <!-- 标题区 -->
+            <div class="mz-header">
+                <div class="mz-title-group">
+                    <a href="../../01-首页/代码/首页.html" class="subpage-back vs-back-home">← 返回首页</a>
+                    <h2 class="mz-title">🔭 近视认知区</h2>
+                    <p class="mz-subtitle">破解6个常见近视误区，看看你到底知道多少！</p>
+                </div>
+                <div class="mz-energy-badge">
+                    <span class="mz-energy-icon">⚡</span>
+                    <span class="mz-energy-label">探索能量</span>
+                    <span class="mz-energy-value" id="mzEnergy">+0</span>
+                </div>
+            </div>
+
+            <!-- 探索进度 -->
+            <div class="mz-progress-bar">
+                <div class="mz-progress-track">
+                    <div class="mz-progress-fill" id="mzProgressFill" style="width:0%"></div>
+                    <div class="mz-progress-nodes" id="mzProgressNodes"><span class="mz-node"></span><span class="mz-node"></span><span class="mz-node"></span><span class="mz-node"></span><span class="mz-node"></span><span class="mz-node"></span></div>
+                </div>
+                <div class="mz-progress-text">
+                    <span>近视知识探索</span>
+                    <span>已破解 <b id="mzSolvedCount">0</b> / 6 个误区</span>
+                </div>
+            </div>
+
+            <!-- 6个误区星球轨道 -->
+            <div class="mz-orbit" id="mzOrbit">
+                <div class="mz-orbit-line"></div>
+                <div class="mz-planets" id="mzPlanets"><div class="mz-planet" data-id="1"><div class="mz-planet-head"><div class="mz-planet-num">01</div><div class="mz-planet-icon">👓</div><div class="mz-planet-title">戴眼镜会加重近视</div><div class="mz-planet-status">点击探索 →</div></div><div class="mz-planet-body" hidden=""><div class="mz-quiz"><p class="mz-quiz-question">你觉得这是真的吗？</p><div class="mz-quiz-btns"><button class="mz-quiz-btn mz-quiz-true" type="button" data-answer="true">✓ 我觉得是真的</button><button class="mz-quiz-btn mz-quiz-false" type="button" data-answer="false">✕ 我觉得是假的</button></div><div class="mz-quiz-feedback" hidden=""></div></div><div class="mz-truth" hidden=""><div class="mz-truth-block"><div class="mz-truth-label">🔎 真相揭晓</div><p class="mz-truth-text"></p></div><div class="mz-tip-block"><div class="mz-tip-label">💡 小光仔提醒</div><p class="mz-tip-text"></p></div><div class="mz-reward"><span class="mz-reward-check">✓ 已破解</span><span class="mz-reward-energy">+10 探索能量</span></div><button class="mz-continue-btn" type="button">收起 ↑</button></div></div></div><div class="mz-planet" data-id="2"><div class="mz-planet-head"><div class="mz-planet-num">02</div><div class="mz-planet-icon">📱</div><div class="mz-planet-title">只有玩电子产品才会导致近视</div><div class="mz-planet-status">点击探索 →</div></div><div class="mz-planet-body" hidden=""><div class="mz-quiz"><p class="mz-quiz-question">你觉得这是真的吗？</p><div class="mz-quiz-btns"><button class="mz-quiz-btn mz-quiz-true" type="button" data-answer="true">✓ 我觉得是真的</button><button class="mz-quiz-btn mz-quiz-false" type="button" data-answer="false">✕ 我觉得是假的</button></div><div class="mz-quiz-feedback" hidden=""></div></div><div class="mz-truth" hidden=""><div class="mz-truth-block"><div class="mz-truth-label">🔎 真相揭晓</div><p class="mz-truth-text"></p></div><div class="mz-tip-block"><div class="mz-tip-label">💡 小光仔提醒</div><p class="mz-tip-text"></p></div><div class="mz-reward"><span class="mz-reward-check">✓ 已破解</span><span class="mz-reward-energy">+10 探索能量</span></div><button class="mz-continue-btn" type="button">收起 ↑</button></div></div></div><div class="mz-planet" data-id="3"><div class="mz-planet-head"><div class="mz-planet-num">03</div><div class="mz-planet-icon">⚠️</div><div class="mz-planet-title">近视可以被"治愈"</div><div class="mz-planet-status">点击探索 →</div></div><div class="mz-planet-body" hidden=""><div class="mz-quiz"><p class="mz-quiz-question">你觉得这是真的吗？</p><div class="mz-quiz-btns"><button class="mz-quiz-btn mz-quiz-true" type="button" data-answer="true">✓ 我觉得是真的</button><button class="mz-quiz-btn mz-quiz-false" type="button" data-answer="false">✕ 我觉得是假的</button></div><div class="mz-quiz-feedback" hidden=""></div></div><div class="mz-truth" hidden=""><div class="mz-truth-block"><div class="mz-truth-label">🔎 真相揭晓</div><p class="mz-truth-text"></p></div><div class="mz-tip-block"><div class="mz-tip-label">💡 小光仔提醒</div><p class="mz-tip-text"></p></div><div class="mz-reward"><span class="mz-reward-check">✓ 已破解</span><span class="mz-reward-energy">+10 探索能量</span></div><button class="mz-continue-btn" type="button">收起 ↑</button></div></div></div><div class="mz-planet" data-id="4"><div class="mz-planet-head"><div class="mz-planet-num">04</div><div class="mz-planet-icon">🛡️</div><div class="mz-planet-title">防蓝光眼镜或绿色屏幕能预防近视</div><div class="mz-planet-status">点击探索 →</div></div><div class="mz-planet-body" hidden=""><div class="mz-quiz"><p class="mz-quiz-question">你觉得这是真的吗？</p><div class="mz-quiz-btns"><button class="mz-quiz-btn mz-quiz-true" type="button" data-answer="true">✓ 我觉得是真的</button><button class="mz-quiz-btn mz-quiz-false" type="button" data-answer="false">✕ 我觉得是假的</button></div><div class="mz-quiz-feedback" hidden=""></div></div><div class="mz-truth" hidden=""><div class="mz-truth-block"><div class="mz-truth-label">🔎 真相揭晓</div><p class="mz-truth-text"></p></div><div class="mz-tip-block"><div class="mz-tip-label">💡 小光仔提醒</div><p class="mz-tip-text"></p></div><div class="mz-reward"><span class="mz-reward-check">✓ 已破解</span><span class="mz-reward-energy">+10 探索能量</span></div><button class="mz-continue-btn" type="button">收起 ↑</button></div></div></div><div class="mz-planet" data-id="5"><div class="mz-planet-head"><div class="mz-planet-num">05</div><div class="mz-planet-icon">📊</div><div class="mz-planet-title">近视度数没到600度就没事</div><div class="mz-planet-status">点击探索 →</div></div><div class="mz-planet-body" hidden=""><div class="mz-quiz"><p class="mz-quiz-question">你觉得这是真的吗？</p><div class="mz-quiz-btns"><button class="mz-quiz-btn mz-quiz-true" type="button" data-answer="true">✓ 我觉得是真的</button><button class="mz-quiz-btn mz-quiz-false" type="button" data-answer="false">✕ 我觉得是假的</button></div><div class="mz-quiz-feedback" hidden=""></div></div><div class="mz-truth" hidden=""><div class="mz-truth-block"><div class="mz-truth-label">🔎 真相揭晓</div><p class="mz-truth-text"></p></div><div class="mz-tip-block"><div class="mz-tip-label">💡 小光仔提醒</div><p class="mz-tip-text"></p></div><div class="mz-reward"><span class="mz-reward-check">✓ 已破解</span><span class="mz-reward-energy">+10 探索能量</span></div><button class="mz-continue-btn" type="button">收起 ↑</button></div></div></div><div class="mz-planet" data-id="6"><div class="mz-planet-head"><div class="mz-planet-num">06</div><div class="mz-planet-icon">👀</div><div class="mz-planet-title">做"眼球操"能恢复视力</div><div class="mz-planet-status">点击探索 →</div></div><div class="mz-planet-body" hidden=""><div class="mz-quiz"><p class="mz-quiz-question">你觉得这是真的吗？</p><div class="mz-quiz-btns"><button class="mz-quiz-btn mz-quiz-true" type="button" data-answer="true">✓ 我觉得是真的</button><button class="mz-quiz-btn mz-quiz-false" type="button" data-answer="false">✕ 我觉得是假的</button></div><div class="mz-quiz-feedback" hidden=""></div></div><div class="mz-truth" hidden=""><div class="mz-truth-block"><div class="mz-truth-label">🔎 真相揭晓</div><p class="mz-truth-text"></p></div><div class="mz-tip-block"><div class="mz-tip-label">💡 小光仔提醒</div><p class="mz-tip-text"></p></div><div class="mz-reward"><span class="mz-reward-check">✓ 已破解</span><span class="mz-reward-energy">+10 探索能量</span></div><button class="mz-continue-btn" type="button">收起 ↑</button></div></div></div></div>
+            </div>
+
+
+            <!-- 完成总结 -->
+            <div class="mz-summary" id="mzSummary" hidden="">
+                <div class="mz-summary-inner">
+                    <div class="mz-summary-celebrate">🎉 近视知识探险完成！</div>
+                    <p class="mz-summary-text">你已经成功破解：<b>06 / 06</b> 个近视误区</p>
+                    <p class="mz-summary-energy">获得：⭐ <b id="mzSummaryEnergy">60</b> 探索能量</p>
+                    <div class="mz-badge">
+                        <div class="mz-badge-icon">🏅</div>
+                        <div class="mz-badge-name">近视认知小达人</div>
+                    </div>
+                    <div class="mz-summary-btns">
+                        <button class="mz-summary-btn mz-retry-btn" type="button" id="mzRetryBtn">重新挑战</button>
+                        <button class="mz-summary-btn mz-back-btn" type="button" id="mzBackBtn">返回视界探索站</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+
+    <!-- ============================================
+         眼镜星球探索馆
+         ============================================ -->
+    <section class="glasses-planet" id="glassesPlanet" aria-label="眼镜星球大揭秘">
+        <a href="../../01-首页/代码/首页.html" class="subpage-back vs-back-home">← 返回首页</a>
+        <div class="gp-header">
+            <div class="gp-xgz">
+                <img src="../../公共资源/配图/小光仔全身.png" alt="小光仔">
+            </div>
+            <div class="gp-title-wrap">
+                <h2 class="gp-title">👓 眼镜星球大揭秘</h2>
+                <p class="gp-subtitle">跟着小光仔探索不同眼镜的秘密吧！</p>
+            </div>
+        </div>
+
+        <div class="gp-planets">
+            <!-- ========== 第一部分：镜片研究站 ========== -->
+            <article class="gp-planet gp-planet-lens" data-planet="lens">
+                <div class="gp-planet-orbit"></div>
+                <div class="gp-planet-body">
+                    <span class="gp-planet-emoji">🔬</span>
+                </div>
+                <h3 class="gp-planet-name">镜片研究站</h3>
+                <p class="gp-planet-desc">点击镜片星球，解锁材质秘密</p>
+                <div class="gp-lens-items">
+                    <div class="gp-lens-planet gp-lp-green" data-lens="resin">
+                        <div class="gp-lp-img-wrap">
+                            <img src="../配图/镜片/树脂镜片.jpg" alt="树脂镜片" class="gp-lp-img">
+                            <div class="gp-lp-glow"></div>
+                        </div>
+                        <span class="gp-lp-icon">🌱</span>
+                        <span class="gp-lp-name">树脂镜片</span>
+                        <span class="gp-lp-suit">适合：日常学习</span>
+                    </div>
+                    <div class="gp-lens-planet gp-lp-blue" data-lens="pc">
+                        <div class="gp-lp-img-wrap">
+                            <img src="../配图/镜片/PC镜片.jpg" alt="PC太空镜片" class="gp-lp-img">
+                            <div class="gp-lp-glow"></div>
+                        </div>
+                        <span class="gp-lp-icon">🚀</span>
+                        <span class="gp-lp-name">PC太空镜片</span>
+                        <span class="gp-lp-shield">🛡️</span>
+                        <span class="gp-lp-suit">适合：运动玩耍</span>
+                    </div>
+                    <div class="gp-lens-planet gp-lp-gray" data-lens="glass">
+                        <div class="gp-lp-img-wrap">
+                            <img src="../配图/镜片/玻璃镜片.jpg" alt="玻璃镜片" class="gp-lp-img">
+                            <div class="gp-lp-glow"></div>
+                        </div>
+                        <span class="gp-lp-icon">💎</span>
+                        <span class="gp-lp-name">玻璃镜片</span>
+                        <span class="gp-lp-suit">耐磨但较重</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- ========== 第二部分：镜架选择实验室 ========== -->
+            <article class="gp-planet gp-planet-frame" data-planet="frame">
+                <div class="gp-planet-orbit gp-orbit-2"></div>
+                <div class="gp-planet-body gp-body-gold">
+                    <span class="gp-planet-emoji">🕶</span>
+                </div>
+                <h3 class="gp-planet-name">镜架实验室</h3>
+                <p class="gp-planet-desc">点眼镜各部位，小光仔来讲解</p>
+
+                <!-- 3D 眼镜展示台 -->
+                <div class="gp-glasses-stage">
+                    <svg class="gp-glasses-svg" viewBox="0 0 260 130" xmlns="http://www.w3.org/2000/svg">
+                        <!-- 左镜圈 -->
+                        <ellipse class="gp-gg-part gp-gg-rim" data-part="rim" cx="75" cy="65" rx="55" ry="45" fill="rgba(120,180,255,0.25)" stroke="#a5e85a" stroke-width="3"></ellipse>
+                        <!-- 右镜圈 -->
+                        <ellipse class="gp-gg-part gp-gg-rim" data-part="rim" cx="185" cy="65" rx="55" ry="45" fill="rgba(120,180,255,0.25)" stroke="#a5e85a" stroke-width="3"></ellipse>
+                        <!-- 中梁 -->
+                        <rect class="gp-gg-part gp-gg-bridge" data-part="bridge" x="125" y="55" width="10" height="20" rx="3" fill="#FFD45A" stroke="#FFD45A" stroke-width="2"></rect>
+                        <!-- 左鼻托 -->
+                        <ellipse class="gp-gg-part gp-gg-nose" data-part="nose" cx="105" cy="95" rx="10" ry="6" fill="#FF9EC7" stroke="#FF9EC7" stroke-width="2"></ellipse>
+                        <!-- 右鼻托 -->
+                        <ellipse class="gp-gg-part gp-gg-nose" data-part="nose" cx="155" cy="95" rx="10" ry="6" fill="#FF9EC7" stroke="#FF9EC7" stroke-width="2"></ellipse>
+                        <!-- 左镜腿 -->
+                        <path class="gp-gg-part gp-gg-temple" data-part="temple" d="M20 50 L-5 38 L-5 30" fill="none" stroke="#7BE84A" stroke-width="5" stroke-linecap="round"></path>
+                        <!-- 右镜腿 -->
+                        <path class="gp-gg-part gp-gg-temple" data-part="temple" d="M240 50 L265 38 L265 30" fill="none" stroke="#7BE84A" stroke-width="5" stroke-linecap="round"></path>
+                    </svg>
+                    <!-- 小光仔放大镜提示 -->
+                    <div class="gp-gg-xgz">
+                        <img src="../../公共资源/配图/小光仔全身.png" alt="小光仔">
+                        <span class="gp-gg-magnifier">🔍</span>
+                    </div>
+                    <div class="gp-gg-tip" id="gpGgTip">点击眼镜上的发光部位吧～</div>
+                </div>
+
+                <div class="gp-frame-parts">
+                    <button class="gp-frame-btn" data-frame="rim">① 镜圈</button>
+                    <button class="gp-frame-btn" data-frame="bridge">② 中梁</button>
+                    <button class="gp-frame-btn" data-frame="nose">③ 鼻托</button>
+                    <button class="gp-frame-btn" data-frame="temple">④ 镜腿</button>
+                </div>
+            </article>
+
+            <!-- ========== 第三部分：我的专属眼镜推荐 ========== -->
+            <article class="gp-planet gp-planet-custom" data-planet="custom">
+                <div class="gp-planet-orbit gp-orbit-3"></div>
+                <div class="gp-planet-body gp-body-green">
+                    <span class="gp-planet-emoji">✨</span>
+                </div>
+                <h3 class="gp-planet-name">我的专属眼镜</h3>
+                <p class="gp-planet-desc">小光仔帮你找到适合你的眼镜！</p>
+
+                <!-- 步骤1：度数 -->
+                <div class="gp-step">
+                    <span class="gp-step-num">1</span>
+                    <span class="gp-step-label">我的近视度数</span>
+                </div>
+                <div class="gp-option-group" data-step="degree">
+                    <label class="gp-opt"><input type="radio" name="gpDegree" value="low"><span>200度以内</span></label>
+                    <label class="gp-opt"><input type="radio" name="gpDegree" value="mid"><span>200-400度</span></label>
+                    <label class="gp-opt"><input type="radio" name="gpDegree" value="high"><span>400-600度</span></label>
+                    <label class="gp-opt"><input type="radio" name="gpDegree" value="ultra"><span>600度以上</span></label>
+                </div>
+
+                <!-- 步骤2：使用场景 -->
+                <div class="gp-step">
+                    <span class="gp-step-num">2</span>
+                    <span class="gp-step-label">主要使用场景</span>
+                </div>
+                <div class="gp-option-group" data-step="scene">
+                    <label class="gp-opt"><input type="radio" name="gpScene" value="study"><span>📚 学习</span></label>
+                    <label class="gp-opt"><input type="radio" name="gpScene" value="sport"><span>🏃 运动</span></label>
+                    <label class="gp-opt"><input type="radio" name="gpScene" value="screen"><span>🎮 长时间用电子</span></label>
+                </div>
+
+                <!-- 步骤3：脸型 -->
+                <div class="gp-step">
+                    <span class="gp-step-num">3</span>
+                    <span class="gp-step-label">我的脸型</span>
+                </div>
+                <div class="gp-option-group" data-step="face">
+                    <label class="gp-opt"><input type="radio" name="gpFace" value="round"><span>🙂 圆脸</span></label>
+                    <label class="gp-opt"><input type="radio" name="gpFace" value="square"><span>⬛ 方脸</span></label>
+                    <label class="gp-opt"><input type="radio" name="gpFace" value="long"><span>⬜ 长脸</span></label>
+                    <label class="gp-opt"><input type="radio" name="gpFace" value="diamond"><span>♦ 菱形脸</span></label>
+                </div>
+
+                <!-- 步骤4：生成报告 -->
+                <button class="gp-custom-btn" type="button" id="gpRecommendBtn">🎁 生成专属眼镜报告</button>
+                <div class="gp-result" id="gpResult" hidden=""></div>
+            </article>
+        </div>
+
+        <!-- 小光仔互动讲解 -->
+        <button class="gp-assistant" id="gpAssistant" type="button" aria-label="小光仔讲解">
+            <span class="gp-assistant-img">
+                <img src="../../公共资源/配图/小光仔全身.png" alt="小光仔">
+            </span>
+            <span class="gp-assistant-badge">💬</span>
+        </button>
+    </section>
+
+    <!-- 眼镜星球 · 知识弹窗 -->
+    <div class="gp-modal" id="gpModal" hidden="">
+        <div class="gp-modal-overlay" id="gpModalOverlay"></div>
+        <div class="gp-modal-box">
+            <button class="gp-modal-close" id="gpModalClose" type="button">×</button>
+            <div class="gp-modal-icon" id="gpModalIcon">🔬</div>
+            <h3 class="gp-modal-title" id="gpModalTitle">标题</h3>
+            <div class="gp-modal-img-wrap" id="gpModalImgWrap" hidden="">
+                <img class="gp-modal-img" id="gpModalImg" alt="">
+            </div>
+            <div class="gp-modal-features" id="gpModalFeatures" hidden=""></div>
+            <p class="gp-modal-text" id="gpModalText">内容</p>
+            <div class="gp-modal-suit" id="gpModalSuit" hidden=""></div>
+            <div class="gp-modal-xgz">
+                <img src="../../公共资源/配图/小光仔全身.png" alt="小光仔">
+                <span class="gp-modal-tip" id="gpModalTip">小光仔陪你一起探索～</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 小光仔讲解对话框 -->
+    <div class="gp-chat" id="gpChat" hidden="">
+        <div class="gp-chat-overlay" id="gpChatOverlay"></div>
+        <div class="gp-chat-box">
+            <button class="gp-chat-close" id="gpChatClose" type="button">×</button>
+            <div class="gp-chat-xgz">
+                <img src="../../公共资源/配图/小光仔全身.png" alt="小光仔">
+            </div>
+            <div class="gp-chat-bubble" id="gpChatBubble">
+                嘿！你知道吗？<br>镜片不是越贵越好，<br>选择适合自己的才最重要哦！
+            </div>
+            <div class="gp-chat-questions">
+                <button class="gp-q-btn" data-q="student">什么镜片适合学生？</button>
+                <button class="gp-q-btn" data-q="high">高度近视怎么办？</button>
+                <button class="gp-q-btn" data-q="frame">什么镜架最舒服？</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         配镜星际任务站
+         ============================================ -->
+    <section class="mission-zone" id="missionZone" aria-label="配镜星际任务站">
+        <!-- 标题 -->
+        <div class="mz-header">
+            <div class="mz-title-wrap">
+                <a href="../../01-首页/代码/首页.html" class="subpage-back vs-back-home">← 返回首页</a>
+                <h2 class="mz-title">👓 配镜星际任务站</h2>
+                <p class="mz-subtitle">小光仔带你完成一次真实配镜冒险</p>
+            </div>
+            <!-- 进度 -->
+            <div class="mz-progress">
+                <span class="mz-progress-label">配镜任务进度</span>
+                <div class="mz-stars" id="mzStars">
+                    <span class="mz-star">☆</span>
+                    <span class="mz-star">☆</span>
+                    <span class="mz-star">☆</span>
+                    <span class="mz-star">☆</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 配镜动画视频 -->
+        <div class="mz-video-section">
+            <h3 class="mz-video-title">🎬 小光仔的配镜冒险</h3>
+            <p class="mz-video-desc">看看一副眼镜是怎样"诞生"的！</p>
+            <div class="mz-video-wrap" id="mzVideoWrap">
+                <video class="mz-video" id="glassesFlowVideo" preload="none" playsinline>
+                    <source src="../视频/配镜流程动画.mp4" type="video/mp4">
+                </video>
+                <div class="mz-video-controls" id="mzVideoControls">
+                    <button class="mz-video-control" id="mzVideoBack" type="button">← 返回任务地图</button>
+                    <button class="mz-video-control" id="mzVideoMute" type="button" aria-pressed="false">🔊 静音</button>
+                </div>
+                <div class="mz-video-overlay" id="mzVideoOverlay">
+                    <div class="mz-video-poster"></div>
+                    <button class="mz-play-btn" id="mzPlayBtn" type="button">
+                        <span class="mz-play-icon">▶</span>
+                        <span class="mz-play-text">开始配镜冒险</span>
+                    </button>
+                </div>
+            </div>
+            <p class="mz-video-hint">✨ 看完动画，一起来了解配镜流程！</p>
+        </div>
+
+        <!-- 星空地图 -->
+        <div class="mz-map" id="mzMap">
+            <!-- 发光轨道（横向连接） -->
+            <div class="mz-orbit-line" id="mzOrbitLine"></div>
+
+            <!-- 任务卡 + 小光仔 横向排列 -->
+            <div class="mz-track">
+                <!-- 小光仔向导（起点） -->
+                <div class="mz-guide" id="mzGuide">
+                    <img src="../../公共资源/配图/小光仔全身.png" alt="小光仔">
+                    <div class="mz-guide-bubble" id="mzGuideBubble">小光仔：<br>准备开始配镜冒险啦！</div>
+                </div>
+
+                <!-- 第一站 -->
+                <div class="mz-planet mz-p1" data-step="1">
+                    <span class="mz-planet-num">1</span>
+                    <div class="mz-planet-core">
+                        <span class="mz-planet-icon">🔍</span>
+                    </div>
+                    <span class="mz-planet-label">眼睛检查站</span>
+                    <span class="mz-planet-intro">了解你的眼睛数据</span>
+                </div>
+
+                <span class="mz-arrow">↓</span>
+
+                <!-- 第二站 -->
+                <div class="mz-planet mz-p2" data-step="2">
+                    <span class="mz-planet-num">2</span>
+                    <div class="mz-planet-core mz-core-blue">
+                        <span class="mz-planet-icon">🤖</span>
+                    </div>
+                    <span class="mz-planet-label">智能验光舱</span>
+                    <span class="mz-planet-intro">获取初步度数</span>
+                </div>
+
+                <span class="mz-arrow">↓</span>
+
+                <!-- 第三站 -->
+                <div class="mz-planet mz-p3" data-step="3">
+                    <span class="mz-planet-num">3</span>
+                    <div class="mz-planet-core mz-core-gold">
+                        <span class="mz-planet-icon">🎯</span>
+                    </div>
+                    <span class="mz-planet-label">精准调试实验室</span>
+                    <span class="mz-planet-intro">找到最舒适方案</span>
+                </div>
+
+                <span class="mz-arrow">↓</span>
+
+                <!-- 第四站 -->
+                <div class="mz-planet mz-p4" data-step="4">
+                    <span class="mz-planet-num">4</span>
+                    <div class="mz-planet-core mz-core-green">
+                        <span class="mz-planet-icon">👓</span>
+                    </div>
+                    <span class="mz-planet-label">试戴空间</span>
+                    <span class="mz-planet-intro">生成专属处方</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 配镜任务 · 详情弹窗 -->
+    <div class="mz-modal" id="mzModal" hidden="">
+        <div class="mz-modal-overlay" id="mzModalOverlay"></div>
+        <div class="mz-modal-box">
+            <button class="mz-modal-close" id="mzModalClose" type="button">×</button>
+            <div class="mz-modal-head">
+                <span class="mz-modal-icon" id="mzModalIcon">🔍</span>
+                <div>
+                    <h3 class="mz-modal-title" id="mzModalTitle">标题</h3>
+                    <p class="mz-modal-eyebrow" id="mzModalEyebrow">第1站</p>
+                </div>
+            </div>
+            <p class="mz-modal-xgz-say" id="mzModalXgzSay">小光仔说…</p>
+            <div class="mz-modal-body" id="mzModalBody">内容</div>
+            <div class="mz-modal-foot">
+                <button class="mz-modal-btn mz-prev" id="mzPrevBtn" type="button">← 上一站</button>
+                <button class="mz-modal-btn mz-done" id="mzDoneBtn" type="button">✓ 完成本站</button>
+                <button class="mz-modal-btn mz-next" id="mzNextBtn" type="button">下一站 →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 徽章奖励弹窗 -->
+    <div class="mz-badge" id="mzBadge" hidden="">
+        <div class="mz-badge-overlay" id="mzBadgeOverlay"></div>
+        <div class="mz-badge-box">
+            <div class="mz-badge-glow"></div>
+            <div class="mz-badge-emoji">🏆</div>
+            <h3 class="mz-badge-title">获得专业配镜小达人徽章</h3>
+            <p class="mz-badge-desc">你已经了解完整的配镜流程啦！<br>快去记录你的专属配镜信息吧～</p>
+            <div class="mz-badge-actions">
+                <button class="mz-badge-btn" type="button" id="mzBadgeRecord">📋 去配镜小助手记录</button>
+                <button class="mz-badge-btn mz-badge-close" type="button" id="mzBadgeClose">太棒了！</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         3. 趣味探索区 + 探索档案
+         ============================================ -->
+
+    </div><!-- /.vs-wrapper -->
+
+    <!-- ============================================
+         配镜小助手 · 配镜记录弹窗
+         ============================================ -->
+    <div class="lens-modal" id="lensModal" hidden="">
+        <div class="lens-overlay" id="lensOverlay"></div>
+        <div class="lens-box">
+            <button class="lens-close" id="lensClose" type="button" aria-label="关闭">×</button>
+
+            <!-- 小光仔助手 -->
+            <div class="lens-xgz" id="lensXgz">
+                <img src="../../公共资源/配图/小光仔全身.png" alt="小光仔">
+            </div>
+            <div class="lens-greeting">
+                你好！我是小光仔～<br>我来帮你记录每一次配镜变化哦✨
+            </div>
+
+            <!-- 配镜记录表单 -->
+            <form class="lens-form" id="lensForm">
+                <div class="lens-field">
+                    <label class="lens-label">📅 配镜日期</label>
+                    <input type="date" id="lensDate" class="lens-input" required="">
+                </div>
+
+                <div class="lens-eyes">
+                    <div class="lens-eye">
+                        <label class="lens-eye-title">👁 左眼</label>
+                        <div class="lens-triplet">
+                            <div class="lens-sub">
+                                <label>SPH</label>
+                                <input type="number" step="0.25" id="lensLSph" class="lens-input" placeholder="-3.00">
+                            </div>
+                            <div class="lens-sub">
+                                <label>CYL</label>
+                                <input type="number" step="0.25" id="lensLCyl" class="lens-input" placeholder="-0.50">
+                            </div>
+                            <div class="lens-sub">
+                                <label>AXIS</label>
+                                <input type="number" id="lensLAxis" class="lens-input" placeholder="180">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lens-eye">
+                        <label class="lens-eye-title">👁 右眼</label>
+                        <div class="lens-triplet">
+                            <div class="lens-sub">
+                                <label>SPH</label>
+                                <input type="number" step="0.25" id="lensRSph" class="lens-input" placeholder="-3.00">
+                            </div>
+                            <div class="lens-sub">
+                                <label>CYL</label>
+                                <input type="number" step="0.25" id="lensRCyl" class="lens-input" placeholder="-0.50">
+                            </div>
+                            <div class="lens-sub">
+                                <label>AXIS</label>
+                                <input type="number" id="lensRAxis" class="lens-input" placeholder="180">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lens-field">
+                    <label class="lens-label">👓 镜片类型</label>
+                    <select id="lensLensType" class="lens-input" required="">
+                        <option value="">请选择镜片类型</option>
+                        <option value="防蓝光镜片">防蓝光镜片</option>
+                        <option value="普通镜片">普通镜片</option>
+                        <option value="离焦镜片">离焦镜片</option>
+                    </select>
+                </div>
+
+                <div class="lens-field">
+                    <label class="lens-label">🏥 配镜地点</label>
+                    <input type="text" id="lensStore" class="lens-input" placeholder="如：XX眼科医院 / XX眼镜店">
+                </div>
+
+                <div class="lens-field">
+                    <label class="lens-label">📝 小备注</label>
+                    <textarea id="lensNote" class="lens-input lens-textarea" rows="2" placeholder="记录配镜感受或注意事项..."></textarea>
+                </div>
+
+                <button type="submit" class="lens-submit">💾 保存记录</button>
+            </form>
+
+            <!-- 我的视界档案卡 -->
+            <div class="lens-archive" id="lensArchive">
+                <h3 class="lens-archive-title">📇 我的视界档案卡</h3>
+                <div class="lens-archive-empty" id="lensArchiveEmpty">还没有配镜记录哦，快来添加第一条吧～</div>
+                <div class="lens-archive-list" id="lensArchiveList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 保存成功动画提示 -->
+    <div class="lens-toast" id="lensToast" hidden="">
+        <div class="lens-toast-xgz">
+            <img src="../../公共资源/配图/小光仔全身.png" alt="小光仔">
+        </div>
+        <div class="lens-toast-text">记录成功！小光仔会帮你守护视界✨</div>
+    </div>
+
+    <!-- ============================================
+         4. 剧情入口对话框
+         ============================================ -->
+    <div class="amap-story-modal" id="amapStoryModal" style="display: none;">
+        <div class="amap-story-overlay"></div>
+        <div class="amap-story-box">
+            <div class="amap-story-emoji">🎈</div>
+            <div class="amap-story-xgz">
+                <img src="../../公共资源/配图/小光仔全身.png" alt="小光仔">
+            </div>
+            <div class="amap-story-bubble">
+                <div class="amap-story-line" id="amapStoryLine">嘿！欢迎来到视界探索站！</div>
+                <div class="amap-story-dots"><span></span><span></span><span></span></div>
+            </div>
+            <div class="amap-story-btn-wrap">
+                <button class="amap-btn-start" id="amapStartBtn">开始冒险！ →</button>
+            </div>
+            <div class="amap-story-skip" id="amapStorySkip">跳过</div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         5. 飘字反馈层
+         ============================================ -->
+    <div class="amap-float-layer" id="amapFloatLayer"></div>
+
+    <!-- ============================================
+         6. 实验弹窗
+         ============================================ -->
+    <div class="vlab-modal" id="vlabModal" hidden="">
+        <div class="vlab-modal-overlay" data-close-modal=""></div>
+        <div class="vlab-modal-box" id="vlabModalBox">
+            <button class="vlab-modal-close" data-close-modal="">✕</button>
+            <div class="vlab-modal-body" id="vlabModalBody"></div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         7. 全部完成奖励弹窗
+         ============================================ -->
+    <div class="vlab-modal vlab-modal-reward" id="vlabRewardModal" hidden="">
+        <div class="vlab-modal-overlay" data-close-reward=""></div>
+        <div class="vlab-modal-box vlab-modal-box-reward">
+            <div class="vlab-reward-confetti">🎉</div>
+            <h2 class="vlab-reward-title">恭喜你！</h2>
+            <p class="vlab-reward-desc">你已经完成视界探索站全部探索！</p>
+            <div class="vlab-reward-badge">🏆 视界探索员</div>
+            <p class="vlab-reward-energy">获得 <b id="vlabRewardEnergy">50</b> 探索能量</p>
+            <div class="vlab-reward-btns">
+                <button class="vlab-btn-primary" id="vlabReplayBtn">🔄 再玩一次</button>
+                <button class="vlab-btn-outline" id="vlabRewardHomeBtn">🏠 返回首页</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         Footer
+         ============================================ -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <img src="../../公共资源/配图/瞳学星球标志.jpg" alt="瞳学星球" class="footer-logo">
+                <div class="footer-text">
+                    <h4>瞳学星球</h4>
+                    <p>守护每个孩子的明亮视界</p>
+                </div>
+            </div>
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h5>探索内容</h5>
+                    <a href="视界探索站.html">视界实验室</a>
+                    <a href="../../02-眼球大冒险/代码/小游戏中心.html">眼球大冒险</a>
+                    <a href="../../05-拓展功能/代码/护眼问答.html">护眼问答机</a>
+                </div>
+                <div class="footer-col">
+                    <h5>趣味挑战</h5>
+                    <a href="../../05-拓展功能/代码/护眼打卡.html">护眼小英雄</a>
+                    <a href="../../04-天书解码器/代码/天书解码器.html">天书解码器</a>
+                    <a href="#">成就徽章</a>
+                </div>
+                <div class="footer-col">
+                    <h5>关于我们</h5>
+                    <a href="#">平台介绍</a>
+                    <a href="#">联系我们</a>
+                    <a href="#">隐私政策</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 瞳学星球 · 专为青少年打造</p>
+                <p style="margin-top:6px;font-size:12px;opacity:0.7;">验光单需要由专业人员结合实际检查结果进行判断，本工具仅用于科普，不用于诊断或配镜。</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../公共资源/代码/公共交互.js"></script>
+    <script src="视界探索站交互.js"></script>
+
+
+
+
+
+
+</body></html>

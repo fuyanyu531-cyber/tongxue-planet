@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>护眼小英雄 · 瞳学星球 | 每日护眼任务打卡</title>
+    <link rel="stylesheet" href="../../公共资源/代码/公共样式.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="护眼打卡样式.css">
+</head>
+<body data-original-page="hero.html" class="subpage theme-orange">
+    <div class="hero-stars" aria-hidden="true">
+        <span class="hero-star s1" style="top:10%;left:15%"></span>
+        <span class="hero-star s2" style="top:20%;left:80%"></span>
+        <span class="hero-star s1" style="top:35%;left:40%"></span>
+        <span class="hero-star s1" style="top:50%;left:25%"></span>
+        <span class="hero-star s2" style="top:65%;left:88%"></span>
+        <span class="hero-star s1" style="top:75%;left:55%"></span>
+        <span class="hero-star s1" style="top:28%;left:92%"></span>
+        <span class="hero-star s2" style="top:88%;left:35%"></span>
+        <span class="hero-star s1" style="top:45%;left:8%"></span>
+        <span class="hero-star s1" style="top:58%;left:62%"></span>
+    </div>
+
+    <!-- ============================================
+         1. 顶部导航栏
+         ============================================ -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="../../公共资源/配图/瞳学星球标志.jpg" alt="瞳学星球 Logo" class="logo-img">
+                <div class="logo-text">
+                    <h1 class="logo-title">瞳学星球</h1>
+                    <p class="logo-subtitle">近视防控科普与矫正指南</p>
+                </div>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="../../01-首页/代码/首页.html" class="nav-link" data-page="index">首页</a></li>
+                    <li><a href="../../02-眼球大冒险/代码/眼球大冒险.html" class="nav-link" data-page="eyeball-adventure">眼球大冒险</a></li>
+                    <li><a href="../../03-视界探索站/代码/视界探索站.html" class="nav-link" data-page="vision-exploration">视界探索站</a></li>
+                    <li><a href="../../04-天书解码器/代码/天书解码器.html" class="nav-link" data-page="decoder">天书解码器</a></li>
+                    <li><a href="护眼打卡.html" class="nav-link active" data-page="hero">护眼小英雄</a></li>
+                    <li><a href="护眼问答.html" class="nav-link" data-page="qa">护眼问答机</a></li>
+                </ul>
+            </nav>
+            <div class="nav-right">
+                <button class="btn-voice">
+                    <span class="voice-icon">🔊</span>
+                    语音朗读
+                </button>
+                <div class="user-avatar" title="用户头像">
+                    <span class="avatar-emoji">👧</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================
+         2. Banner + 小光仔向导
+         ============================================ -->
+    <section class="hero-page-hero">
+        <div class="hero-page-inner">
+            <div class="hero-page-text">
+                <a href="../../01-首页/代码/首页.html" class="subpage-back">← 返回首页</a>
+                <h1 class="hero-page-title">🌟 护眼小英雄</h1>
+                <p class="hero-page-subtitle">完成每日护眼任务，累积积分，解锁专属勋章！</p>
+                <div class="hero-page-tip">
+                    💡 小提示：每天坚持完成 5 个任务，你就是真正的护眼小英雄哦！
+                </div>
+            </div>
+            <div class="hero-page-guide">
+                <div class="hero-guide-img-wrap">
+                    <img src="../../公共资源/配图/小光仔全身.png" alt="小光仔" class="hero-guide-xgz">
+                </div>
+                <div class="hero-guide-bubble">
+                    嗨！我是小光仔～<br>
+                    今天我们一起来完成<b> 5 个护眼小任务</b>吧！<br>
+                    每完成一个都能获得<b> 10 积分</b>，加油！💪
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         3. 主内容：状态面板 + 任务列表 + 勋章墙
+         ============================================ -->
+    <main class="subpage-container">
+
+        <!-- ---- 顶部状态条：积分 / 进度 / 连续打卡 ---- -->
+        <section class="hero-stats-row">
+            <div class="hero-stat-card stat-points">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-info">
+                    <div class="stat-label">累计积分</div>
+                    <div class="stat-value" id="totalPoints">0</div>
+                </div>
+            </div>
+            <div class="hero-stat-card stat-progress">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-info">
+                    <div class="stat-label">今日进度</div>
+                    <div class="stat-value"><span id="todayDone">0</span> / <span id="todayTotal">5</span></div>
+                </div>
+                <div class="stat-progress-bar">
+                    <div class="stat-progress-fill" id="todayProgressFill" style="width:0%"></div>
+                </div>
+            </div>
+            <div class="hero-stat-card stat-streak">
+                <div class="stat-icon">🔥</div>
+                <div class="stat-info">
+                    <div class="stat-label">连续打卡</div>
+                    <div class="stat-value"><span id="streakDays">0</span> 天</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ---- 今日护眼任务 ---- -->
+        <section class="hero-section">
+            <h2 class="hero-section-title">
+                <span class="title-deco">📋</span>
+                今日护眼任务
+                <span class="title-helper">每完成一个任务可获得 10 积分</span>
+            </h2>
+
+            <div class="hero-tasks-grid" id="tasksGrid">
+                <!-- 任务 1 -->
+                <div class="hero-task-card" data-task-id="outdoor">
+                    <div class="task-card-head">
+                        <div class="task-icon-wrap icon-green">
+                            <span class="task-icon">🌳</span>
+                        </div>
+                        <div class="task-point-badge">+10</div>
+                    </div>
+                    <h3 class="task-title">户外活动 2 小时</h3>
+                    <p class="task-desc">到阳光下奔跑、玩耍，自然光能让眼睛更健康！</p>
+                    <button class="task-action-btn btn-green" data-action="complete">
+                        <span class="btn-text">完成任务</span>
+                        <span class="btn-check">✓ 已完成</span>
+                    </button>
+                </div>
+
+                <!-- 任务 2 -->
+                <div class="hero-task-card" data-task-id="rule202020">
+                    <div class="task-card-head">
+                        <div class="task-icon-wrap icon-blue">
+                            <span class="task-icon">👀</span>
+                        </div>
+                        <div class="task-point-badge">+10</div>
+                    </div>
+                    <h3 class="task-title">遵守 20-20-20 规则</h3>
+                    <p class="task-desc">每用眼 20 分钟，看 20 英尺（约 6 米）外的物体 20 秒。</p>
+                    <button class="task-action-btn btn-blue" data-action="complete">
+                        <span class="btn-text">完成任务</span>
+                        <span class="btn-check">✓ 已完成</span>
+                    </button>
+                </div>
+
+                <!-- 任务 3 -->
+                <div class="hero-task-card" data-task-id="posture">
+                    <div class="task-card-head">
+                        <div class="task-icon-wrap icon-purple">
+                            <span class="task-icon">📖</span>
+                        </div>
+                        <div class="task-point-badge">+10</div>
+                    </div>
+                    <h3 class="task-title">保持正确读写姿势</h3>
+                    <p class="task-desc">记住"一拳一尺一寸"：胸离桌一拳，眼离书一尺，手离笔尖一寸。</p>
+                    <button class="task-action-btn btn-purple" data-action="complete">
+                        <span class="btn-text">完成任务</span>
+                        <span class="btn-check">✓ 已完成</span>
+                    </button>
+                </div>
+
+                <!-- 任务 4 -->
+                <div class="hero-task-card" data-task-id="sleep">
+                    <div class="task-card-head">
+                        <div class="task-icon-wrap icon-teal">
+                            <span class="task-icon">😴</span>
+                        </div>
+                        <div class="task-point-badge">+10</div>
+                    </div>
+                    <h3 class="task-title">保证充足睡眠</h3>
+                    <p class="task-desc">小学生每天睡够 10 小时，初中生 9 小时，让眼睛好好休息～</p>
+                    <button class="task-action-btn btn-teal" data-action="complete">
+                        <span class="btn-text">完成任务</span>
+                        <span class="btn-check">✓ 已完成</span>
+                    </button>
+                </div>
+
+                <!-- 任务 5 -->
+                <div class="hero-task-card" data-task-id="screen">
+                    <div class="task-card-head">
+                        <div class="task-icon-wrap icon-orange">
+                            <span class="task-icon">📱</span>
+                        </div>
+                        <div class="task-point-badge">+10</div>
+                    </div>
+                    <h3 class="task-title">控制电子屏幕时间</h3>
+                    <p class="task-desc">每次看屏幕不超过 20 分钟，每天累计不超过 1 小时哦！</p>
+                    <button class="task-action-btn btn-orange" data-action="complete">
+                        <span class="btn-text">完成任务</span>
+                        <span class="btn-check">✓ 已完成</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ---- 勋章墙 ---- -->
+        <section class="hero-section">
+            <h2 class="hero-section-title">
+                <span class="title-deco">🏆</span>
+                我的护眼勋章
+                <span class="title-helper">完成任务累计积分即可解锁</span>
+            </h2>
+
+            <div class="hero-badges-grid" id="badgesGrid">
+                <!-- 勋章 1：护眼新星 -->
+                <div class="hero-badge-card" data-badge="star" data-points="30">
+                    <div class="badge-medal medal-bronze">
+                        <span class="medal-emoji">⭐</span>
+                    </div>
+                    <h4 class="badge-name">护眼新星</h4>
+                    <p class="badge-cond">累计积分 ≥ 30 解锁</p>
+                    <div class="badge-status">
+                        <span class="status-locked">🔒 未解锁</span>
+                        <span class="status-unlocked">🎉 已获得</span>
+                    </div>
+                </div>
+
+                <!-- 勋章 2：坚持小达人 -->
+                <div class="hero-badge-card" data-badge="persist" data-points="100">
+                    <div class="badge-medal medal-silver">
+                        <span class="medal-emoji">🔥</span>
+                    </div>
+                    <h4 class="badge-name">坚持小达人</h4>
+                    <p class="badge-cond">累计积分 ≥ 100 解锁</p>
+                    <div class="badge-status">
+                        <span class="status-locked">🔒 未解锁</span>
+                        <span class="status-unlocked">🎉 已获得</span>
+                    </div>
+                </div>
+
+                <!-- 勋章 3：护眼英雄 -->
+                <div class="hero-badge-card" data-badge="hero" data-points="210">
+                    <div class="badge-medal medal-gold">
+                        <span class="medal-emoji">🦸</span>
+                    </div>
+                    <h4 class="badge-name">护眼英雄</h4>
+                    <p class="badge-cond">累计积分 ≥ 210 解锁</p>
+                    <div class="badge-status">
+                        <span class="status-locked">🔒 未解锁</span>
+                        <span class="status-unlocked">🎉 已获得</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ---- 底部操作 ---- -->
+        <section class="hero-bottom-row">
+            <button class="btn-theme btn-orange" id="heroBackHome" onclick="location.href='../../01-首页/代码/首页.html'">
+                🏠 返回首页
+            </button>
+            <button class="btn-theme btn-outline-orange" id="heroResetBtn"
+                    data-toast="🔄 已重置今日任务（仅演示）">
+                🔄 重置今日任务
+            </button>
+        </section>
+
+    </main>
+
+    <!-- ============================================
+         庆祝动画浮层（完成任务时触发）
+         ============================================ -->
+    <div class="hero-celebrate-layer" id="celebrateLayer" aria-hidden="true"></div>
+
+    <!-- ============================================
+         勋章解锁弹窗
+         ============================================ -->
+    <div class="adv-modal hero-badge-modal" id="badgeModal" hidden>
+        <div class="adv-modal-mask" data-close-modal="1"></div>
+        <div class="adv-modal-box badge-modal-box">
+            <button class="adv-modal-close" data-close-modal="1" aria-label="关闭">×</button>
+            <div class="badge-modal-content">
+                <div class="badge-modal-glow"></div>
+                <div class="badge-modal-medal" id="badgeModalMedal">⭐</div>
+                <div class="badge-modal-title">🎊 恭喜解锁勋章！</div>
+                <div class="badge-modal-name" id="badgeModalName">护眼新星</div>
+                <div class="badge-modal-desc" id="badgeModalDesc">你已经迈出了护眼的第一步，加油！</div>
+                <button class="btn-theme btn-orange" data-close-modal="1">我知道啦！</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         Footer
+         ============================================ -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <img src="../../公共资源/配图/瞳学星球标志.jpg" alt="瞳学星球" class="footer-logo">
+                <div class="footer-text">
+                    <h4>瞳学星球</h4>
+                    <p>守护每个孩子的明亮视界</p>
+                </div>
+            </div>
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h5>探索内容</h5>
+                    <a href="../../02-眼球大冒险/代码/小游戏中心.html">眼球大冒险</a>
+                    <a href="护眼问答.html">护眼问答机</a>
+                    <a href="../../03-视界探索站/代码/视界探索站.html">视界实验室</a>
+                </div>
+                <div class="footer-col">
+                    <h5>趣味挑战</h5>
+                    <a href="护眼打卡.html">护眼小英雄</a>
+                    <a href="../../04-天书解码器/代码/天书解码器.html">天书解码器</a>
+                    <a href="#">成就徽章</a>
+                </div>
+                <div class="footer-col">
+                    <h5>关于我们</h5>
+                    <a href="#">平台介绍</a>
+                    <a href="#">联系我们</a>
+                    <a href="#">隐私政策</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 瞳学星球 · 专为青少年打造</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../公共资源/代码/公共交互.js"></script>
+</body>
+</html>

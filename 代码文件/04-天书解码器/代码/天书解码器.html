@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天书解码器 · 瞳学星球 | 验光单趣味解读工具</title>
+    <link rel="stylesheet" href="../../公共资源/代码/公共样式.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="天书解码器样式.css">
+  <link rel="stylesheet" href="../../公共资源/代码/系统外观.css">
+  <script defer src="../../公共资源/代码/系统导航.js"></script>
+  <link rel="stylesheet" href="../../公共资源/代码/学习空间.css">
+  <script defer src="../../公共资源/代码/学习空间.js"></script>
+</head>
+<body data-original-page="decoder.html" class="subpage theme-purple">
+    <div class="dec-stars" aria-hidden="true">
+        <span class="dec-star s1" style="top:8%;left:12%"></span>
+        <span class="dec-star s2" style="top:15%;left:78%"></span>
+        <span class="dec-star s1" style="top:32%;left:45%"></span>
+        <span class="dec-star s1" style="top:55%;left:22%"></span>
+        <span class="dec-star s2" style="top:68%;left:85%"></span>
+        <span class="dec-star s1" style="top:78%;left:60%"></span>
+        <span class="dec-star s1" style="top:25%;left:90%"></span>
+        <span class="dec-star s2" style="top:90%;left:30%"></span>
+        <span class="dec-star s1" style="top:42%;left:8%"></span>
+        <span class="dec-star s1" style="top:62%;left:50%"></span>
+    </div>
+
+    <!-- ============================================
+         1. 顶部导航栏（与全站一致）
+         ============================================ -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="../../公共资源/配图/瞳学星球标志.jpg" alt="瞳学星球 Logo" class="logo-img">
+                <div class="logo-text">
+                    <h1 class="logo-title">瞳学星球</h1>
+                    <p class="logo-subtitle">近视防控科普与矫正指南</p>
+                </div>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="../../01-首页/代码/首页.html" class="nav-link" data-page="index">首页</a></li>
+                    <li><a href="../../02-眼球大冒险/代码/眼球大冒险.html" class="nav-link" data-page="eyeball-adventure">眼球大冒险</a></li>
+                    <li><a href="../../03-视界探索站/代码/视界探索站.html" class="nav-link" data-page="vision-exploration">视界探索站</a></li>
+                    <li><a href="天书解码器.html" class="nav-link active" data-page="decoder">天书解码器</a></li>
+                    <li><a href="../../05-拓展功能/代码/护眼打卡.html" class="nav-link" data-page="hero">护眼小英雄</a></li>
+                    <li><a href="../../05-拓展功能/代码/护眼问答.html" class="nav-link" data-page="qa">护眼问答机</a></li>
+                </ul>
+            </nav>
+            <div class="nav-right">
+                <button class="btn-voice">
+                    <span class="voice-icon">🔊</span>
+                    语音朗读
+                </button>
+                <div class="user-avatar" title="用户头像">
+                    <span class="avatar-emoji">👧</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================
+         2. Banner 主标题
+         ============================================ -->
+    <section class="subpage-banner">
+        <div class="subpage-title-group">
+            <a href="../../01-首页/代码/首页.html" class="subpage-back">← 返回首页</a>
+            <h1 class="subpage-title">天书解码器 🔮</h1>
+            <p class="subpage-subtitle">验光单上的"神秘符号"，小光仔陪你一秒读懂！</p>
+        </div>
+    </section>
+
+    <!-- ============================================
+         3. 主内容
+         ============================================ -->
+    <main class="subpage-container">
+
+        <!-- ========== 小光仔向导气泡 + 插画 ========== -->
+        <div class="decoder-guide">
+            <div class="decoder-guide-img" aria-hidden="true">
+                <img src="../../公共资源/配图/小光仔全身.png" alt="小光仔" class="decoder-xiaoguangzai">
+            </div>
+            <div class="decoder-guide-bubble" id="decoderGuideBubble">
+                嗨！我是小光仔～<br>
+                验光单上有好多奇怪的 <b>R、L、SPH、-2.00</b> 字母和数字，<br>
+                看起来像"天书"📜 别怕！我们分三步把它看懂：<br>
+                👉 第一步 <b>认识符号</b>，第二步 <b>点开模拟单</b>，第三步 <b>当个小侦探</b>！
+            </div>
+        </div>
+
+        <!-- ========== 🔍 核心区：验光单解码器（拍照 + 手动输入） ========== -->
+        <section class="decoder-core">
+            <div class="decoder-core-head">
+                <h2 class="decoder-core-title">🔍 验光单解码器</h2>
+                <p class="decoder-core-sub">看不懂验光单？让小光仔帮你翻译！</p>
+            </div>
+
+            <div class="decoder-core-grid">
+
+                <!-- 卡片 1：📷 拍照 / 上传验光单 -->
+                <div class="decoder-core-card core-card-camera">
+                    <div class="core-card-head">
+                        <span class="core-card-icon">📷</span>
+                        <div>
+                            <h3 class="core-card-title">拍照 / 上传验光单</h3>
+                            <p class="core-card-subtitle-pill">拍一张验光单，让小光仔帮你找符号</p>
+                        </div>
+                    </div>
+
+                    <label class="core-upload-btn" for="decoderPhotoInput">
+                        <input type="file" id="decoderPhotoInput"
+                               accept="image/jpeg,image/png,image/webp"
+                               capture="environment" hidden>
+                        <span class="core-upload-icon">🖼️</span>
+                        <span class="core-upload-text">上传验光单</span>
+                    </label>
+
+                    <div class="core-photo-preview" id="decoderPhotoPreview">
+                        <div class="preview-placeholder">
+                            <span class="ph-icon">🖼️</span>
+                            <span class="ph-text">图片预览区域（支持 JPG / PNG / WEBP）</span>
+                        </div>
+                    </div>
+
+                    <div class="core-photo-status" id="decoderPhotoStatus"></div>
+
+                    <button type="button" class="btn-theme btn-purple core-recognize-btn" id="decoderRecognizeBtn" disabled>
+                        🔮 开始识别
+                    </button>
+                </div>
+
+                <!-- 卡片 2：✏️ 手动输入验光数据 -->
+                <div class="decoder-core-card core-card-input">
+                    <div class="core-card-head">
+                        <span class="core-card-icon">✏️</span>
+                        <div>
+                            <h3 class="core-card-title">手动输入验光数据</h3>
+                            <p class="core-card-subtitle-pill core-card-subtitle-green">
+                                自己输入数字，小光仔马上帮你解释
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="core-rx-form">
+                        <!-- 右眼列 -->
+                        <div class="core-eye-col core-eye-r">
+                            <div class="core-eye-head">
+                                <span class="core-eye-emoji">🫣</span>
+                                <span class="core-eye-name"><b>R</b> · 右眼</span>
+                            </div>
+                            <label class="core-field">
+                                <span class="core-field-label">SPH <small>球镜</small></span>
+                                <input type="number" step="0.25" class="core-field-input"
+                                       id="rx-r-sph" placeholder="如 -2.00">
+                            </label>
+                            <label class="core-field">
+                                <span class="core-field-label">CYL <small>柱镜/散光</small></span>
+                                <input type="number" step="0.25" class="core-field-input"
+                                       id="rx-r-cyl" placeholder="如 -0.75">
+                            </label>
+                            <label class="core-field">
+                                <span class="core-field-label">AXIS <small>轴位</small></span>
+                                <input type="number" min="0" max="180" step="1" class="core-field-input"
+                                       id="rx-r-axis" placeholder="如 180">
+                            </label>
+                        </div>
+
+                        <!-- 左眼列 -->
+                        <div class="core-eye-col core-eye-l">
+                            <div class="core-eye-head">
+                                <span class="core-eye-emoji">🫢</span>
+                                <span class="core-eye-name"><b>L</b> · 左眼</span>
+                            </div>
+                            <label class="core-field">
+                                <span class="core-field-label">SPH <small>球镜</small></span>
+                                <input type="number" step="0.25" class="core-field-input"
+                                       id="rx-l-sph" placeholder="如 -1.50">
+                            </label>
+                            <label class="core-field">
+                                <span class="core-field-label">CYL <small>柱镜/散光</small></span>
+                                <input type="number" step="0.25" class="core-field-input"
+                                       id="rx-l-cyl" placeholder="如 -0.50">
+                            </label>
+                            <label class="core-field">
+                                <span class="core-field-label">AXIS <small>轴位</small></span>
+                                <input type="number" min="0" max="180" step="1" class="core-field-input"
+                                       id="rx-l-axis" placeholder="如 95">
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn-theme btn-green core-explain-btn core-explain-full" id="decoderExplainBtn">
+                        ✨ 开始解释
+                    </button>
+
+                    <div class="core-quick-row">
+                        <span class="core-quick-label">常用符号：</span>
+                        <button type="button" class="core-quick-chip" data-quick="SPH">SPH</button>
+                        <button type="button" class="core-quick-chip" data-quick="CYL">CYL</button>
+                        <button type="button" class="core-quick-chip" data-quick="AXIS">AXIS</button>
+                        <button type="button" class="core-quick-chip" data-quick="R">R</button>
+                        <button type="button" class="core-quick-chip" data-quick="L">L</button>
+                        <button type="button" class="core-quick-chip" data-quick="PD">PD</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 小光仔解释结果区 -->
+            <div class="decoder-result" id="decoderCoreResult" hidden>
+                <div class="decoder-result-inner">
+                    <div class="decoder-result-head">
+                        <div class="decoder-result-avatar" aria-hidden="true">
+                            <img src="../../公共资源/配图/小光仔全身.png" alt="小光仔" class="decoder-result-xgz">
+                        </div>
+                        <div class="decoder-result-text">
+                            <div class="decoder-result-tag" id="decoderResultTag">小光仔解释结果</div>
+                            <h4 class="decoder-result-title" id="decoderResultTitle">SPH</h4>
+                            <p class="decoder-result-sub" id="decoderResultSub">球镜（近视 / 远视）</p>
+                        </div>
+                    </div>
+                    <div class="decoder-result-body" id="decoderResultBody">
+                        SPH 是球镜度数，可以帮助我们了解近视或远视的大致度数。
+                    </div>
+                </div>
+            </div>
+
+            <!-- 免责声明 -->
+            <div class="decoder-core-disclaimer">
+                ⚠️ <b>免责声明：</b>本工具用于科普和辅助理解验光单，不替代专业验光、诊断或医生建议。
+            </div>
+        </section>
+
+        <!-- ========== 第一区：5 个项目解释卡片（点击 → 解释弹窗） ========== -->
+        <div class="content-card decoder-card decoder-section">
+            <div class="decoder-section-head">
+                <span class="decoder-step-badge">1</span>
+                <h2 class="decoder-section-title">认识天书符号</h2>
+                <p class="decoder-section-sub">👇 点下面任意一张小卡片，看看它到底是什么意思</p>
+            </div>
+
+            <div class="decoder-item-grid" id="decoderItemGrid">
+                <!-- R / L -->
+            <button type="button" class="decoder-item-card card-theme-green" data-item="RL">
+                <span class="decoder-item-icon" aria-hidden="true">👀</span>
+                <span class="decoder-item-code">R &nbsp;/&nbsp; L</span>
+                <span class="decoder-item-name">右眼 / 左眼</span>
+                <span class="decoder-item-hint">点我看看 →</span>
+            </button>
+            <!-- SPH -->
+            <button type="button" class="decoder-item-card card-theme-blue" data-item="SPH">
+                <span class="decoder-item-icon" aria-hidden="true">🔵</span>
+                <span class="decoder-item-code">SPH</span>
+                <span class="decoder-item-name">球镜（近视 / 远视）</span>
+                <span class="decoder-item-hint">点我看看 →</span>
+            </button>
+            <!-- CYL -->
+            <button type="button" class="decoder-item-card card-theme-purple" data-item="CYL">
+                <span class="decoder-item-icon" aria-hidden="true">🌀</span>
+                <span class="decoder-item-code">CYL</span>
+                <span class="decoder-item-name">柱镜（散光）</span>
+                <span class="decoder-item-hint">点我看看 →</span>
+            </button>
+            <!-- AXIS -->
+            <button type="button" class="decoder-item-card card-theme-orange" data-item="AXIS">
+                <span class="decoder-item-icon" aria-hidden="true">🧭</span>
+                <span class="decoder-item-code">AXIS / A</span>
+                <span class="decoder-item-name">轴位（散光方向）</span>
+                <span class="decoder-item-hint">点我看看 →</span>
+            </button>
+            <!-- PD -->
+            <button type="button" class="decoder-item-card card-theme-teal" data-item="PD">
+                <span class="decoder-item-icon" aria-hidden="true">📏</span>
+                <span class="decoder-item-code">PD</span>
+                <span class="decoder-item-name">瞳距（瞳孔距离）</span>
+                <span class="decoder-item-hint">点我看看 →</span>
+            </button>
+            </div>
+        </div>
+
+        <!-- ========== 第二区：模拟验光单（点击数字→含义） ========== -->
+        <div class="content-card decoder-card decoder-section">
+            <div class="decoder-section-head">
+                <span class="decoder-step-badge">2</span>
+                <h2 class="decoder-section-title">点开模拟验光单</h2>
+                <p class="decoder-section-sub">下面是一张"小侦探专用"的模拟验光单 ✨ 点击任意一个数字/字母，小光仔会告诉你它的秘密！</p>
+            </div>
+
+            <div class="decoder-prescription" id="decoderPrescription">
+                <!-- 单据头部 -->
+                <div class="rx-header">
+                    <div class="rx-title">
+                        <span class="rx-title-icon">📋</span>
+                        <span class="rx-title-text">瞳学星球 · 模拟验光单</span>
+                    </div>
+                    <div class="rx-meta">
+                        <span>姓名：小侦探同学</span>
+                        <span>年龄：10 岁</span>
+                        <span>日期：2026-09-01</span>
+                    </div>
+                </div>
+
+                <!-- 单据表格 -->
+                <table class="rx-table">
+                    <thead>
+                        <tr>
+                            <th class="rx-eye">👁️ 眼别</th>
+                            <th class="rx-col">
+                                <button class="rx-code-btn" data-code="SPH" aria-label="SPH 球镜">SPH</button>
+                                <small>球镜</small>
+                            </th>
+                            <th class="rx-col">
+                                <button class="rx-code-btn" data-code="CYL" aria-label="CYL 柱镜">CYL</button>
+                                <small>柱镜</small>
+                            </th>
+                            <th class="rx-col">
+                                <button class="rx-code-btn" data-code="AXIS" aria-label="AXIS 轴位">A</button>
+                                <small>轴位</small>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>
+                                <button class="rx-code-btn rx-eye-btn" data-code="R">R（右眼）</button>
+                            </th>
+                            <td><button class="rx-num" data-cell="r-sph">-2.00</button></td>
+                            <td><button class="rx-num" data-cell="r-cyl">-0.75</button></td>
+                            <td><button class="rx-num" data-cell="r-axis">180°</button></td>
+                        </tr>
+                        <tr>
+                            <th>
+                                <button class="rx-code-btn rx-eye-btn" data-code="L">L（左眼）</button>
+                            </th>
+                            <td><button class="rx-num" data-cell="l-sph">-1.50</button></td>
+                            <td><button class="rx-num" data-cell="l-cyl">-0.50</button></td>
+                            <td><button class="rx-num" data-cell="l-axis">95°</button></td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4" class="rx-foot-row">
+                                <span class="rx-foot-label">
+                                    <button class="rx-code-btn" data-code="PD">PD（瞳距）</button>：
+                                </span>
+                                <span class="rx-foot-value">
+                                    <button class="rx-num rx-num-lg" data-cell="pd">59 mm</button>
+                                </span>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <!-- 数字点击解释框 -->
+            <div class="decoder-cell-tip" id="decoderCellTip" hidden>
+                <button type="button" class="decoder-cell-close" id="decoderCellClose" aria-label="关闭">×</button>
+                <div class="decoder-cell-title">🔎 你点了：<b id="decoderCellName"></b></div>
+                <div class="decoder-cell-body" id="decoderCellBody"></div>
+            </div>
+        </div>
+
+        <!-- ========== 第三区：我是小侦探 小游戏 ========== -->
+        <div class="content-card decoder-card decoder-section">
+            <div class="decoder-section-head">
+                <span class="decoder-step-badge">3</span>
+                <h2 class="decoder-section-title">🕵️ 我是小侦探</h2>
+                <p class="decoder-section-sub">读完了吗？来挑战 3 道简单小题，看看你是不是"解码小能手"！💡</p>
+            </div>
+
+            <div class="detective-wrap" id="detectiveWrap">
+                <!-- 顶部状态 -->
+                <div class="detective-status">
+                    <div class="detective-progress">
+                        第 <b id="detectiveIndex">1</b> / 3 题
+                    </div>
+                    <div class="detective-stars" id="detectiveStars" title="获得的线索星星">
+                        <span class="star">☆</span>
+                        <span class="star">☆</span>
+                        <span class="star">☆</span>
+                    </div>
+                </div>
+
+                <!-- 题目 -->
+                <div class="detective-question" id="detectiveQuestion">题目加载中…</div>
+
+                <!-- 选项 -->
+                <div class="detective-options" id="detectiveOptions">
+                    <!-- JS 动态渲染 -->
+                </div>
+
+                <!-- 反馈 -->
+                <div class="detective-feedback" id="detectiveFeedback" hidden>
+                    <div class="detective-feedback-inner" id="detectiveFeedbackInner"></div>
+                </div>
+
+                <!-- 下一题/查看结果 -->
+                <div class="detective-next-row">
+                    <button type="button" id="detectiveNextBtn" class="btn-purple" disabled>下一题 →</button>
+                </div>
+            </div>
+
+            <!-- 完成页（默认隐藏） -->
+            <div class="detective-result" id="detectiveResult" hidden>
+                <div class="detective-badge">🏅</div>
+                <h3 class="detective-result-title">🎉 挑战完成！</h3>
+                <p class="detective-result-sub" id="detectiveResultSub">你获得了 0 颗"线索星星"</p>
+                <div class="detective-result-stars" id="detectiveResultStars"></div>
+                <p class="detective-result-tip">
+                    你已经能看懂大部分"验光单天书"啦～<br>
+                    下次看到爸爸妈妈手里的验光单，就可以帮他们"解码"咯！
+                </p>
+                <div class="detective-result-btns">
+                    <button type="button" id="detectiveRestartBtn" class="btn-secondary">🔄 再玩一次</button>
+                    <a href="../../01-首页/代码/首页.html" class="btn-back-home">
+                        <span class="home-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 10.5L12 3l9 7.5"></path>
+                                <path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"></path>
+                            </svg>
+                        </span>
+                        <span class="home-text">返回首页</span>
+                        <span class="home-arrow" aria-hidden="true">›</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== 免责提示 ========== -->
+        <div class="decoder-disclaimer">
+            <div class="decoder-disclaimer-icon" aria-hidden="true">⚠️</div>
+            <div class="decoder-disclaimer-text">
+                <b>温馨提示：</b>验光单需要由专业人员结合实际检查结果进行判断，本工具仅用于科普，不用于诊断或配镜。
+                如果验光数据有疑问，请一定去正规医院眼科🏥 或 眼镜店，请专业的验光师/医生帮你解读哦！
+            </div>
+        </div>
+
+        <!-- ========== 独立返回首页按钮 ========== -->
+        <div class="decoder-bottom-row">
+            <a href="../../01-首页/代码/首页.html" class="btn-back-home">
+                <span class="home-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 10.5L12 3l9 7.5"></path>
+                        <path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"></path>
+                    </svg>
+                </span>
+                <span class="home-text">返回首页</span>
+                <span class="home-arrow" aria-hidden="true">›</span>
+            </a>
+        </div>
+    </main>
+
+    <!-- ============================================
+         项目解释弹窗（点击5张卡片弹出）
+         ============================================ -->
+    <div class="adv-modal decoder-modal" id="decoderItemModal" hidden role="dialog" aria-modal="true" aria-labelledby="decoderItemTitle" aria-hidden="true">
+        <div class="adv-modal-mask" data-close-modal="1"></div>
+        <div class="adv-modal-box decoder-modal-box">
+            <button type="button" class="adv-modal-close" data-close-modal="1" aria-label="关闭">×</button>
+            <div class="adv-modal-badge" id="decoderItemIcon">🔵</div>
+            <div class="adv-modal-order decoder-modal-order" id="decoderItemOrder">符号解释</div>
+            <h3 class="adv-modal-title" id="decoderItemTitle">SPH</h3>
+            <div class="adv-modal-desc" id="decoderItemDesc"></div>
+            <div class="adv-modal-tip decoder-modal-tip">
+                <div class="adv-modal-tip-label">💡 小光仔提醒你</div>
+                <div id="decoderItemTip"></div>
+            </div>
+            <div class="adv-modal-actions">
+                <button type="button" class="btn-purple" data-close-modal="1">我知道啦 ✓</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         Footer
+         ============================================ -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <img src="../../公共资源/配图/瞳学星球标志.jpg" alt="瞳学星球" class="footer-logo">
+                <div class="footer-text">
+                    <h4>瞳学星球</h4>
+                    <p>守护每个孩子的明亮视界</p>
+                </div>
+            </div>
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h5>探索内容</h5>
+                    <a href="../../02-眼球大冒险/代码/小游戏中心.html">眼球大冒险</a>
+                    <a href="../../05-拓展功能/代码/护眼问答.html">护眼问答机</a>
+                    <a href="../../03-视界探索站/代码/视界探索站.html">视界实验室</a>
+                </div>
+                <div class="footer-col">
+                    <h5>趣味挑战</h5>
+                    <a href="../../05-拓展功能/代码/护眼打卡.html">21天打卡</a>
+                    <a href="#">护眼排行榜</a>
+                    <a href="#">成就徽章</a>
+                </div>
+                <div class="footer-col">
+                    <h5>关于我们</h5>
+                    <a href="#">平台介绍</a>
+                    <a href="#">联系我们</a>
+                    <a href="#">隐私政策</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 瞳学星球 · 专为青少年打造</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../公共资源/代码/公共交互.js"></script>
+</body>
+</html>

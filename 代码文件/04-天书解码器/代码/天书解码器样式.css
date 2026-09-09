@@ -1,0 +1,250 @@
+
+    /* ============================================================
+       天书解码器 decoder.html · 宇宙星空游戏风格覆盖
+       命名空间 body.theme-purple（不影响其他页面）
+       ============================================================ */
+    body.theme-purple {
+        background: #06183D;
+        color: #e8f0ff;
+        font-family: "ZCOOL KuaiLe", "Microsoft YaHei", sans-serif;
+        overflow-x: hidden;
+    }
+    /* 星空背景层 */
+    body.theme-purple::before {
+        content: ""; position: fixed; inset: 0; z-index: -2;
+        background-image: url("../../公共资源/配图/护眼星球场景.png");
+        background-size: cover; background-position: center top; background-repeat: no-repeat;
+    }
+    body.theme-purple::after {
+        content: ""; position: fixed; inset: 0; z-index: -1;
+        background:
+            radial-gradient(900px 420px at 18% -10%, rgba(101,200,255,0.30), rgba(10,36,90,0) 62%),
+            radial-gradient(1100px 520px at 110% 8%, rgba(166,108,255,0.22), rgba(14,30,84,0) 58%),
+            radial-gradient(860px 460px at 115% 110%, rgba(255,213,90,0.16), rgba(14,30,84,0) 58%),
+            linear-gradient(180deg, rgba(4,10,34,0.30), rgba(4,10,34,0.70));
+        pointer-events: none;
+    }
+    /* 星星粒子层 */
+    .dec-stars { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+    .dec-star { position: absolute; border-radius: 50%; background: #fff; }
+    .dec-star.s1 { width:2px; height:2px; opacity:.7; animation: dec-twinkle 3s ease-in-out infinite; }
+    .dec-star.s2 { width:3px; height:3px; opacity:.5; animation: dec-twinkle 4s ease-in-out infinite 1s; }
+    @keyframes dec-twinkle { 0%,100%{opacity:.3} 50%{opacity:.9} }
+    /* 导航栏玻璃态 */
+    body.theme-purple .navbar {
+        background: rgba(7,27,73,0.75) !important;
+        backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+        border-bottom: 1px solid rgba(120,200,255,0.25) !important;
+    }
+    body.theme-purple .nav-link { color: #cddfff !important; }
+    body.theme-purple .nav-link:hover { color: #7BE84A !important; transform: translateY(-2px); text-shadow: 0 0 8px rgba(123,232,74,0.5); }
+    body.theme-purple .nav-link.active { color: #7BE84A !important; }
+    body.theme-purple .nav-link.active::after {
+        background: #7BE84A;
+        box-shadow: 0 0 10px rgba(123,232,74,0.7);
+    }
+    body.theme-purple .logo-title { color: #fff !important; }
+    body.theme-purple .logo-subtitle { color: #9bb8e8 !important; }
+    body.theme-purple .btn-voice {
+        background: rgba(255,255,255,0.1) !important;
+        border: 1px solid rgba(120,200,255,0.3) !important;
+        color: #fff !important;
+    }
+    /* Hero 横幅：宇宙解密站 */
+    body.theme-purple .subpage-banner {
+        background: linear-gradient(135deg, rgba(123,232,74,0.12) 0%, rgba(85,200,255,0.12) 100%) !important;
+        border-bottom: 1px solid rgba(120,200,255,0.2);
+    }
+    body.theme-purple .subpage-banner::before,
+    body.theme-purple .subpage-banner::after { display: none !important; }
+    body.theme-purple .subpage-title {
+        font-family: "ZCOOL KuaiLe", "Microsoft YaHei", sans-serif !important;
+        color: #fff !important; font-size: 42px !important;
+        text-shadow: 0 0 20px rgba(123,232,74,0.6), 0 0 40px rgba(123,232,74,0.3);
+    }
+    body.theme-purple .subpage-subtitle { color: #d8f5ff !important; font-size: 18px !important; }
+    /* 小光仔引导气泡：玻璃态 */
+    body.theme-purple .decoder-guide-bubble,
+    body.theme-purple .hero-guide-bubble {
+        background: rgba(15,45,95,0.75) !important;
+        border: 1px solid rgba(120,200,255,0.35) !important;
+        color: #e8f0ff !important;
+    }
+    /* 核心卡片：宇宙玻璃拟态 */
+    body.theme-purple .decoder-core-card,
+    body.theme-purple .content-card,
+    body.theme-purple .decoder-card {
+        background: rgba(15,45,95,0.75) !important;
+        border: 1px solid rgba(120,200,255,0.35) !important;
+        border-radius: 24px !important;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.25) !important;
+        color: #e8f0ff !important;
+        transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+    }
+    body.theme-purple .decoder-core-card:hover,
+    body.theme-purple .content-card:hover,
+    body.theme-purple .decoder-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(120,200,255,0.6) !important;
+        box-shadow: 0 14px 48px rgba(85,200,255,0.2) !important;
+    }
+    body.theme-purple .core-card-head,
+    body.theme-purple .content-card-header,
+    body.theme-purple .decoder-section-head {
+        border-bottom-color: rgba(120,200,255,0.2) !important;
+    }
+    body.theme-purple .core-card-head h3,
+    body.theme-purple .content-card h2,
+    body.theme-purple .content-card h3,
+    body.theme-purple .decoder-section-head h2 {
+        color: #fff !important;
+    }
+    body.theme-purple .content-card .lead,
+    body.theme-purple .decoder-section p { color: #b8c8e8 !important; }
+    /* 标签/徽章 */
+    body.theme-purple .decoder-result-tag,
+    body.theme-purple .adv-modal-order {
+        background: rgba(123,232,74,0.15) !important;
+        color: #7BE84A !important;
+        border: 1px solid rgba(123,232,74,0.3) !important;
+    }
+    /* 侦探游戏区 */
+    /* 题目卡片：浅紫底 + 深蓝色粗体大字 */
+    body.theme-purple .detective-question {
+        color: #243B6B !important;
+        font-size: 26px !important;
+        font-weight: 800 !important;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.15) !important;
+    }
+    /* 选项按钮：深蓝底 + 白色粗体大字 */
+    body.theme-purple .detective-options button {
+        background: rgba(15,45,95,0.92) !important;
+        border: 1px solid rgba(120,200,255,0.4) !important;
+        color: #FFFFFF !important;
+        font-weight: 700 !important;
+        font-size: 22px !important;
+        letter-spacing: 1px !important;
+        opacity: 1 !important;
+        filter: none !important;
+    }
+    body.theme-purple .detective-options button:hover {
+        border-color: #7BE84A !important;
+        box-shadow: 0 0 14px rgba(123,232,74,0.45) !important;
+    }
+    /* 区域标题：白色 + 绿色星光 */
+    body.theme-purple .decoder-section-title {
+        color: #FFFFFF !important;
+        font-weight: 900 !important;
+        text-shadow: 0 0 12px rgba(120,255,80,0.8) !important;
+    }
+    /* 答题进度：亮绿字 + 深蓝底保证对比度 */
+    body.theme-purple .detective-progress {
+        background: rgba(15,45,95,0.8) !important;
+        border-color: rgba(120,200,255,0.3) !important;
+        color: #7CFF4F !important;
+        font-weight: 800 !important;
+    }
+    body.theme-purple .detective-progress b {
+        color: #7CFF4F !important;
+        font-weight: 800 !important;
+    }
+    /* 统一按钮：游戏化 */
+    body.theme-purple .btn-theme,
+    body.theme-purple .btn-green {
+        background: linear-gradient(135deg, #9BEF55, #42B936) !important;
+        color: #fff !important; font-weight: 700;
+        border-radius: 999px !important; border: none !important;
+        box-shadow: 0 4px 16px rgba(66,185,54,0.3);
+        transition: transform .2s ease, box-shadow .2s ease;
+    }
+    body.theme-purple .btn-theme:hover,
+    body.theme-purple .btn-green:hover {
+        transform: scale(1.03);
+        box-shadow: 0 6px 24px rgba(123,232,74,0.5) !important;
+    }
+    body.theme-purple .btn-purple {
+        background: linear-gradient(135deg, #b88aff, #7651D8) !important;
+        color: #fff !important; font-weight: 700;
+        border-radius: 999px !important; border: none !important;
+        box-shadow: 0 4px 16px rgba(118,81,216,0.3);
+    }
+    body.theme-purple .btn-purple:hover {
+        transform: scale(1.03);
+        box-shadow: 0 6px 24px rgba(166,108,255,0.5) !important;
+    }
+    body.theme-purple .btn-secondary {
+        background: rgba(255,255,255,0.1) !important;
+        border: 1px solid rgba(120,200,255,0.4) !important;
+        color: #cddfff !important;
+        border-radius: 999px !important;
+    }
+    body.theme-purple .btn-secondary:hover {
+        background: rgba(120,200,255,0.2) !important;
+    }
+    body.theme-purple .btn-back-home {
+        background: linear-gradient(135deg, #9BEF55, #42B936) !important;
+        color: #fff !important; border-radius: 999px !important; border: none !important;
+    }
+    /* 模态框 */
+    body.theme-purple .adv-modal-box,
+    body.theme-purple .decoder-modal-box {
+        background: rgba(11,40,96,0.95) !important;
+        border: 1px solid rgba(120,200,255,0.4) !important;
+        color: #e8f0ff !important;
+    }
+    /* 弹窗标题：白色 + 绿色外发光 */
+    body.theme-purple .adv-modal-title {
+        color: #FFFFFF !important;
+        text-shadow: 0 0 10px rgba(130,255,80,0.8) !important;
+    }
+    /* 白色解释卡片：白底 + 深蓝色正文 */
+    body.theme-purple .adv-modal-desc {
+        background: #FFFFFF !important;
+        color: #23456F !important;
+        font-size: 22px !important;
+        line-height: 1.8 !important;
+        font-weight: 500 !important;
+    }
+    /* 小光仔提示框 */
+    body.theme-purple .adv-modal-tip {
+        background: rgba(123,232,74,0.12) !important;
+        border: 1px solid rgba(123,232,74,0.3) !important;
+    }
+    body.theme-purple .adv-modal-tip-label {
+        color: #FFD43B !important;
+        font-weight: 800 !important;
+    }
+    body.theme-purple .adv-modal-tip > div:last-child,
+    body.theme-purple #decoderItemTip {
+        color: #B8FF5A !important;
+        font-weight: 600 !important;
+    }
+    /* 白色知识卡片：深蓝色粗体文字 */
+    body.theme-purple .decoder-item-code,
+    body.theme-purple .decoder-item-name {
+        color: #173B6D !important;
+        font-weight: 700 !important;
+    }
+    body.theme-purple .adv-modal-tip::before { display: none !important; }
+    /* 表单项 */
+    body.theme-purple input,
+    body.theme-purple select,
+    body.theme-purple textarea {
+        background: rgba(7,27,73,0.6) !important;
+        border: 1px solid rgba(120,200,255,0.3) !important;
+        color: #fff !important;
+    }
+    body.theme-purple input::placeholder { color: #6b86b8 !important; }
+    /* 页脚 */
+    body.theme-purple .footer {
+        background: rgba(7,27,73,0.8) !important;
+        border-top: 1px solid rgba(120,200,255,0.2) !important;
+        color: #9bb8e8 !important;
+    }
+    body.theme-purple .footer a { color: #7BE84A !important; }
+    /* 小光仔角色：左侧陪伴，不遮挡内容 */
+    body.theme-purple .decoder-guide-img img,
+    body.theme-purple .hero-guide-img-wrap img {
+        filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+    }
+    

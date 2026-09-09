@@ -1,0 +1,284 @@
+
+    /* ============================================================
+       护眼小英雄 hero.html · 深蓝星空幻想风（与眼球大冒险/视界探索站统一）
+       命名空间 body.theme-orange（不影响其他页面）
+       ============================================================ */
+    body.theme-orange {
+        background: #071936;
+        color: #e8f0ff;
+        font-family: "ZCOOL KuaiLe", "Microsoft YaHei", sans-serif;
+        overflow-x: hidden;
+    }
+    /* ===== 1. 背景层：planet-scene.png + 深蓝遮罩 + 彩色光晕 ===== */
+    body.theme-orange::before {
+        content: ""; position: fixed; inset: 0; z-index: -2;
+        background-image: url("../../公共资源/配图/护眼星球场景.png");
+        background-size: cover; background-position: center top; background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+    body.theme-orange::after {
+        content: ""; position: fixed; inset: 0; z-index: -1;
+        background:
+            radial-gradient(900px 420px at 18% -10%, rgba(101,200,255,0.28), rgba(10,36,90,0) 62%),
+            radial-gradient(1100px 520px at 110% 8%, rgba(118,86,214,0.18), rgba(14,30,84,0) 58%),
+            radial-gradient(860px 460px at 115% 110%, rgba(255,213,90,0.14), rgba(14,30,84,0) 58%),
+            radial-gradient(1100px 640px at -12% 110%, rgba(165,232,90,0.10), rgba(4,10,34,0) 60%),
+            linear-gradient(180deg, rgba(7,25,54,0.35), rgba(7,25,54,0.65));
+        pointer-events: none;
+    }
+
+    /* ===== 2. 星空粒子层（远景星 + 近景星 + 星尘） ===== */
+    .hero-stars { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+    .hero-stars::before {
+        content: ""; position: absolute; inset: 0; opacity: .70;
+        background-image:
+            radial-gradient(1.6px 1.6px at 9% 18%, #FFFFFF 50%, transparent 51%),
+            radial-gradient(1.4px 1.4px at 17% 64%, #E6F0FF 50%, transparent 51%),
+            radial-gradient(1.3px 1.3px at 22% 34%, #FFFFFF 50%, transparent 51%),
+            radial-gradient(1.6px 1.6px at 31% 82%, #CFE6FF 50%, transparent 51%),
+            radial-gradient(1.6px 1.6px at 41% 10%, #D4E4FF 50%, transparent 51%),
+            radial-gradient(1.2px 1.2px at 48% 48%, #FFFFFF 50%, transparent 51%),
+            radial-gradient(1.4px 1.4px at 58% 28%, #FFFFFF 50%, transparent 51%),
+            radial-gradient(1.6px 1.6px at 68% 32%, #FFE58A 50%, transparent 51%),
+            radial-gradient(1.5px 1.5px at 78% 68%, #FFFFFF 50%, transparent 51%),
+            radial-gradient(1.3px 1.3px at 88% 42%, #DCE7FF 50%, transparent 51%),
+            radial-gradient(1.8px 1.8px at 92% 82%, #FFFFFF 50%, transparent 51%),
+            radial-gradient(1.2px 1.2px at 6% 90%, #E6F0FF 50%, transparent 51%),
+            radial-gradient(1.4px 1.4px at 35% 20%, #FFFFFF 50%, transparent 51%);
+        animation: hero-twinkle 8s ease-in-out infinite alternate;
+    }
+    .hero-stars::after {
+        content: ""; position: absolute; inset: 0; opacity: .70;
+        background-image:
+            radial-gradient(2.4px 2.4px at 12% 22%, #FFE58A 50%, transparent 51%),
+            radial-gradient(2.2px 2.2px at 30% 78%, #FFFFFF 50%, transparent 51%),
+            radial-gradient(2.8px 2.8px at 70% 30%, #FFE58A 50%, transparent 51%),
+            radial-gradient(2.0px 2.0px at 88% 70%, #FFFFFF 50%, transparent 51%),
+            radial-gradient(2.2px 2.2px at 50% 14%, #FFF1B3 50%, transparent 51%),
+            radial-gradient(2.4px 2.4px at 42% 54%, #FFE58A 50%, transparent 51%),
+            radial-gradient(1.8px 1.8px at 78% 58%, #FFFFFF 50%, transparent 51%),
+            radial-gradient(2.6px 2.6px at 4% 48%, #FFFFFF 50%, transparent 51%),
+            radial-gradient(2.2px 2.2px at 62% 88%, #FFE58A 50%, transparent 51%);
+        background-size: 560px 560px;
+        animation: hero-drift-near 80s linear infinite, hero-twinkle 10s ease-in-out infinite alternate-reverse;
+    }
+    /* HTML 中的 span 星星作为额外闪烁点 */
+    .hero-star { position: absolute; border-radius: 50%; background: #fff; }
+    .hero-star.s1 { width:2px; height:2px; opacity:.7; animation: hero-twinkle 3s ease-in-out infinite; }
+    .hero-star.s2 { width:3px; height:3px; opacity:.5; background:#FFE58A; animation: hero-twinkle 4s ease-in-out infinite 1s; }
+    @keyframes hero-twinkle { 0%,100%{opacity:.28} 50%{opacity:.85} }
+    @keyframes hero-drift-near { from{transform:translate3d(0,0,0)} to{transform:translate3d(-60px,30px,0)} }
+
+    /* ===== 3. 导航栏：半透明深蓝玻璃 ===== */
+    body.theme-orange .navbar {
+        background: rgba(10,25,60,0.55) !important;
+        backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid rgba(120,200,255,0.18) !important;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    }
+    body.theme-orange .nav-link { color: #d6e4ff !important; }
+    body.theme-orange .nav-link:hover { color: #a5e85a !important; transform: translateY(-2px); text-shadow: 0 0 8px rgba(165,232,90,0.5); }
+    body.theme-orange .nav-link.active { color: #a5e85a !important; }
+    body.theme-orange .nav-link.active::after {
+        background: linear-gradient(90deg, #78c943, #a5e85a);
+        box-shadow: 0 0 8px rgba(165,232,90,0.7);
+    }
+    body.theme-orange .logo-title { color: #fff !important; }
+    body.theme-orange .logo-subtitle { color: #9bb8e8 !important; }
+    body.theme-orange .btn-voice {
+        background: rgba(255,255,255,0.1) !important;
+        border: 1px solid rgba(120,200,255,0.3) !important;
+        color: #fff !important;
+    }
+
+    /* ===== 4. Hero 标题区：透明，让星空透出 ===== */
+    body.theme-orange .hero-page-hero {
+        background: transparent !important;
+        border-bottom: 1px solid rgba(120,200,255,0.12);
+    }
+    body.theme-orange .hero-page-hero::before,
+    body.theme-orange .hero-page-hero::after { display: none !important; }
+    body.theme-orange .hero-page-title {
+        font-family: "ZCOOL KuaiLe", "Microsoft YaHei", sans-serif !important;
+        color: #fff !important; font-size: 44px !important;
+        letter-spacing: 2px;
+        text-shadow: 0 0 18px rgba(165,232,90,0.55), 0 0 36px rgba(139,234,53,0.3);
+        animation: hero-title-glow 3.5s ease-in-out infinite;
+    }
+    @keyframes hero-title-glow {
+        0%,100% { text-shadow: 0 0 18px rgba(165,232,90,0.55), 0 0 36px rgba(139,234,53,0.3); }
+        50%      { text-shadow: 0 0 26px rgba(165,232,90,0.75), 0 0 50px rgba(139,234,53,0.45); }
+    }
+    body.theme-orange .hero-page-text p,
+    body.theme-orange .hero-page-subtitle { color: #cfe0ff !important; }
+    body.theme-orange .hero-page-tip {
+        color: #b8d4ff !important;
+        background: rgba(255,255,255,0.08) !important;
+        border: 1px solid rgba(255,255,255,0.15) !important;
+    }
+    /* 小光仔：柔光 + 浮动 */
+    body.theme-orange .hero-guide-img-wrap img {
+        filter: drop-shadow(0 4px 12px rgba(0,0,0,0.45)) drop-shadow(0 0 22px rgba(165,232,90,0.28));
+        animation: hero-xgz-float 4s ease-in-out infinite;
+    }
+    @keyframes hero-xgz-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+    /* 小光仔周围星尘 */
+    body.theme-orange .hero-guide-img-wrap::after {
+        content: "✦  ✧  ✦"; position: absolute; inset: 0; pointer-events: none;
+        color: rgba(255,229,138,0.6); font-size: 12px; letter-spacing: 18px;
+        animation: hero-dust-spin 12s linear infinite; opacity: .7;
+    }
+    @keyframes hero-dust-spin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+    body.theme-orange .hero-guide-bubble {
+        background: rgba(255,255,255,0.12) !important;
+        backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255,255,255,0.25) !important;
+        border-radius: 20px !important;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.18);
+        color: #e8f0ff !important;
+    }
+
+    /* ===== 5. 统计卡 / 任务卡 / 勋章卡：玻璃拟态探索卡 ===== */
+    body.theme-orange .hero-stat-card,
+    body.theme-orange .hero-task-card,
+    body.theme-orange .hero-badge-card,
+    body.theme-orange .hero-section .content-card {
+        background: rgba(255,255,255,0.12) !important;
+        backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255,255,255,0.25) !important;
+        border-radius: 24px !important;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.15) !important;
+        color: #e8f0ff !important;
+        transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+    }
+    body.theme-orange .hero-stat-card:hover,
+    body.theme-orange .hero-task-card:hover,
+    body.theme-orange .hero-badge-card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(165,232,90,0.6) !important;
+        box-shadow: 0 16px 48px rgba(165,232,90,0.22), inset 0 1px 0 rgba(255,255,255,0.22) !important;
+    }
+    body.theme-orange .hero-stat-card .stat-label { color: #9bb8e8 !important; }
+    body.theme-orange .hero-stat-card .stat-value {
+        color: #FFD45A !important;
+        text-shadow: 0 0 12px rgba(255,212,90,0.5);
+        transition: transform .3s ease;
+    }
+    body.theme-orange .stat-points .stat-value { color: #a5e85a !important; text-shadow: 0 0 12px rgba(165,232,90,0.5); }
+    body.theme-orange .stat-points .stat-value.bump { animation: hero-num-bump .5s ease; }
+    @keyframes hero-num-bump { 0%{transform:scale(1)} 50%{transform:scale(1.35);color:#fff} 100%{transform:scale(1)} }
+    /* 进度条：绿色能量条 */
+    body.theme-orange .stat-progress-bar {
+        background: rgba(255,255,255,0.12) !important;
+        border: 1px solid rgba(255,255,255,0.2) !important;
+    }
+    body.theme-orange .stat-progress-fill {
+        background: linear-gradient(90deg, #42b72a, #8bea35) !important;
+        box-shadow: 0 0 10px rgba(139,234,53,0.6);
+        border-radius: 999px;
+    }
+    /* 任务卡内部：编号徽章 + icon + 按钮 */
+    body.theme-orange .task-point-badge {
+        background: linear-gradient(135deg, #8bea35, #42b72a) !important;
+        color: #fff !important;
+        box-shadow: 0 0 10px rgba(139,234,53,0.5);
+    }
+    body.theme-orange .task-icon-wrap {
+        background: rgba(255,255,255,0.12) !important;
+        border: 1px solid rgba(255,255,255,0.22) !important;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
+    }
+    body.theme-orange .hero-task-card h3,
+    body.theme-orange .hero-badge-card h3,
+    body.theme-orange .hero-section h2,
+    body.theme-orange .hero-section-title { color: #fff !important; }
+    body.theme-orange .hero-task-card p,
+    body.theme-orange .hero-badge-card p { color: #b8c8e8 !important; }
+    body.theme-orange .title-helper { color: #8fb0e0 !important; }
+    /* 已完成状态：绿色玻璃调 */
+    body.theme-orange .hero-task-card.done,
+    body.theme-orange .hero-task-card.is-done {
+        border-color: rgba(165,232,90,0.6) !important;
+        background: rgba(165,232,90,0.14) !important;
+        box-shadow: 0 10px 40px rgba(120,201,67,0.2), inset 0 1px 0 rgba(255,255,255,0.2) !important;
+    }
+    body.theme-orange .hero-task-card.done .task-title,
+    body.theme-orange .hero-task-card.is-done .task-title { color: #a5e85a !important; }
+    /* 勋章 */
+    body.theme-orange .badge-medal {
+        background: rgba(255,255,255,0.1) !important;
+        border: 1px solid rgba(255,255,255,0.22) !important;
+    }
+    body.theme-orange .hero-badge-card.is-unlocked .badge-medal {
+        border-color: rgba(255,212,90,0.7) !important;
+        box-shadow: 0 0 18px rgba(255,212,90,0.4);
+    }
+
+    /* ===== 6. 按钮：绿色发光渐变 ===== */
+    body.theme-orange .btn-theme,
+    body.theme-orange .btn-green,
+    body.theme-orange .task-action-btn {
+        background: linear-gradient(135deg, #8bea35, #42b72a) !important;
+        color: #fff !important; font-weight: 700;
+        border-radius: 999px !important; border: none !important;
+        box-shadow: 0 4px 16px rgba(66,183,42,0.4), 0 0 12px rgba(139,234,53,0.3);
+        transition: transform .2s ease, box-shadow .2s ease;
+    }
+    body.theme-orange .btn-theme:hover,
+    body.theme-orange .btn-green:hover,
+    body.theme-orange .task-action-btn:hover {
+        transform: scale(1.04);
+        box-shadow: 0 6px 24px rgba(139,234,53,0.55), 0 0 20px rgba(139,234,53,0.4) !important;
+    }
+    body.theme-orange .btn-purple {
+        background: linear-gradient(135deg, #b88aff, #7651D8) !important;
+        color: #fff !important; font-weight: 700;
+        border-radius: 999px !important; border: none !important;
+    }
+    body.theme-orange .btn-purple:hover {
+        transform: scale(1.04);
+        box-shadow: 0 6px 24px rgba(166,108,255,0.5) !important;
+    }
+    body.theme-orange .btn-secondary {
+        background: rgba(255,255,255,0.1) !important;
+        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255,255,255,0.25) !important;
+        color: #d6e4ff !important;
+        border-radius: 999px !important;
+    }
+    body.theme-orange .btn-secondary:hover {
+        background: rgba(165,232,90,0.18) !important;
+        border-color: rgba(165,232,90,0.5) !important;
+    }
+    body.theme-orange .btn-back-home {
+        background: linear-gradient(135deg, #8bea35, #42b72a) !important;
+        color: #fff !important; border-radius: 999px !important; border: none !important;
+    }
+
+    /* ===== 7. 庆祝层（透明，仅承载彩纸） ===== */
+    body.theme-orange .hero-celebrate-layer { background: transparent !important; }
+
+    /* ===== 8. 模态框：深蓝玻璃 ===== */
+    body.theme-orange .adv-modal-box {
+        background: rgba(11,40,96,0.92) !important;
+        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.2) !important;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.15);
+        color: #e8f0ff !important;
+    }
+    body.theme-orange .adv-modal-title,
+    body.theme-orange .adv-modal-desc { color: #e8f0ff !important; }
+    body.theme-orange .adv-modal-tip {
+        background: rgba(165,232,90,0.1) !important;
+        border: 1px solid rgba(165,232,90,0.3) !important;
+    }
+
+    /* ===== 9. 页脚：玻璃拟态 ===== */
+    body.theme-orange .footer {
+        background: rgba(10,25,60,0.55) !important;
+        backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        border-top: 1px solid rgba(120,200,255,0.18) !important;
+        color: #9bb8e8 !important;
+    }
+    body.theme-orange .footer a { color: #a5e85a !important; }
+    
