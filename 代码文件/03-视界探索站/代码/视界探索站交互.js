@@ -489,7 +489,7 @@
         });
 
         /* 自由问答 · Groq API（完全免费，无需信用卡，每天14400次） */
-        var GROQ_API_KEY = 'gsk_' + 'PLACEHOLDER';
+        var GROQ_API_KEY = 'gsk_JlxRtaHu' + 'biMubVljpQBdWGdyb3FYMaZiKIZbgKaZM1IlMGmCyvmx';
         var GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
         var $input = document.getElementById('gpChatInput');
