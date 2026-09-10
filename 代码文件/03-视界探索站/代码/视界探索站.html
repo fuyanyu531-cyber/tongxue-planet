@@ -437,45 +437,6 @@
         </button>
     </section>
 
-    <!-- 眼镜星球 · 知识弹窗 -->
-    <div class="gp-modal" id="gpModal" hidden="">
-        <div class="gp-modal-overlay" id="gpModalOverlay"></div>
-        <div class="gp-modal-box">
-            <button class="gp-modal-close" id="gpModalClose" type="button">×</button>
-            <div class="gp-modal-icon" id="gpModalIcon">🔬</div>
-            <h3 class="gp-modal-title" id="gpModalTitle">标题</h3>
-            <div class="gp-modal-img-wrap" id="gpModalImgWrap" hidden="">
-                <img class="gp-modal-img" id="gpModalImg" alt="">
-            </div>
-            <div class="gp-modal-features" id="gpModalFeatures" hidden=""></div>
-            <p class="gp-modal-text" id="gpModalText">内容</p>
-            <div class="gp-modal-suit" id="gpModalSuit" hidden=""></div>
-            <div class="gp-modal-xgz">
-                <img src="../../公共资源/配图/小光仔全身.png" alt="小光仔">
-                <span class="gp-modal-tip" id="gpModalTip">小光仔陪你一起探索～</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- 小光仔讲解对话框 -->
-    <div class="gp-chat" id="gpChat" hidden="">
-        <div class="gp-chat-overlay" id="gpChatOverlay"></div>
-        <div class="gp-chat-box">
-            <button class="gp-chat-close" id="gpChatClose" type="button">×</button>
-            <div class="gp-chat-xgz">
-                <img src="../../公共资源/配图/小光仔全身.png" alt="小光仔">
-            </div>
-            <div class="gp-chat-bubble" id="gpChatBubble">
-                嘿！你知道吗？<br>镜片不是越贵越好，<br>选择适合自己的才最重要哦！
-            </div>
-            <div class="gp-chat-questions">
-                <button class="gp-q-btn" data-q="student">什么镜片适合学生？</button>
-                <button class="gp-q-btn" data-q="high">高度近视怎么办？</button>
-                <button class="gp-q-btn" data-q="frame">什么镜架最舒服？</button>
-            </div>
-        </div>
-    </div>
-
     <!-- ============================================
          配镜星际任务站
          ============================================ -->
@@ -824,8 +785,44 @@
     <script src="../../公共资源/代码/公共交互.js"></script>
     <script src="视界探索站交互.js"></script>
 
+    <!-- 眼镜星球 · 知识弹窗（移至body末尾，脱离glasses-planet的层叠上下文） -->
+    <div class="gp-modal" id="gpModal" hidden="">
+        <div class="gp-modal-overlay" id="gpModalOverlay"></div>
+        <div class="gp-modal-box">
+            <button class="gp-modal-close" id="gpModalClose" type="button">×</button>
+            <div class="gp-modal-icon" id="gpModalIcon">🔬</div>
+            <h3 class="gp-modal-title" id="gpModalTitle">标题</h3>
+            <div class="gp-modal-img-wrap" id="gpModalImgWrap" hidden="">
+                <img class="gp-modal-img" id="gpModalImg" alt="">
+            </div>
+            <div class="gp-modal-features" id="gpModalFeatures" hidden=""></div>
+            <p class="gp-modal-text" id="gpModalText">内容</p>
+            <div class="gp-modal-suit" id="gpModalSuit" hidden=""></div>
+            <div class="gp-modal-xgz">
+                <img src="../../公共资源/配图/小光仔全身.png" alt="小光仔">
+                <span class="gp-modal-tip" id="gpModalTip">小光仔陪你一起探索～</span>
+            </div>
+        </div>
+    </div>
 
-
+    <!-- 小光仔讲解对话框（移至body末尾） -->
+    <div class="gp-chat" id="gpChat" hidden="">
+        <div class="gp-chat-overlay" id="gpChatOverlay"></div>
+        <div class="gp-chat-box">
+            <button class="gp-chat-close" id="gpChatClose" type="button">×</button>
+            <div class="gp-chat-xgz">
+                <img src="../../公共资源/配图/小光仔全身.png" alt="小光仔">
+            </div>
+            <div class="gp-chat-bubble" id="gpChatBubble">
+                嘿！你知道吗？<br>镜片不是越贵越好，<br>选择适合自己的才最重要哦！
+            </div>
+            <div class="gp-chat-questions">
+                <button class="gp-q-btn" data-q="student">什么镜片适合学生？</button>
+                <button class="gp-q-btn" data-q="high">高度近视怎么办？</button>
+                <button class="gp-q-btn" data-q="frame">什么镜架最舒服？</button>
+            </div>
+        </div>
+    </div>
 
 
 
