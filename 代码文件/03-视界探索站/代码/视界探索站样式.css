@@ -1595,8 +1595,9 @@
     /* 知识弹窗 */
     .gp-modal {
         position: fixed; inset: 0; z-index: 2000;
-        display: flex; align-items: center; justify-content: center;
-        padding: 20px;
+        display: flex; align-items: flex-start; justify-content: center;
+        padding: 6vh 20px 20px;
+        overflow-y: auto;
     }
     .gp-modal[hidden] { display: none !important; }
     .gp-modal-overlay {
@@ -1607,7 +1608,7 @@
     .gp-modal-box {
         position: relative;
         width: 100%; max-width: 420px;
-        max-height: 88vh; overflow-y: auto;
+        max-height: 82vh !important; overflow-y: auto !important;
         background: linear-gradient(160deg, #fff 0%, #F1F8FF 60%, #E8F5E9 100%);
         border-radius: 26px; padding: 24px 22px 20px;
         text-align: center;
