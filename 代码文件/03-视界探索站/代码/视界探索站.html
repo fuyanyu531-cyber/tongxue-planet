@@ -782,10 +782,7 @@
         </div>
     </footer>
 
-    <script src="../../公共资源/代码/公共交互.js"></script>
-    <script src="视界探索站交互.js"></script>
-
-    <!-- 眼镜星球 · 知识弹窗（移至body末尾，脱离glasses-planet的层叠上下文） -->
+    <!-- 眼镜星球 · 知识弹窗（放在script之前，确保JS能获取到DOM元素） -->
     <div class="gp-modal" id="gpModal" hidden="">
         <div class="gp-modal-overlay" id="gpModalOverlay"></div>
         <div class="gp-modal-box">
@@ -805,7 +802,7 @@
         </div>
     </div>
 
-    <!-- 小光仔讲解对话框（移至body末尾） -->
+    <!-- 小光仔讲解对话框 -->
     <div class="gp-chat" id="gpChat" hidden="">
         <div class="gp-chat-overlay" id="gpChatOverlay"></div>
         <div class="gp-chat-box">
@@ -827,6 +824,9 @@
             </div>
         </div>
     </div>
+
+    <script src="../../公共资源/代码/公共交互.js"></script>
+    <script src="视界探索站交互.js"></script>
 
 
 
