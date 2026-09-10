@@ -488,9 +488,9 @@
             });
         });
 
-        /* 自由问答 · Google Gemini API（免费，每天1500次） */
-        var GEMINI_API_KEY = 'AIza' + 'SyD3pP-v5lF8d0cA1-2n4r6t8u0o2i4c6e8a0';
-        var GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+        /* 自由问答 · Groq API（完全免费，无需信用卡，每天14400次） */
+        var GROQ_API_KEY = 'gsk_' + 'PLACEHOLDER';
+        var GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
         var $input = document.getElementById('gpChatInput');
         var $sendBtn = document.getElementById('gpChatSend');
@@ -500,28 +500,35 @@
             + '如果问题与眼睛无关，礼貌引导回到护眼话题。';
 
         function askAI(question){
-            if(GEMINI_API_KEY.indexOf('AIzaSyD3pP') === 0){
-                $bubble.innerHTML = '小光仔还需要主人配置Gemini API Key才能联网回答哦～<br>免费获取：aistudio.google.com/apikey';
+            if(GROQ_API_KEY === 'gsk_PLACEHOLDER'){
+                $bubble.innerHTML = '小光仔还需要主人配置Groq API Key才能联网回答哦～<br>免费获取：console.groq.com/keys';
                 return;
             }
             $sendBtn.disabled = true;
             $sendBtn.textContent = '...';
             $bubble.innerHTML = '小光仔正在思考<span class="gp-chat-loading">...</span>';
 
-            fetch(GEMINI_API_URL + '?key=' + GEMINI_API_KEY, {
+            fetch(GROQ_API_URL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + GROQ_API_KEY
+                },
                 body: JSON.stringify({
-                    systemInstruction: { parts: [{ text: SYS_PROMPT }] },
-                    contents: [{ role: 'user', parts: [{ text: question }] }],
-                    generationConfig: { maxOutputTokens: 200, temperature: 0.7 }
+                    model: 'llama-3.3-70b-versatile',
+                    messages: [
+                        { role: 'system', content: SYS_PROMPT },
+                        { role: 'user', content: question }
+                    ],
+                    max_tokens: 200,
+                    temperature: 0.7
                 })
             })
             .then(function(r){ return r.json(); })
             .then(function(data){
                 var reply = '';
                 try {
-                    reply = data.candidates[0].content.parts[0].text;
+                    reply = data.choices[0].message.content;
                 } catch(e) {}
                 $bubble.textContent = reply || '抱歉，我没听清楚，再问一次吧～';
                 $sendBtn.disabled = false;
