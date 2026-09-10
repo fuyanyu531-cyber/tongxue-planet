@@ -1730,6 +1730,45 @@
         background: rgba(120,201,67,0.22);
         transform: translateX(4px);
     }
+    .gp-chat-input-area {
+        display: flex; gap: 8px; margin-top: 12px;
+    }
+    .gp-chat-input-area input {
+        flex: 1; padding: 10px 14px;
+        border: 1.5px solid rgba(120,201,67,0.35);
+        border-radius: 12px;
+        background: rgba(255,255,255,0.9);
+        color: #1B3A6B; font-size: 14px; font-weight: 600;
+        outline: none; transition: border-color .2s;
+    }
+    .gp-chat-input-area input:focus {
+        border-color: rgba(120,201,67,0.6);
+    }
+    .gp-chat-input-area input::placeholder {
+        color: #8aa5b8; font-weight: 500;
+    }
+    .gp-chat-input-area button {
+        padding: 10px 18px; border-radius: 12px; border: none;
+        background: linear-gradient(135deg, #78C943, #5BB96D);
+        color: #fff; font-size: 14px; font-weight: 800;
+        cursor: pointer; white-space: nowrap;
+        transition: all .2s;
+    }
+    .gp-chat-input-area button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(120,201,67,0.4);
+    }
+    .gp-chat-input-area button:disabled {
+        opacity: 0.5; cursor: not-allowed; transform: none;
+    }
+    .gp-chat-loading {
+        display: inline-block;
+        animation: gpDotBounce 1.2s infinite;
+    }
+    @keyframes gpDotBounce {
+        0%, 80%, 100% { opacity: 0.3; }
+        40% { opacity: 1; }
+    }
 
     /* 响应式 */
     @media (max-width: 900px) {

@@ -488,6 +488,62 @@
             });
         });
 
+        /* 自由问答 · 免费AI接入 (Pollinations.ai，无需API Key) */
+        var $input = document.getElementById('gpChatInput');
+        var $sendBtn = document.getElementById('gpChatSend');
+
+        var SYS_PROMPT = '你是"小光仔"，瞳学星球的护眼精灵助手。你精通儿童眼健康、近视防控、眼镜知识、配镜流程等领域。'
+            + '请用亲切、活泼、简短的语气回答问题，像和朋友聊天一样。回答控制在3句话以内，通俗易懂，适合青少年阅读。'
+            + '如果问题与眼睛无关，礼貌引导回到护眼话题。';
+
+        function askAI(question){
+            $sendBtn.disabled = true;
+            $sendBtn.textContent = '...';
+            $bubble.innerHTML = '小光仔正在思考<span class="gp-chat-loading">...</span>';
+
+            var body = JSON.stringify({
+                messages: [
+                    { role: 'system', content: SYS_PROMPT },
+                    { role: 'user', content: question }
+                ],
+                model: 'openai'
+            });
+
+            fetch('https://text.pollinations.ai/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: body
+            })
+            .then(function(r){ return r.text(); })
+            .then(function(text){
+                $bubble.textContent = text || '抱歉，我没听清楚，再问一次吧～';
+                $sendBtn.disabled = false;
+                $sendBtn.textContent = '发送';
+            })
+            .catch(function(){
+                $bubble.innerHTML = '网络开小差了，稍后再试一下吧～ 🌟';
+                $sendBtn.disabled = false;
+                $sendBtn.textContent = '发送';
+            });
+        }
+
+        $sendBtn.addEventListener('click', function(){
+            var q = $input.value.trim();
+            if(q){
+                askAI(q);
+                $input.value = '';
+            }
+        });
+        $input.addEventListener('keydown', function(e){
+            if(e.key === 'Enter'){
+                var q = $input.value.trim();
+                if(q){
+                    askAI(q);
+                    $input.value = '';
+                }
+            }
+        });
+
         /* 点击星光特效 */
         function createSparkle(x, y){
             for(var i=0;i<6;i++){
