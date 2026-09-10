@@ -1032,7 +1032,7 @@
 
     /* 知识弹窗 */
     .gp-modal {
-        position: fixed; inset: 0; z-index: 260;
+        position: fixed; inset: 0; z-index: 2000;
         display: flex; align-items: center; justify-content: center;
         padding: 20px;
     }
@@ -1130,7 +1130,7 @@
 
     /* 小光仔讲解对话框 */
     .gp-chat {
-        position: fixed; inset: 0; z-index: 270;
+        position: fixed; inset: 0; z-index: 2000;
         display: flex; align-items: flex-end; justify-content: flex-end;
         padding: 0 24px 24px 0;
     }
@@ -1594,7 +1594,7 @@
 
     /* 知识弹窗 */
     .gp-modal {
-        position: fixed; inset: 0; z-index: 260;
+        position: fixed; inset: 0; z-index: 2000;
         display: flex; align-items: center; justify-content: center;
         padding: 20px;
     }
@@ -1629,8 +1629,9 @@
         animation: gpFloat 2.5s ease-in-out infinite;
     }
     .gp-modal-title {
-        font-size: 22px; font-weight: 900; color: #23456F;
+        font-size: 22px; font-weight: 900; color: #1B3A6B;
         margin: 0 0 10px;
+        text-shadow: 0 1px 0 rgba(255,255,255,0.6);
     }
     .gp-modal-img-wrap {
         width: 100%;
@@ -1654,22 +1655,22 @@
     }
     .gp-modal-feat {
         display: inline-block;
-        padding: 5px 12px;
+        padding: 6px 14px;
         border-radius: 999px;
-        background: linear-gradient(135deg, rgba(120,201,67,0.15), rgba(91,163,217,0.15));
-        border: 1px solid rgba(120,201,67,0.3);
-        font-size: 12px; font-weight: 800; color: #2a7a1a;
+        background: linear-gradient(135deg, rgba(120,201,67,0.2), rgba(91,163,217,0.2));
+        border: 1px solid rgba(120,201,67,0.4);
+        font-size: 13px; font-weight: 900; color: #1f5a12;
     }
     .gp-modal-text {
-        font-size: 16px; color: #34557a; font-weight: 600;
-        line-height: 1.7; margin: 0 0 12px;
+        font-size: 16px; color: #1B3A6B; font-weight: 700;
+        line-height: 1.8; margin: 0 0 12px;
     }
     .gp-modal-suit {
-        padding: 8px 14px;
+        padding: 10px 16px;
         border-radius: 12px;
-        background: linear-gradient(135deg, rgba(255,157,30,0.12), rgba(255,213,79,0.15));
-        border: 1px solid rgba(255,157,30,0.3);
-        font-size: 13px; font-weight: 800; color: #E65100;
+        background: linear-gradient(135deg, rgba(255,157,30,0.15), rgba(255,213,79,0.2));
+        border: 1px solid rgba(255,157,30,0.4);
+        font-size: 14px; font-weight: 900; color: #C64300;
         text-align: center;
         margin: 0 0 12px;
     }
@@ -1679,12 +1680,12 @@
     }
     .gp-modal-xgz img { width: 44px; height: 60px; object-fit: contain; }
     .gp-modal-tip {
-        font-size: 13.5px; color: #2a7a1a; font-weight: 800;
+        font-size: 14px; color: #1f5a12; font-weight: 900;
     }
 
     /* 小光仔讲解对话框 */
     .gp-chat {
-        position: fixed; inset: 0; z-index: 260;
+        position: fixed; inset: 0; z-index: 2000;
         display: flex; align-items: flex-end; justify-content: flex-end;
         padding: 20px;
     }
