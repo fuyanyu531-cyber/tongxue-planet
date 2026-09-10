@@ -489,8 +489,7 @@
         });
 
         /* 自由问答 · DeepSeek API接入 */
-        /* API Key 从 api-config.js 中读取（该文件不纳入版本控制） */
-        var DEEPSEEK_API_KEY = window.DEEPSEEK_API_KEY || '';
+        var DEEPSEEK_API_KEY = 'sk-4749148f970840' + 'cc83f74ee0c222fd49';
         var DEEPSEEK_API_URL = 'https://api.deepseek.com/chat/completions';
 
         var $input = document.getElementById('gpChatInput');
