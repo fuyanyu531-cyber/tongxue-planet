@@ -488,7 +488,11 @@
             });
         });
 
-        /* 自由问答 · 免费AI接入 (Pollinations.ai，无需API Key) */
+        /* 自由问答 · DeepSeek API接入 */
+        /* 获取你自己的API Key: https://platform.deepseek.com/ → 注册 → API Keys */
+        var DEEPSEEK_API_KEY = ''; /* ← 在这里填入你的 DeepSeek API Key */
+        var DEEPSEEK_API_URL = 'https://api.deepseek.com/chat/completions';
+
         var $input = document.getElementById('gpChatInput');
         var $sendBtn = document.getElementById('gpChatSend');
 
@@ -497,26 +501,36 @@
             + '如果问题与眼睛无关，礼貌引导回到护眼话题。';
 
         function askAI(question){
+            if(!DEEPSEEK_API_KEY){
+                $bubble.innerHTML = '小光仔还需要主人配置API Key才能联网回答哦～<br>请先联系管理员设置。';
+                return;
+            }
             $sendBtn.disabled = true;
             $sendBtn.textContent = '...';
             $bubble.innerHTML = '小光仔正在思考<span class="gp-chat-loading">...</span>';
 
-            var body = JSON.stringify({
-                messages: [
-                    { role: 'system', content: SYS_PROMPT },
-                    { role: 'user', content: question }
-                ],
-                model: 'openai'
-            });
-
-            fetch('https://text.pollinations.ai/', {
+            fetch(DEEPSEEK_API_URL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: body
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + DEEPSEEK_API_KEY
+                },
+                body: JSON.stringify({
+                    model: 'deepseek-chat',
+                    messages: [
+                        { role: 'system', content: SYS_PROMPT },
+                        { role: 'user', content: question }
+                    ],
+                    max_tokens: 200,
+                    temperature: 0.7
+                })
             })
-            .then(function(r){ return r.text(); })
-            .then(function(text){
-                $bubble.textContent = text || '抱歉，我没听清楚，再问一次吧～';
+            .then(function(r){ return r.json(); })
+            .then(function(data){
+                var reply = data.choices && data.choices[0] && data.choices[0].message
+                    ? data.choices[0].message.content
+                    : '';
+                $bubble.textContent = reply || '抱歉，我没听清楚，再问一次吧～';
                 $sendBtn.disabled = false;
                 $sendBtn.textContent = '发送';
             })
