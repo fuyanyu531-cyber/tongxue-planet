@@ -12,4 +12,5 @@ html,body{margin:0;min-width:320px;min-height:100%;background:#061734}
 .exploration{left:51.3%;top:13.5%;width:19%;height:30%}
 .decoder{left:58.3%;top:39%;width:19%;height:27%}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.char-fix{position:absolute;left:71.2%;top:13.8%;width:3.6%;height:5.5%;display:flex;align-items:center;justify-content:center;font-size:clamp(10px,2.3vw,50px);font-weight:700;color:#32463C;background:#DCF5E6;border-radius:2px;z-index:2;pointer-events:none;line-height:1;overflow:hidden}
 @media(prefers-reduced-motion:reduce){.entrance img{transition:none}}
