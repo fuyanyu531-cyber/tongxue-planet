@@ -1076,8 +1076,8 @@
         animation: gpFloat 3s ease-in-out infinite;
     }
     .gp-modal-title {
-        font-size: 22px; font-weight: 900; color: #0D1B3A;
-        margin: 0 0 12px;
+        font-size: 22px; font-weight: 900; color: #fff;
+        margin: 0 0 12px; text-shadow: 0 1px 3px rgba(0,0,0,0.3);
     }
     .gp-modal-img-wrap {
         width: 100%;
@@ -1103,30 +1103,30 @@
         display: inline-block;
         padding: 6px 14px;
         border-radius: 999px;
-        background: linear-gradient(135deg, rgba(120,201,67,0.15), rgba(91,163,217,0.15));
-        border: 1px solid rgba(120,201,67,0.3);
-        font-size: 13px; font-weight: 800; color: #0D3B0A;
+        background: rgba(0,0,0,0.25);
+        border: 1px solid rgba(255,255,255,0.3);
+        font-size: 13px; font-weight: 800; color: #fff;
     }
     .gp-modal-text {
-        font-size: 16px; font-weight: 700; color: #0D1B3A;
+        font-size: 16px; font-weight: 700; color: #fff;
         line-height: 1.8; margin: 0 0 14px;
     }
     .gp-modal-suit {
         padding: 10px 16px;
         border-radius: 14px;
-        background: linear-gradient(135deg, rgba(255,157,30,0.12), rgba(255,213,79,0.15));
-        border: 1px solid rgba(255,157,30,0.3);
-        font-size: 14px; font-weight: 800; color: #8A3000;
+        background: rgba(0,0,0,0.25);
+        border: 1px solid rgba(255,255,255,0.25);
+        font-size: 14px; font-weight: 800; color: #fff;
         text-align: center;
         margin: 0 0 14px;
     }
     .gp-modal-xgz {
         display: flex; align-items: center; justify-content: center; gap: 10px;
         padding-top: 12px;
-        border-top: 1px dashed rgba(120,201,67,0.4);
+        border-top: 1px dashed rgba(255,255,255,0.3);
     }
     .gp-modal-xgz img { width: 44px; height: 60px; object-fit: contain; }
-    .gp-modal-tip { font-size: 13px; font-weight: 800; color: #0D3B0A; }
+    .gp-modal-tip { font-size: 13px; font-weight: 800; color: #fff; }
 
     /* 小光仔讲解对话框 */
     .gp-chat {
@@ -1631,9 +1631,8 @@
         animation: gpFloat 2.5s ease-in-out infinite;
     }
     .gp-modal-title {
-        font-size: 22px; font-weight: 900; color: #0D1B3A;
-        margin: 0 0 10px;
-        text-shadow: 0 1px 0 rgba(255,255,255,0.6);
+        font-size: 22px; font-weight: 900; color: #fff;
+        margin: 0 0 10px; text-shadow: 0 1px 3px rgba(0,0,0,0.3);
     }
     .gp-modal-img-wrap {
         width: 100%;
@@ -1659,30 +1658,30 @@
         display: inline-block;
         padding: 6px 14px;
         border-radius: 999px;
-        background: linear-gradient(135deg, rgba(120,201,67,0.2), rgba(91,163,217,0.2));
-        border: 1px solid rgba(120,201,67,0.4);
-        font-size: 13px; font-weight: 900; color: #0D3B0A;
+        background: rgba(0,0,0,0.25);
+        border: 1px solid rgba(255,255,255,0.3);
+        font-size: 13px; font-weight: 900; color: #fff;
     }
     .gp-modal-text {
-        font-size: 16px; color: #0D1B3A; font-weight: 700;
+        font-size: 16px; color: #fff; font-weight: 700;
         line-height: 1.8; margin: 0 0 12px;
     }
     .gp-modal-suit {
         padding: 10px 16px;
         border-radius: 12px;
-        background: linear-gradient(135deg, rgba(255,157,30,0.15), rgba(255,213,79,0.2));
-        border: 1px solid rgba(255,157,30,0.4);
-        font-size: 14px; font-weight: 900; color: #8A3000;
+        background: rgba(0,0,0,0.25);
+        border: 1px solid rgba(255,255,255,0.25);
+        font-size: 14px; font-weight: 900; color: #fff;
         text-align: center;
         margin: 0 0 12px;
     }
     .gp-modal-xgz {
         display: flex; align-items: center; justify-content: center; gap: 10px;
-        padding-top: 12px; border-top: 1px dashed rgba(120,201,67,0.3);
+        padding-top: 12px; border-top: 1px dashed rgba(255,255,255,0.3);
     }
     .gp-modal-xgz img { width: 44px; height: 60px; object-fit: contain; }
     .gp-modal-tip {
-        font-size: 14px; color: #0D3B0A; font-weight: 900;
+        font-size: 14px; color: #fff; font-weight: 900;
     }
 
     /* 小光仔讲解对话框 */
