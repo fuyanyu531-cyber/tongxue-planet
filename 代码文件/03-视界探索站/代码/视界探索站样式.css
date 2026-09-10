@@ -1607,8 +1607,9 @@
     .gp-modal-box {
         position: relative;
         width: 100%; max-width: 420px;
+        max-height: 88vh; overflow-y: auto;
         background: linear-gradient(160deg, #fff 0%, #F1F8FF 60%, #E8F5E9 100%);
-        border-radius: 26px; padding: 28px 24px 22px;
+        border-radius: 26px; padding: 24px 22px 20px;
         text-align: center;
         box-shadow: 0 20px 60px rgba(0,0,0,0.35), inset 0 0 0 3px rgba(255,255,255,0.6);
         animation: gpPop .4s cubic-bezier(.4,1.7,.5,1);
@@ -1635,9 +1636,9 @@
     }
     .gp-modal-img-wrap {
         width: 100%;
-        max-width: 240px;
-        margin: 0 auto 12px;
-        border-radius: 16px;
+        max-width: 160px;
+        margin: 0 auto 10px;
+        border-radius: 14px;
         overflow: hidden;
         background: linear-gradient(135deg, rgba(120,201,67,0.1), rgba(91,163,217,0.1));
         box-shadow: 0 6px 20px rgba(0,0,0,0.1), inset 0 0 0 2px rgba(255,255,255,0.5);
