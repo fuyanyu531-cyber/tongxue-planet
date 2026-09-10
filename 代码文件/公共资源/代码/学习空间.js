@@ -19,7 +19,7 @@
     const nodes=topics.map(t=>{const n=t[3]?document.querySelector(t[3]):null;return n&&!vision&&!n.matches('.decoder-core')?n.closest('.decoder-section'):n;});
     const assistant=document.querySelector('#lensAssistantCard .vs-node-btn');
     const landing=document.createElement('main');landing.className='learn-landing';
-    const title=vision?'视界探索站':'天书解码器';
+    const title=vision?'世界探索站':'天书解码器';
     landing.innerHTML=`<div class="learn-intro"><span class="learn-kicker">${vision?'发现生活中的护眼知识':'从认识符号，到读懂自己的验光单'}</span><h1>${title}</h1><p>${vision?'选择一颗星球，带着好奇心出发。':'第一次来？从「认识符号」开始，已有验光单也可以直接解读。'}</p></div><div class="learn-topics"></div><p class="learn-hint">点击图片进入 · 小光仔一直在右下角陪你</p>`;
     const workspace=document.createElement('section');workspace.className='learn-workspace';workspace.hidden=true;workspace.setAttribute('aria-label',title+'学习面板');
     workspace.innerHTML='<div class="learn-work-head"><button type="button" class="learn-overview">← 返回主题</button><div><small class="learn-step"></small><h2 tabindex="-1"></h2></div><span class="learn-position"></span></div><div class="learn-reading"></div><div class="learn-work-foot"><button type="button" class="learn-prev">上一主题</button><span>按自己的节奏学习</span><button type="button" class="learn-next">下一主题 →</button></div>';
